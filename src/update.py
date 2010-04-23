@@ -130,7 +130,7 @@ def execute_objects(folder,oracle_sid,oracle_user,oracle_passwd):
 
 def recompile(oracle_sid, oracle_user, oracle_passwd):
    oracle_script=INSTALL_DIR+os.sep+'recompile.sql'
-   execute(oracle_sid,oracle_user,oracle_passwd, oracle_script,'')
+   execute(oracle_sid,oracle_user,oracle_passwd, oracle_script,'','')
 
 if __name__ == "__main__":
 
