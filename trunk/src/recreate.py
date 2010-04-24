@@ -120,13 +120,6 @@ def update_database(oracle_sid, environment,max_version):
     if result!=0:
       exit(1)
 
-
-def replace_source(oracle_sid, environment):
-  result=subprocess.call(['python',INSTALL_DIR+os.sep+'replace_source.py','-sid='+oracle_sid,'-env='+environment])
-  if result!=0:
-    exit(1)
-
-
 def unittest(oracle_sid,environment):
   result=subprocess.call(['python',INSTALL_DIR+os.sep+'unittest.py','-sid='+oracle_sid,'-env='+environment])
   if result!=0:
