@@ -1,15 +1,22 @@
 This document contains some bootstrap info for using the unittest-db example.
+It also makes you familiar with the concept of unit testing and how easy it
+can be realized. Included are the packages ut_assert and ut_run. They
+are easy to use, lightweight. ut_assert is used to make assertions in
+your unit tests. ut_run is a helper to run your unit tests.
+Also included is an actual unit test example. It is called ut_app_prop 
+This is the test package for the app_prop package.
 
 Pre installation
 
-To use the helloword-db example you need to have installed the following:
-1. An oracle database, download from http://www.oracle.com/technology/software/products/database/index.html
-2. An sqlplus client, download from http://www.oracle.com/technology/tech/oci/instantclient/index.html
-3. Python 2.x.x, download from http://www.python.org/download/
-4. Noora, download from https://sourceforge.net/projects/noora/files/
+To use the unittest-db example you need to have installed the following:
+1. An oracle database, download it from http://www.oracle.com/technology/software/products/database/index.html
+2. An sqlplus client, download it from http://www.oracle.com/technology/tech/oci/instantclient/index.html
+3. Python 2.x.x, download it from http://www.python.org/download/
+4. Noora, download it from https://sourceforge.net/projects/noora/files/
 
 Remarks for the Python installation on Windows
 1. Add the python installation folder to your PATH.
+
 
 Installation of Noora
 
@@ -21,7 +28,7 @@ Installation of Noora
      Noora database installer 0.0.1, recreate.py
 
 
-Installation of the helloword-db example
+Installation of the unittest-db example
 
 1. Create the tablespaces APPDAT and APPIDX in your Oracle database.
    An example can be found in the create_tablespaces.sql file.
@@ -40,9 +47,13 @@ Installation of the helloword-db example
 4. Change the DEFAULT_ORACLE_SID value in the config.py to the oracle sid of your database.
 
 
-Now you can use the helloworld-db example
-5. Open a command prompt and enter the following:
-   # cd ../noora/examples/helloword-db
+Creating the unittest-db example:
+1. Open a command prompt and enter the following:
+   # cd ../noora/examples/unittest-db
    # recreate.py
 
-If you need help or want to comment on this document sent an e-mail to janripke@gmail.com
+
+
+
+If you need help or want to comment on this document,
+sent an e-mail to janripke@gmail.com
