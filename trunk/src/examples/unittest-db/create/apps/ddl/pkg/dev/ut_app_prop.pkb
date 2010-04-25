@@ -1,10 +1,14 @@
 create or replace package body ut_app_prop as
 
+  -- this procedure is executed before the tests in this package
+  -- are executed.
   procedure setup is
   begin
     null;
   end;
-  
+
+  -- this procedure is executed after the tests in this package
+  -- are executed.  
   procedure teardown is
   begin
     rollback;
