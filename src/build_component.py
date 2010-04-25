@@ -23,12 +23,11 @@ COMPONENT_CREATE_VERSION=config.COMPONENT_CREATE_VERSION
 COMPONENT_RELEASE_FOLDER=config.COMPONENT_RELEASE_FOLDER
 
 def usage():
-  print ""
-  print "usage : build_component.py -version=[VERSION]"
-  print "-version=[VERSION], the version to use."
-  print "creates a database independend package."
-
-
+  print "Noora database installer, build_compent.py"
+  print "creates a database independend component."
+  print "options:"
+  print "-version=[VERSION], required, the version to use."
+  
 def invalid_build_version(build_version):
   if build_version==None:
     usage()

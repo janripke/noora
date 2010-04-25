@@ -16,8 +16,10 @@ ORACLE_USERS=config.ORACLE_USERS
 
 
 def usage():
-  print ""
-  print "usage : unittest.py -sid=[ORACLE_SID] -env=[ENVIRONMENT]"
+  print "Noora database installer, unittest.py"
+  print "executes the unittests."
+  print "options:"
+  print "-sid=[ORACLE_SID]"
   print "-env=[ENVIRONMENT], the defined database environments, see config.ENVIRONMENTS"
   print "    ",config.ENVIRONMENTS
 

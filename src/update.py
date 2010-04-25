@@ -21,8 +21,11 @@ VERSION_SELECT_STATEMENT=config.VERSION_SELECT_STATEMENT
 ENVIRONMENT_SELECT_STATEMENT=config.ENVIRONMENT_SELECT_STATEMENT
 
 def usage():
-  print ""
-  print "usage : update.py -version=[VERSION] -sid=[ORACLE_SID] -env=[ENVIRONMENT]"
+  print "Noora database installer, update.py"
+  print "executes the defined update scripts in the alter folders."
+  print "options:"
+  print "-version=[VERSION]" 
+  print "-sid=[ORACLE_SID]"
   print "-env=[ENVIRONMENT], the defined database environments, see config.ENVIRONMENTS"
   print "    ",config.ENVIRONMENTS
 
