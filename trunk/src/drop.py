@@ -120,12 +120,10 @@ if __name__ == "__main__":
   schema_users=get_schema_users()
   
   print "dropping database "+oracle_sid+" using environment "+environment
- 
   for schema in SCHEMAS:
 
     oracle_user=get_oracle_user(schema,environment)
     oracle_passwd=get_oracle_passwd(schema,environment)
-
     for object in OBJECTS:
       
       # ddl objects
