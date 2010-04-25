@@ -17,8 +17,9 @@ DEFAULT_ORACLE_SID=config.DEFAULT_ORACLE_SID
 DEFAULT_ENVIRONMENT=config.DEFAULT_ENVIRONMENT
 
 def usage():
-  print ""
-  print "usage : create.py -sid=[ORACLE_SID] -env=[ENVIRONMENT]"
+  print "Noora database installer, create.py"
+  print "executes the defined baseline scripts in the create folder"
+  print "-sid=[ORACLE_SID]"
   print "-env=[ENVIRONMENT], the defined database environments, see config.ENVIRONMENTS"
   print "    ",config.ENVIRONMENTS
 

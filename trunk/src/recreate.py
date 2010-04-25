@@ -19,8 +19,9 @@ DEFAULT_ENVIRONMENT=config.DEFAULT_ENVIRONMENT
 BLOCKED_ENVIRONMENTS=config.BLOCKED_ENVIRONMENTS
 
 def usage():
-  print ""
-  print "usage : recreate.py"
+  print "Noora database installer, recreate.py"
+  print "recreates the database."
+  print "options:"
   print "-sid=[ORACLE_SID], the oracle sid to use."
   print "-env=[ENVIRONMENT], the defined database environments, see config.ENVIRONMENTS"
   print "    ",config.ENVIRONMENTS

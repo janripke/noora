@@ -12,8 +12,13 @@ COMPONENT_VERSION=component.COMPONENT_VERSION
 COMPONENT_CREATE_VERSION=component.COMPONENT_CREATE_VERSION
 
 def usage():
-  print ""
-  print "usage : setup.py -sid=[ORACLE_SID] -username=[username] -password=[password] [-base=]"
+  print "Noora database installer, setup.py"
+  print "installs database independend components"
+  print "options:"
+  print "-sid=[ORACLE_SID]"
+  print "-username=[username]"
+  print "-password=[password]"
+  print "-base=[base]"
   print ""
 
 def no_oracle_sid(oracle_sid):

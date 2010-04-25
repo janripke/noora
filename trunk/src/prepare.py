@@ -19,8 +19,10 @@ DEFAULT_VERSION=config.DEFAULT_VERSION
 VERSION_UPDATE_STATEMENT=config.VERSION_UPDATE_STATEMENT
 
 def usage():
-  print ""
-  print "usage : prepare.py -version=[VERSION]"
+  print "Noora database installer, prepare.py"
+  print "creates the fixed folder structure of the next version"
+  print "options:"
+  print "-version=[VERSION], not required, the version to prepare"
 
 def help_on_version_present(version):
   print ""
