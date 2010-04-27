@@ -2,7 +2,7 @@
 VERSIONS=['1.0.0']
 
 # De schema's in de database
-SCHEMAS=['apps']
+SCHEMES=['apps']
 
 # De object typen die worden verwijderd.
 # Dit zijn folders in de de drop boom.
@@ -17,9 +17,8 @@ CREATE_SCHEMA_OBJECTS=['usr','dbl','dir','seq','syn','tab','cst','vw','prc','pkg
 # Bevat de verschillende schema's met hun omgevingen, gebruikersnaam en wachtwoord.
 ORACLE_USERS=[['apps',['dev','test','uat','prod'],'apps','apps']]
 
-# Wanneer geen oracle_sid wordt opgegeven wordt deze sid gebruikt.
-# Meestal is dit de oracle_sid van de development omgeving.
-DEFAULT_ORACLE_SID='orcl'
+# Deprecated
+# DEFAULT_ORACLE_SID='orcl'
 
 # Wanneer geen omgeving (environment) wordt opgegeven wordt deze omgeving gebruikt.
 # Meestal is dit de development omgeving.
@@ -32,6 +31,14 @@ DEFAULT_ENVIRONMENT='dev'
 # Meestal is dit de produktie omgeving.
 BLOCKED_ENVIRONMENTS=['prod','uat']
 
+# Contains a list of oracle sids. Any given oracle sid must be in
+# this list.
+ALLOWED_ORACLE_SIDS=['orcl']
+
+# Contains a list of blocked oracle sids. 
+# Blocked sids can not be dropped. 
+# Normaly this variable contains the oracle sid of your production environment.
+BLOCKED_ORACLE_SIDS=[]
 
 CHECK_VERSION_SCHEMA='apps'
 
