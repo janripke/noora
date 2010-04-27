@@ -1,10 +1,4 @@
-This document contains some bootstrap info for using the unittest-db example.
-It also makes you familiar with the concept of unit testing and how easy it
-can be realized. Included are the packages ut_assert and ut_run. They
-are easy to use, lightweight. ut_assert is used to make assertions in
-your unit tests. ut_run is a helper to run your unit tests.
-Also included is an actual unit test example. It is called ut_app_prop 
-This is the test package for the app_prop package.
+This document contains some info on using the unittest-db example.
 
 Pre installation
 
@@ -53,6 +47,32 @@ Creating the unittest-db example:
    # recreate.py
 
 
+Running the unit test example:
+1. Open a command prompt and enter the following:
+   # cd ../noora/examples/unittest-db
+   # unittest.py
+     executing unit tests for schema apps
+     declare
+     *
+     ERROR at line 1:
+     ORA-20002: ORA-06512: at "APPS.UT_ASSERT", line 27 
+     ORA-06512: at "APPS.UT_APP_PROP", line 45 
+     ORA-06512: at line 1 
+     ORA-06512: at "APPS.UT_RUN", line 73 
+     ORA-06512: at "APPS.UT_RUN", line 84 
+     ORA-20001: [t_get_property], invalid property value: test.code <> test1.code 
+     ORA-06512: at "APPS.UT_RUN", line 96 
+     ORA-06512: at line 1 
+     ORA-06512: at line 18
+     
+unittest.py will execute all the unit tests of the schema apps.
+Considered as unit test's are package that start with ut_.
+Excluded are the packages ut_assert en ut_run. ut_assert is used to 
+create assertions in your unit tests. 
+ut_run is a helper to run your unit tests.
+In this example i wrote one unit test. It is called ut_app_prop.
+I made an error in this unit test, on line 45. It is to show you
+what happens when a unit test fails.
 
 
 If you need help or want to comment on this document,
