@@ -12,7 +12,7 @@ DROP_OBJECTS=['usr','vw','syn','trg','typ','tab','prc','fct','pkg','seq','idx','
 # De object typen die worden aangemaakt door create of alter
 # Dit zijn folder in de create en alter boom.
 # De volgorde bepaalt de volgorde waarin de object typen worden aangemaakt.
-CREATE_SCHEMA_OBJECTS=['usr','dbl','dir','seq','syn','tab','cst','vw','prc','pkg','jar','trg','idx','gra']
+CREATE_OBJECTS=['usr','dbl','dir','seq','syn','tab','cst','vw','prc','pkg','jar','trg','idx','gra']
 
 # Bevat de verschillende schema's met hun omgevingen, gebruikersnaam en wachtwoord.
 ORACLE_USERS=[['apps',['dev','test','uat','prod'],'apps','apps']]
@@ -33,7 +33,7 @@ BLOCKED_ENVIRONMENTS=['prod','uat']
 
 # Contains a list of oracle sids. Any given oracle sid must be in
 # this list.
-ALLOWED_ORACLE_SIDS=['orcl']
+ORACLE_SIDS=['orcl']
 
 # Contains a list of blocked oracle sids. 
 # Blocked sids can not be dropped. 

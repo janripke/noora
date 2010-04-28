@@ -12,14 +12,14 @@ import utils
 SCHEMES=config.SCHEMES
 OBJECTS=config.DROP_OBJECTS
 ORACLE_USERS=config.ORACLE_USERS
-ALLOWED_ORACLE_SIDS=config.ALLOWED_ORACLE_SIDS
+ORACLE_SIDS=config.ORACLE_SIDS
 BLOCKED_ORACLE_SIDS=config.BLOCKED_ORACLE_SIDS
 DEFAULT_ENVIRONMENT=config.DEFAULT_ENVIRONMENT
 ENVIRONMENTS=config.ENVIRONMENTS
 
 def usage():
   print "Noora database installer, drop.py"
-  print "drops database objects of the defined schemes."
+  print "drops the database objects in the defined schemes."
   print "-s(id)=[ORACLE_SID], required contains the tnsname of the database."
   print "-scheme=[SCHEME], not required, contains the scheme of "
   print "                  the database objects to drop."
@@ -28,7 +28,7 @@ def usage():
 
 
 def has_oracle_sid(oracle_sid):
-  for allowed_oracle_sid in ALLOWED_ORACLE_SIDS:
+  for allowed_oracle_sid in ORACLE_SIDS:
     if allowed_oracle_sid.lower()==oracle_sid.lower():
       return True
   return False
