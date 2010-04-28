@@ -2,43 +2,115 @@
 import sys
 import os
 import subprocess
-INSTALL_DIR=os.path.abspath(os.path.dirname(sys.argv[0]))
-POVS_DIR=INSTALL_DIR.split('bin')[0]
+NOORA_DIR=os.path.abspath(os.path.dirname(sys.argv[0]))
 BASE_DIR=os.path.abspath('.')
 CREATE_DIR=BASE_DIR+os.sep+'create'
 sys.path.append(BASE_DIR)
 import config
 import utils
 
-SCHEMAS=config.SCHEMAS
-SCHEMA_OBJECTS=config.CREATE_SCHEMA_OBJECTS
+SCHEMES=config.SCHEMES
+OBJECTS=config.CREATE_OBJECTS
 ORACLE_USERS=config.ORACLE_USERS
-DEFAULT_ORACLE_SID=config.DEFAULT_ORACLE_SID
+ORACLE_SIDS=config.ORACLE_SIDS
 DEFAULT_ENVIRONMENT=config.DEFAULT_ENVIRONMENT
+ENVIRONMENTS=config.ENVIRONMENTS
 
 def usage():
   print "Noora database installer, create.py"
   print "executes the defined baseline scripts in the create folder"
-  print "-sid=[ORACLE_SID]"
-  print "-env=[ENVIRONMENT], the defined database environments, see config.ENVIRONMENTS"
-  print "    ",config.ENVIRONMENTS
+  print "-s(id)=[ORACLE_SID], required contains the tnsname of the database."
+  print "-scheme=[SCHEME], not required, contains the scheme of "
+  print "                  the database objects to drop."
+  print "-e(nv)=[ENVIRONMENT], not required, used for mapping "
+  print "                      the username and password."
+  print "-nocompile, not required, disable the compilation of "
+  print "            packages, triggers and views."
+
+def has_oracle_sid(oracle_sid):
+  for allowed_oracle_sid in ORACLE_SIDS:
+    if allowed_oracle_sid.lower()==oracle_sid.lower():
+      return True
+  return False
+  
+def has_scheme(scheme):
+  for default_scheme in SCHEMES:
+    if default_scheme.lower()==scheme.lower():
+      return True
+  return False
+  
+def has_environment(environment):
+  for allowed_environment in ENVIRONMENTS:
+    if allowed_environment.lower()==environment.lower():
+      return True
+  return False
+
+def invalid_oracle_sid(oracle_sid):
+  if has_oracle_sid(oracle_sid)==False:
+    usage()
+    print
+    print "the given oracle_sid is not valid for this project."
+    exit(1)
+    
+def oracle_sid_not_none(oracle_sid):
+  if oracle_sid==None:
+    usage()
+    print
+    print "no oracle_sid was given"
+    exit(1)
 
 def get_oracle_sid(parameters):
-  oracle_sid=utils.get_parameter_value(parameters,'-sid=')
-  if oracle_sid==None:
-    oracle_sid=DEFAULT_ORACLE_SID
+  oracle_sid=utils.get_parameter_value_from_list(parameters,['-s=','-sid='])
   return oracle_sid
 
+def get_schemes(parameters):
+  build_schemes=[]
+  build_scheme=utils.get_parameter_value_from_list(parameters,['-scheme='])
+  if build_scheme==None:
+    build_schemes=SCHEMES
+  else:
+    build_schemes.append(build_scheme)
+  return build_schemes
+  
+def invalid_schemes(schemes):
+  for scheme in schemes:
+    if has_scheme(scheme)==False:
+      usage()
+      print
+      print "the given schema is not valid for this project."
+      exit(1)
+
+def schemes_not_none(schemes):
+  if schemes==None:
+    usage()
+    print
+    print "no scheme was found."
+    exit(1)
+    
 def get_environment(parameters):
-  environment=utils.get_parameter_value(parameters,'-env=')
+  environment=utils.get_parameter_value_from_list(parameters,['-e=','-env='])    
   if environment==None:
     environment=DEFAULT_ENVIRONMENT
-  return environment
+  return environment    
+  
+def invalid_environment(environment):
+  if has_environment(environment)==False:
+    usage()
+    print
+    print "the given environment is not valid for this project."
+    exit(1)
+    
+def environment_not_none(environment):
+  if environment==None:
+    usage()
+    print
+    print "no environment was found."
+    exit(1)  
 
-def get_oracle_user(schema,environment):
+def get_oracle_user(scheme,environment):
   result=""
   for user in ORACLE_USERS:
-    if user[0]==schema:
+    if user[0]==scheme:
         user_environments=user[1]
         for user_environment in user_environments:
           if user_environment==environment:
@@ -46,27 +118,17 @@ def get_oracle_user(schema,environment):
             break
   return result
 
-def get_oracle_passwd(schema,environment):
+def get_oracle_passwd(scheme,environment):
   result=""
   for user in ORACLE_USERS:
-    if user[0]==schema:
+    if user[0]==scheme:
        user_environments=user[1]
        for user_environment in user_environments:
          if user_environment==environment:
            result=user[3]
            break
-  return result
+  return result    
 
-
-# retrieves the oracle schemas in a string.
-# remark : the schemas are seperated by ;
-def get_schema_users():
-  result=""
-  for schema in SCHEMAS:
-    for oracle_user in ORACLE_USERS:
-      if oracle_user[0]==schema:
-        result=result+oracle_user[2]+';'
-  return result.rstrip(';')
 
 def install_component(url, oracle_sid, oracle_user, oracle_passwd):
   result=subprocess.call(['python',url+os.sep+'setup.py','-sid='+oracle_sid,'-username='+oracle_user,'-password='+oracle_passwd,'-base='+BASE_DIR])
@@ -82,13 +144,13 @@ def get_component_folder(url):
 
 def execute(oracle_sid, oracle_user, oracle_passwd, oracle_script,script_param):
   connect=oracle_user+'/'+oracle_passwd+'@'+oracle_sid
-  script='@'+INSTALL_DIR+os.sep+'create.sql'
+  script='@'+NOORA_DIR+os.sep+'create.sql'
   result=subprocess.call(['sqlplus','-l','-s',connect , script, oracle_script,script_param])
   if result!=0:
     utils.show_errors()
     exit(1)
 
-def execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,schema_users):
+def execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,script_param):
   files=utils.find_files(folder)
   for file in files:
     url=folder+os.sep+file
@@ -99,14 +161,11 @@ def execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,schema_users):
       utils.remove_folder_recursive(extract_folder)  
     else:
       print url.split(BASE_DIR)[1]
-      execute(oracle_sid,oracle_user,oracle_passwd,url,schema_users)
+      execute(oracle_sid,oracle_user,oracle_passwd,url,script_param)
 
 def recompile(oracle_sid, oracle_user, oracle_passwd):
-   oracle_script=INSTALL_DIR+os.sep+'recompile.sql'
+   oracle_script=NOORA_DIR+os.sep+'recompile.sql'
    execute(oracle_sid,oracle_user,oracle_passwd, oracle_script,'')
-
-def get_base_dir():
-  return BASE_DIR
 
 if __name__ == "__main__":
   
@@ -118,35 +177,45 @@ if __name__ == "__main__":
     exit(1)
 
   oracle_sid=get_oracle_sid(parameters)
+  oracle_sid_not_none(oracle_sid)
+  invalid_oracle_sid(oracle_sid)
+  
+  schemes=get_schemes(parameters)
+  schemes_not_none(schemes)
+  invalid_schemes(schemes)
+  
   environment=get_environment(parameters)
+  environment_not_none(environment)
+  invalid_environment(environment)
 
-  schema_users=get_schema_users()
 
-  print "creating database "+oracle_sid+" using environment "+environment
-  for schema in SCHEMAS:
-
-    oracle_user=get_oracle_user(schema,environment)
-    oracle_passwd=get_oracle_passwd(schema,environment)
-    for object in SCHEMA_OBJECTS:
+  for scheme in schemes:
+    print "creating scheme '"+scheme+"' in database '"+oracle_sid+"' using environment '"+environment+"'"
+    oracle_user=get_oracle_user(scheme,environment)
+    oracle_passwd=get_oracle_passwd(scheme,environment)
+    for object in  OBJECTS:
 
       # environment specific ddl objects
-      folder=CREATE_DIR+os.sep+schema+os.sep+'ddl'+os.sep+object+os.sep+environment
-      execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,schema_users)
+      folder=CREATE_DIR+os.sep+scheme+os.sep+'ddl'+os.sep+object+os.sep+environment
+      execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,'')
       
       # global ddl objects
-      folder=CREATE_DIR+os.sep+schema+os.sep+'ddl'+os.sep+object
-      execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,schema_users)
+      folder=CREATE_DIR+os.sep+scheme+os.sep+'ddl'+os.sep+object
+      execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,'')
 
     # environment specific dat objects
-    folder=CREATE_DIR+os.sep+schema+os.sep+'dat'+os.sep+environment
-    execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,schema_users)
+    folder=CREATE_DIR+os.sep+scheme+os.sep+'dat'+os.sep+environment
+    execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,'')
 
     # global dat objects
-    folder=CREATE_DIR+os.sep+schema+os.sep+'dat'
-    execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,schema_users)
+    folder=CREATE_DIR+os.sep+scheme+os.sep+'dat'
+    execute_objects(folder,oracle_sid,oracle_user,oracle_passwd,'')
+    
+    print "scheme '"+scheme+"' created."
 
-  for schema in SCHEMAS:
-    print "compiling schema "+schema
-    recompile(oracle_sid,oracle_user,oracle_passwd)
+  if utils.is_parameter(parameters,'-nocompile')==False:
+    for scheme in schemes:
+      print "compiling scheme '"+scheme+"' in database '"+oracle_sid+"' using environment '"+environment+"'"
+      recompile(oracle_sid,oracle_user,oracle_passwd)
+      print "scheme '"+scheme+"' compiled."
 
-  print "database "+oracle_sid+" created."
