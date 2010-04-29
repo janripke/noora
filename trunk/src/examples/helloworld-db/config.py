@@ -1,5 +1,5 @@
 # De versie's van de database
-VERSIONS=['1.0.0']
+VERSIONS=['1.0.0','1.0.1']
 
 # De schema's in de database
 SCHEMES=['apps']
@@ -40,7 +40,7 @@ ORACLE_SIDS=['orcl']
 # Normaly this variable contains the oracle sid of your production environment.
 BLOCKED_ORACLE_SIDS=[]
 
-CHECK_VERSION_SCHEMA='apps'
+VERSION_SCHEMA='apps'
 
 EXCLUDED_EXTENSIONS=['bak','~','pyc','log']
 
