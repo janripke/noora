@@ -2,7 +2,7 @@
 import sys
 import os
 import subprocess
-__version__ = "$Revision: $"
+__version__ = "$Revision$"
 
 
 INSTALL_DIR=os.path.abspath(os.path.dirname(sys.argv[0]))
