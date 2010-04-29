@@ -19,7 +19,7 @@ ENVIRONMENTS=config.ENVIRONMENTS
 
 def usage():
   print "Noora database installer, drop.py"
-  print "drops the database objects in the defined schemes."
+  print "drops the database objects of the defined schemes."
   print "-s=  --sid=     required contains the tnsname of the database."
   print "-u=  --scheme=  not required, contains the scheme of "
   print "                the database objects to drop."

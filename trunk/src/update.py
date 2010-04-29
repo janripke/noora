@@ -142,6 +142,7 @@ def version_folder_not_present(version):
     usage()
     print
     print "version folder not present."
+    exit(1)
 
 def get_version(parameters):
   version=utils.get_parameter_value_from_list(parameters,['-v=','--version='])
@@ -289,6 +290,8 @@ if __name__ == "__main__":
   if utils.is_parameter(parameters,'-nocompile')==False:
     for scheme in schemes:
       print "compiling scheme '"+scheme+"' in database '"+oracle_sid+"' using environment '"+environment+"'"
+      oracle_user=get_oracle_user(scheme,environment)
+      oracle_passwd=get_oracle_passwd(scheme,environment)
       recompile(oracle_sid,oracle_user,oracle_passwd)
       print "scheme '"+scheme+"' compiled."
 

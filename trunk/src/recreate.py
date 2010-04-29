@@ -2,83 +2,172 @@
 import sys
 import os
 import subprocess
-__version__ = "$Revision$"
+__revision__ = "$Revision$"
 
 
-INSTALL_DIR=os.path.abspath(os.path.dirname(sys.argv[0]))
-POVS_DIR=INSTALL_DIR.split('bin')[0]
+NOORA_DIR=os.path.abspath(os.path.dirname(sys.argv[0]))
 BASE_DIR=os.path.abspath('.')
-ALTER_DIR=BASE_DIR+os.sep+'alter'
 sys.path.append(BASE_DIR)
 import config
 import utils
 import version_utils
 
-DEFAULT_ORACLE_SID=config.DEFAULT_ORACLE_SID
+SCHEMES=config.SCHEMES
+OBJECTS=config.CREATE_OBJECTS
+ORACLE_USERS=config.ORACLE_USERS
+ORACLE_SIDS=config.ORACLE_SIDS
 DEFAULT_ENVIRONMENT=config.DEFAULT_ENVIRONMENT
-BLOCKED_ENVIRONMENTS=config.BLOCKED_ENVIRONMENTS
+ENVIRONMENTS=config.ENVIRONMENTS
+VERSIONS=config.VERSIONS
 
 def usage():
   print "Noora database installer, recreate.py"
-  print "recreates the database."
-  print "options:"
-  print "-sid=[ORACLE_SID], the oracle sid to use."
-  print "-env=[ENVIRONMENT], the defined database environments, see config.ENVIRONMENTS"
-  print "    ",config.ENVIRONMENTS
-  print "-max=[MAX_VERSION], after this version recreation will stop."
-  print "-test, execute unittests after recreation."
+  print "recreates the database objects of the defined schemes."
+  
+  print "-s= --sid=     required contains the tnsname of the database."
+  print "-u= --scheme=  not required, contains the scheme of "
+  print "               the database objects to drop."
+  print "-e= --env=     not required, used for mapping "
+  print "               the username and password."
+  print "-nocompile     not required, disable the compilation of "
+  print "               packages, triggers and views."  
+  print "-m= --max=     not required, after the given version recreation will stop."
+  print "-test          not required, executes the defined unit tests after recreation."
 
-def version():
-  print ""
-  print "pyois   : recreate.py"
-  print "version :",__version__
+def revision():
+  print "Noora database installer, recreate.py"
+  print "revision :",__revision__
 
-def check_blocked_environments(environment):
-  for blocked_environment in BLOCKED_ENVIRONMENTS:
-    if environment.lower()==blocked_environment.lower():
-      print "recreation is not allowed for this environment."
-      exit(1) 
- 
-"""
-Returns the oracle_sid from the command line list parameters.
-When no sid is given, the default oracle sid in config.py is used.
+def has_oracle_sid(oracle_sid):
+  for allowed_oracle_sid in ORACLE_SIDS:
+    if allowed_oracle_sid.lower()==oracle_sid.lower():
+      return True
+  return False
+  
+def has_scheme(scheme):
+  for default_scheme in SCHEMES:
+    if default_scheme.lower()==scheme.lower():
+      return True
+  return False
+  
+def has_environment(environment):
+  for allowed_environment in ENVIRONMENTS:
+    if allowed_environment.lower()==environment.lower():
+      return True
+  return False
+  
+def has_version(version):
+  for allowed_version in VERSIONS:
+    if allowed_version.lower()==version.lower():
+      return True
+  return False 
 
-parameters : the command line list.
-returns    : the oracle sid.
-"""
-def get_oracle_sid(parameters):
-  oracle_sid=utils.get_parameter_value(parameters,'-sid=')
+def invalid_oracle_sid(oracle_sid):
+  if has_oracle_sid(oracle_sid)==False:
+    usage()
+    print
+    print "the given oracle_sid is not valid for this project."
+    exit(1)
+    
+def oracle_sid_not_none(oracle_sid):
   if oracle_sid==None:
-    oracle_sid=DEFAULT_ORACLE_SID
+    usage()
+    print
+    print "no oracle_sid was given"
+    exit(1)
+
+def get_oracle_sid(parameters):
+  oracle_sid=utils.get_parameter_value_from_list(parameters,['-s=','--sid='])
   return oracle_sid
 
+def get_scheme(parameters):
+  scheme=utils.get_parameter_value_from_list(parameters,['-u=','--scheme='])
+  return scheme
+  
+def invalid_scheme(scheme):
+  if has_scheme(scheme)==False:
+    usage()
+    print
+    print "the given schema is not valid for this project."
+    exit(1)
+    
+def invalid_schemes(schemes):
+  for scheme in schemes:
+    if has_scheme(scheme)==False:
+      usage()
+      print
+      print "the given schema is not valid for this project."
+      exit(1)
 
-"""
-Returns the database environment from the command line list parameters.
-When no environment is given, the default environment in config.py is used.
-The environment option is used to install environment specific scripts.
-
-parameters : the command line list.
-returns    : the environment.
-"""
+def schemes_not_none(schemes):
+  if schemes==None:
+    usage()
+    print
+    print "no scheme was found."
+    exit(1)    
+    
+def get_schemes(parameters):
+  build_schemes=[]
+  build_scheme=utils.get_parameter_value_from_list(parameters,['-u=','--scheme='])
+  if build_scheme==None:
+    build_schemes=SCHEMES
+  else:
+    build_schemes.append(build_scheme)
+  return build_schemes    
+    
 def get_environment(parameters):
-  environment=utils.get_parameter_value(parameters,'-env=')
+  environment=utils.get_parameter_value_from_list(parameters,['-e=','--env='])    
   if environment==None:
     environment=DEFAULT_ENVIRONMENT
-  return environment
+  return environment    
+  
+def invalid_environment(environment):
+  if has_environment(environment)==False:
+    usage()
+    print
+    print "the given environment is not valid for this project."
+    exit(1)
+    
+def environment_not_none(environment):
+  if environment==None:
+    usage()
+    print
+    print "no environment was found."
+    exit(1)  
+
+def get_oracle_user(scheme,environment):
+  result=""
+  for user in ORACLE_USERS:
+    if user[0]==scheme:
+        user_environments=user[1]
+        for user_environment in user_environments:
+          if user_environment==environment:
+            result=user[2]
+            break
+  return result
+
+def get_oracle_passwd(scheme,environment):
+  result=""
+  for user in ORACLE_USERS:
+    if user[0]==scheme:
+       user_environments=user[1]
+       for user_environment in user_environments:
+         if user_environment==environment:
+           result=user[3]
+           break
+  return result  
 
 
-"""
-Returns the max version from the command line list parameters.
-The max version option is used to terminate the installation after the given version is installed.
-This is the version given in the alter folder.
-
-parameters : the command line list.
-returns    : the max version.
-"""
 def get_max_version(parameters):
-  max_version=utils.get_parameter_value(parameters,'-max=')
+  max_version=utils.get_parameter_value_from_list(parameters,['-m=','--max='])
   return max_version
+
+def invalid_max_version(max_version):
+  if has_version(max_version)==False:
+    usage()
+    print
+    print "the given max version is not valid for this project."
+    exit(1)
 
 
 """
@@ -99,32 +188,66 @@ def get_sub_list(items,p_item):
   return sub_list
 
     
-def drop_database(oracle_sid,environment):
-  result=subprocess.call(['python',INSTALL_DIR+os.sep+'drop.py','-sid='+oracle_sid,'-env='+environment])
-  if result!=0:
-    exit(1)
-
-
-def create_database(oracle_sid, environment):
-  result=subprocess.call(['python',INSTALL_DIR+os.sep+'create.py','-sid='+oracle_sid,'-env='+environment])
-  if result!=0:
-    exit(1)
-
-
-def update_database(oracle_sid, environment,max_version):
-  folder=ALTER_DIR
-  versions=utils.find_dirs(folder)
-  versions=version_utils.sort_as_versions(versions)
-  versions=get_sub_list(versions,max_version)
-  for version in versions:
-    result=subprocess.call(['python',INSTALL_DIR+os.sep+'update.py','-version='+version,'-sid='+oracle_sid,'-env='+environment])
+def drop_database(oracle_sid, scheme, environment):
+  if scheme==None:
+    result=subprocess.call(['python',NOORA_DIR+os.sep+'drop.py','--sid='+oracle_sid,'--env='+environment])
+    if result!=0:
+      exit(1)    
+  else:
+    result=subprocess.call(['python',NOORA_DIR+os.sep+'drop.py','--sid='+oracle_sid,'--scheme='+scheme,'--env='+environment])
     if result!=0:
       exit(1)
 
-def unittest(oracle_sid,environment):
-  result=subprocess.call(['python',INSTALL_DIR+os.sep+'unittest.py','-sid='+oracle_sid,'-env='+environment])
+
+def create_database(oracle_sid, scheme, environment):
+  if scheme==None:
+    result=subprocess.call(['python',NOORA_DIR+os.sep+'create.py','--sid='+oracle_sid,'--env='+environment,'-nocompile'])
+    if result!=0:
+      exit(1)
+  else:      
+    result=subprocess.call(['python',NOORA_DIR+os.sep+'create.py','--sid='+oracle_sid,'--scheme='+scheme,'--env='+environment,'-nocompile'])
+    if result!=0:
+      exit(1)
+
+
+def update_database(oracle_sid, scheme, environment, max_version):
+  create_version=VERSIONS[0]
+  versions=VERSIONS
+  versions.remove(create_version)  
+  versions=get_sub_list(versions,max_version)
+  for version in versions:
+    if scheme==None:
+      result=subprocess.call(['python',NOORA_DIR+os.sep+'update.py','--version='+version,'--sid='+oracle_sid,'--env='+environment,'-nocompile'])        
+      if result!=0:
+        exit(1)
+    else:
+      result=subprocess.call(['python',NOORA_DIR+os.sep+'update.py','--version='+version,'--sid='+oracle_sid,'--scheme='+scheme,'--env='+environment,'-nocompile'])
+      if result!=0:
+        exit(1)
+
+def unittest(oracle_sid, scheme, environment):
+  if scheme==None:
+    result=subprocess.call(['python',NOORA_DIR+os.sep+'unittest.py','--sid='+oracle_sid,'--env='+environment])
+    if result!=0:
+      exit(1)
+  else:
+    result=subprocess.call(['python',NOORA_DIR+os.sep+'unittest.py','--sid='+oracle_sid,'--scheme='+scheme,'--env='+environment])
+    if result!=0:
+      exit(1)
+    
+def execute(oracle_sid, oracle_user, oracle_passwd, oracle_script, param1, param2):
+  connect=oracle_user+'/'+oracle_passwd+'@'+oracle_sid
+  script='@'+NOORA_DIR+os.sep+'update.sql'
+  result=subprocess.call(['sqlplus','-l','-s',connect , script, oracle_script, param1,param2])
   if result!=0:
+    utils.show_errors()
     exit(1)
+
+def recompile(oracle_sid, oracle_user, oracle_passwd):
+   oracle_script=NOORA_DIR+os.sep+'recompile.sql'
+   execute(oracle_sid,oracle_user,oracle_passwd, oracle_script,'','')
+
+
 
 if __name__ == "__main__":
 
@@ -133,20 +256,45 @@ if __name__ == "__main__":
     usage()
     exit(1)
 
-  if utils.is_parameter(parameters,'-v'):
-    version()
+  if utils.is_parameter(parameters,'-r'):
+    revision()
     exit(1)
 
   oracle_sid=get_oracle_sid(parameters)
-  environment=get_environment(parameters)
-  max_version=get_max_version(parameters)
-  check_blocked_environments(environment)
-
-  drop_database(oracle_sid,environment)
-  create_database(oracle_sid,environment)
-  update_database(oracle_sid,environment,max_version)
+  oracle_sid_not_none(oracle_sid)
+  invalid_oracle_sid(oracle_sid)
   
+  scheme=get_scheme(parameters)
+  if scheme!=None:
+    invalid_scheme(scheme)
+  
+  schemes=get_schemes(parameters)
+  schemes_not_none(schemes)
+  invalid_schemes(schemes)
+  
+  environment=get_environment(parameters)
+  environment_not_none(environment)
+  invalid_environment(environment)
 
-  print ""
+  max_version=get_max_version(parameters)
+  if max_version!=None:
+    invalid_max_version(max_version)
+
+  drop_database(oracle_sid,scheme,environment)
+  create_database(oracle_sid,scheme,environment)
+  update_database(oracle_sid,scheme,environment,max_version)
+  
+  if utils.is_parameter(parameters,'-nocompile')==False:
+    for scheme in schemes:
+      print "compiling scheme '"+scheme+"' in database '"+oracle_sid+"' using environment '"+environment+"'"
+      oracle_user=get_oracle_user(scheme,environment)
+      oracle_passwd=get_oracle_passwd(scheme,environment)
+      recompile(oracle_sid, oracle_user, oracle_passwd)
+      print "scheme '"+scheme+"' compiled."
+
+
   if utils.is_parameter(parameters,'-test'):
-    unittest(oracle_sid,environment)
+    for scheme in schemes:
+      print "executing unit tests for scheme '"+scheme+"' in database '"+oracle_sid+"' using environment '"+environment+"'"
+      unittest(oracle_sid, scheme, environment)
+      print "unit tests for scheme '"+scheme+"' executed."
