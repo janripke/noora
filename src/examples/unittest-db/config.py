@@ -40,7 +40,7 @@ ORACLE_SIDS=['orcl']
 # Normaly this variable contains the oracle sid of your production environment.
 BLOCKED_ORACLE_SIDS=[]
 
-CHECK_VERSION_SCHEMA='apps'
+VERSION_SCHEMA='apps'
 
 EXCLUDED_EXTENSIONS=['bak','~','pyc','log']
 

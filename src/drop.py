@@ -20,11 +20,11 @@ ENVIRONMENTS=config.ENVIRONMENTS
 def usage():
   print "Noora database installer, drop.py"
   print "drops the database objects in the defined schemes."
-  print "-s(id)=[ORACLE_SID], required contains the tnsname of the database."
-  print "-scheme=[SCHEME], not required, contains the scheme of "
-  print "                  the database objects to drop."
-  print "-e(nv)=[ENVIRONMENT], not required, used for mapping "
-  print "                      the username and password."
+  print "-s=  --sid=     required contains the tnsname of the database."
+  print "-u=  --scheme=  not required, contains the scheme of "
+  print "                the database objects to drop."
+  print "-e=  --env=     not required, used for mapping "
+  print "                the username and password."
 
 
 def has_oracle_sid(oracle_sid):
@@ -68,12 +68,12 @@ def oracle_sid_not_none(oracle_sid):
     exit(1)
 
 def get_oracle_sid(parameters):
-  oracle_sid=utils.get_parameter_value_from_list(parameters,['-s=','-sid='])
+  oracle_sid=utils.get_parameter_value_from_list(parameters,['-s=','--sid='])
   return oracle_sid
 
 def get_schemes(parameters):
   build_schemes=[]
-  build_scheme=utils.get_parameter_value_from_list(parameters,['-scheme='])
+  build_scheme=utils.get_parameter_value_from_list(parameters,['-u=','--scheme='])
   if build_scheme==None:
     build_schemes=SCHEMES
   else:
@@ -96,7 +96,7 @@ def schemes_not_none(schemes):
     exit(1)
     
 def get_environment(parameters):
-  environment=utils.get_parameter_value_from_list(parameters,['-e=','-env='])    
+  environment=utils.get_parameter_value_from_list(parameters,['-e=','--env='])    
   if environment==None:
     environment=DEFAULT_ENVIRONMENT
   return environment    

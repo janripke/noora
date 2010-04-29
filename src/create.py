@@ -19,13 +19,13 @@ ENVIRONMENTS=config.ENVIRONMENTS
 def usage():
   print "Noora database installer, create.py"
   print "executes the defined baseline scripts in the create folder"
-  print "-s(id)=[ORACLE_SID], required contains the tnsname of the database."
-  print "-scheme=[SCHEME], not required, contains the scheme of "
-  print "                  the database objects to drop."
-  print "-e(nv)=[ENVIRONMENT], not required, used for mapping "
-  print "                      the username and password."
-  print "-nocompile, not required, disable the compilation of "
-  print "            packages, triggers and views."
+  print "-s= --sid=     required contains the tnsname of the database."
+  print "-u= --scheme=  not required, contains the scheme of "
+  print "               the database objects to drop."
+  print "-e= --env=     not required, used for mapping "
+  print "               the username and password."
+  print "-nocompile     not required, disable the compilation of "
+  print "               packages, triggers and views."
 
 def has_oracle_sid(oracle_sid):
   for allowed_oracle_sid in ORACLE_SIDS:
@@ -60,12 +60,12 @@ def oracle_sid_not_none(oracle_sid):
     exit(1)
 
 def get_oracle_sid(parameters):
-  oracle_sid=utils.get_parameter_value_from_list(parameters,['-s=','-sid='])
+  oracle_sid=utils.get_parameter_value_from_list(parameters,['-s=','--sid='])
   return oracle_sid
 
 def get_schemes(parameters):
   build_schemes=[]
-  build_scheme=utils.get_parameter_value_from_list(parameters,['-scheme='])
+  build_scheme=utils.get_parameter_value_from_list(parameters,['-u=','--scheme='])
   if build_scheme==None:
     build_schemes=SCHEMES
   else:
@@ -88,7 +88,7 @@ def schemes_not_none(schemes):
     exit(1)
     
 def get_environment(parameters):
-  environment=utils.get_parameter_value_from_list(parameters,['-e=','-env='])    
+  environment=utils.get_parameter_value_from_list(parameters,['-e=','--env='])    
   if environment==None:
     environment=DEFAULT_ENVIRONMENT
   return environment    
@@ -193,7 +193,7 @@ if __name__ == "__main__":
     print "creating scheme '"+scheme+"' in database '"+oracle_sid+"' using environment '"+environment+"'"
     oracle_user=get_oracle_user(scheme,environment)
     oracle_passwd=get_oracle_passwd(scheme,environment)
-    for object in  OBJECTS:
+    for object in OBJECTS:
 
       # environment specific ddl objects
       folder=CREATE_DIR+os.sep+scheme+os.sep+'ddl'+os.sep+object+os.sep+environment
