@@ -216,6 +216,8 @@ if __name__ == "__main__":
   if utils.is_parameter(parameters,'-nocompile')==False:
     for scheme in schemes:
       print "compiling scheme '"+scheme+"' in database '"+oracle_sid+"' using environment '"+environment+"'"
+      oracle_user=get_oracle_user(scheme,environment)
+      oracle_passwd=get_oracle_passwd(scheme,environment)
       recompile(oracle_sid,oracle_user,oracle_passwd)
       print "scheme '"+scheme+"' compiled."
 
