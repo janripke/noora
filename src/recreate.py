@@ -295,6 +295,4 @@ if __name__ == "__main__":
 
   if utils.is_parameter(parameters,'-test'):
     for scheme in schemes:
-      print "executing unit tests for scheme '"+scheme+"' in database '"+oracle_sid+"' using environment '"+environment+"'"
       unittest(oracle_sid, scheme, environment)
-      print "unit tests for scheme '"+scheme+"' executed."

@@ -21,80 +21,125 @@ VERSION_UPDATE_STATEMENT=config.VERSION_UPDATE_STATEMENT
 def usage():
   print "Noora database installer, prepare.py"
   print "creates the folder structure of the given version"
-  print "options:"
-  print "-version=[VERSION], not required, the version to prepare"
+  print "remarks : the given version must be present in config.VERSIONS
+  print "          the first version in config.VERSIONS is considered as the baseline (create)."
+  print "          the folder structure is only created when the version folder is not already present."
+  print "-v= --version= required, contains the version to create."
+  print "-u= --scheme=  not required, contains the scheme to create. "
 
-def help_on_version_present(version):
-  print ""
-  print "version "+version+" is already present."
+def has_scheme(scheme):
+  for default_scheme in SCHEMES:
+    if default_scheme.lower()==scheme.lower():
+      return True
+  return False
+    
+def has_version(version):
+  for allowed_version in VERSIONS:
+    if allowed_version.lower()==version.lower():
+      return True
+  return False 
 
-def get_alter_dir():
-  alter_dir=get_base_dir()+os.sep+'alter'
-  return alter_dir
+def get_schemes(parameters):
+  build_schemes=[]
+  build_scheme=utils.get_parameter_value_from_list(parameters,['-u=','--scheme='])
+  if build_scheme==None:
+    build_schemes=SCHEMES
+  else:
+    build_schemes.append(build_scheme)
+  return build_schemes
+  
+def invalid_schemes(schemes):
+  for scheme in schemes:
+    if has_scheme(scheme)==False:
+      usage()
+      print
+      print "the given schema is not valid for this project."
+      exit(1)
 
-def get_base_dir():
-  return BASE_DIR
+def schemes_not_none(schemes):
+  if schemes==None:
+    usage()
+    print
+    print "no scheme was found."
+    exit(1)
 
-def get_version_dir(version):
-  version_dir=get_alter_dir()+os.sep+version
-  return version_dir
-
-# checks if the version is already present
-def version_is_present(version):
-  result=False
-  folder_versions=utils.find_dirs(get_alter_dir())
-  for folder_version in folder_versions:
-    if folder_version==version:
-      result=True
-      break
-  return result
-
-def get_next_version(parameters):  
-  version=utils.get_parameter_value(parameters,'-version=')
+def invalid_version(version):
+  if has_version(version)==False:
+    usage()
+    print
+    print "the given version is not valid for this project."
+    exit(1)
+    
+def version_not_none(version):
   if version==None:
-    version=config.DEFAULT_VERSION
-    folder_versions=utils.find_dirs(get_alter_dir())
-    folder_versions=version_utils.sort_as_versions(folder_versions)
-    if len(folder_versions)!=0:
+    usage()
+    print
+    print "no version was given."
+    exit(1)
 
-      last_version=folder_versions[len(folder_versions)-1]
-      last_major=last_version.split('.')[0]
-      last_minor=last_version.split('.')[1]
-      last_build=last_version.split('.')[2]
-      next_build=str(int(last_build)+1)
-      version=last_major+'.'+last_minor+'.'+next_build
-  return version
+def get_version(parameters):
+  version=utils.get_parameter_value_from_list(parameters,['-v=','--version='])
+  return version    
 
+def version_folder_present(version_folder):
+  if utils.dir_is_present(version_folder):
+    usage()
+    print
+    print "version folder is already present."
+    exit(1)
 
-def get_sql_update_database_version(version):
-  stream=VERSION_UPDATE_STATEMENT
+def get_version_folder(version):
+  create_version=VERSIONS[0]
+  if create_version==version:
+    version_folder=BASE_DIR+os.sep+'create'
+  else:
+    version_folder=BASE_DIR+os.sep+'alter'+os.sep+version
+  return version_folder
+
+def get_sql_version_statement(version):
+  create_version=VERSIONS[0]
+  if create_version==version:
+    stream=VERSION_INSERT_STATEMENT
+  else:
+    stream=VERSION_UPDATE_STATEMENT
   stream=stream.replace('<version>',version)
   return stream
 
 if __name__ == "__main__":
 
+  print ""
   parameters=utils.get_parameters()
-  version=get_next_version(parameters)
-  if version_is_present(version):
-    help_on_version_present(version)
-    exit(1) 
+
+  if utils.is_parameter(parameters,'-h'):
+    usage()
+    exit(1)
+      
+  schemes=get_schemes(parameters)
+  schemes_not_none(schemes)
+  invalid_schemes(schemes)
+      
+  version=get_version(parameters)
+  version_not_none(version)
+  invalid_version(version)
+
+  version_folder=get_version_folder(version)
+  version_folder_present(version)
 
   # create the version folder
-  version_dir=get_version_dir(version)
-  os.mkdir(version_dir)
+  os.mkdir(version_folder)
   
-  for schema in SCHEMAS:
+  for scheme in schemes:
 
-    # create the schema folder
-    schema_folder=get_version_dir(version)+os.sep+schema
-    os.mkdir(schema_folder)
+    # create the scheme folder
+    scheme_folder=version_folder+os.sep+scheme
+    os.mkdir(scheme_folder)
 
     # create the dat folder
-    dat_folder=schema_folder+os.sep+'dat'
+    dat_folder=scheme_folder+os.sep+'dat'
     os.mkdir(dat_folder)
 
     # create the version script in the dat folder
-    if schema==VERSION_SCHEMA:
+    if scheme==VERSION_SCHEME:
       sql_script=get_sql_update_database_version(version)
       utils.write_file(dat_folder+os.sep+'version.sql', sql_script)
 
