@@ -4,7 +4,7 @@ SCHEMAS=['<schemas>']
 # De object typen die worden verwijderd.
 # Dit zijn folders in de de drop boom.
 # De volgorde is de volgorde waarin object typen worden verwijderd.
-DROP_OBJECTS=['usr','vw','syn','trg','typ','tab','prc','fct','pkg','seq','idx','dbl']
+DROP_OBJECTS=['usr','vw','syn','trg','typ','tab','prc','jar','fct','pkg','seq','idx','dbl']
 
 # De object typen die worden aangemaakt door create of alter
 # Dit zijn folder in de create en alter boom.
