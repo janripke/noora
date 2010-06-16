@@ -25,7 +25,7 @@ def usage():
   print "          the first version in config.VERSIONS is considered as the baseline (create)."
   print "          the folder structure is only created when the version folder is not already present."
   print "-v= --version= required, contains the version to create."
-  print "-u= --scheme=  not required, contains the scheme to create. "
+  print "-s= --scheme=  not required, contains the scheme to create. "
 
 def has_scheme(scheme):
   for default_scheme in SCHEMES:
@@ -41,7 +41,7 @@ def has_version(version):
 
 def get_schemes(parameters):
   build_schemes=[]
-  build_scheme=utils.get_parameter_value_from_list(parameters,['-u=','--scheme='])
+  build_scheme=utils.get_parameter_value_from_list(parameters,['-s=','--scheme='])
   if build_scheme==None:
     build_schemes=SCHEMES
   else:
