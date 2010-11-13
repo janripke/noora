@@ -1,8 +1,0 @@
-create or replace package ut_app_prop as
-
-  procedure setup;
-  procedure teardown;
-  procedure t_get_property_pass;
-
-end ut_app_prop;
-/
