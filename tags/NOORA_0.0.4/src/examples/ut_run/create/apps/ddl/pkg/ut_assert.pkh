@@ -1,0 +1,17 @@
+create or replace package UT_ASSERT as
+
+  procedure equals(p_message in varchar2
+                  ,a       in varchar2
+                  ,b       in varchar2);
+  procedure equals(p_message in varchar2
+                  ,a       in boolean
+                  ,b       in boolean);
+  procedure not_equals(p_message in varchar2
+                      ,a       in varchar2
+                      ,b       in varchar2);
+  procedure throws(p_message in varchar2
+                  ,a         in varchar2
+                  ,b         in varchar2);
+
+end UT_ASSERT;
+/
