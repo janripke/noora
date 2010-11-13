@@ -8,7 +8,7 @@ import core.ParameterHelper as ParameterHelper
 import core.NooraException  as NooraException
 import core.ClassLoader     as ClassLoader
 
-__revision__ = "$Revision: 8686 $"
+__revision__ = "$Revision: $"
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
 PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'
