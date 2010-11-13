@@ -1,0 +1,28 @@
+create table FILES
+  (id                      number(12) not null
+  ,job_name                varchar2(255)
+  ,filename                varchar2(255)
+  ,filetype                varchar2(30)
+  ,status_code             varchar2(50)
+  ,records_total           number(10)        default 0 -- #aangeleverd (goed gekeurd) 
+  ,records_ok              number(10)        default 0 -- #aangeleverd (goed gekeurd tot aan stage)  
+  ,records_error           number(10)        default 0 -- #afgekeurd
+  ,created_at              date
+  ,created_by              varchar2(45)
+  ,updated_at              date
+  ,updated_by              varchar2(45)
+);
+
+alter table FILES add constraint FI_ID_PK primary key (ID) using index;
+
+alter table FILES add constraint FI_JOB_NAME_NN check (job_name is not null);
+alter table FILES add constraint FI_FILESNAME_NN check (filename is not null);
+alter table FILES add constraint FI_FILESTYPE_NN check (filetype is not null);
+alter table FILES add constraint FI_STATUS_CODE_NN check (status_code is not null);
+alter table FILES add constraint FI_RECORDS_TOTAL_NN check (records_total is not null);
+alter table FILES add constraint FI_RECORDS_OK_NN check (records_ok is not null);
+alter table FILES add constraint FI_RECORDS_ERROR_NN check (records_error is not null);
+alter table FILES add constraint FI_CREATED_AT_NN check (created_at is not null);
+alter table FILES add constraint FI_CREATED_BY_NN check (created_by is not null);
+alter table FILES add constraint FI_UPDATED_AT_NN check (updated_at is not null);
+alter table FILES add constraint FI_UPDATED_BY_NN check (created_by is not null);
