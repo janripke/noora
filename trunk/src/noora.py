@@ -11,12 +11,27 @@ import core.ClassLoader     as ClassLoader
 __revision__ = "$Revision: $"
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
+BASE_DIR     = os.path.abspath('.')
 PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'
 sys.path.append(PLUGIN_DIR)
+
+
 
 def getRevision():  
   print "NoOra revision :" + __revision__.split(":")[1].rstrip("$")
 
+def findTemplateFile(filename):
+  url=BASE_DIR+os.sep+filename
+  if os.path.isfile(url):
+    print url
+    return url
+  url=NOORA_DIR+os.sep+filename
+  if os.path.isfile(url):
+    return url
+  return None
+
+def failOnPluginNotFound(message):
+  raise NooraException.NooraException(message)
 
 
 if __name__ == "__main__":
@@ -26,8 +41,8 @@ if __name__ == "__main__":
     if parameterHelper.hasParameter('-r'):
       getRevision()
       exit(1)
-      
-    config = ConfigReader.ConfigReader('project.conf')
+ 
+    config = ConfigReader.ConfigReader(findTemplateFile('project.conf'))
     
     classLoader = ClassLoader.ClassLoader()
     pluginManager = PluginManager.PluginManager()
@@ -42,12 +57,16 @@ if __name__ == "__main__":
       pluginClass=classLoader.findByPattern(plugin)
       pluginManager.registerPlugin(pluginClass)
     
-    
-    
+        
     for plugin in pluginManager.getPlugins():
+      
       for parameter in parameters:
         if parameter.upper() == plugin.getType():
           plugin.execute(parameterHelper)
+          exit(0)
+
+    failOnPluginNotFound('no plugin found.')
+    
   
   except NooraException.NooraException as e:
     print e.getMessage()
