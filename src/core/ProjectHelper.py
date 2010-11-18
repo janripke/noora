@@ -6,7 +6,6 @@ import zipfile
 import platform
 import core.NooraException as NooraException
 
-BASE_DIR    = os.path.abspath('.')
 NOORA_DIR   = os.path.abspath(os.path.dirname(sys.argv[0]))
 SCRIPT_DIR  = NOORA_DIR+os.sep+'scripts'
 # 'constant' to determine if we're on the cyswin platform
@@ -16,6 +15,16 @@ class ProjectHelper:
   
   def __init__(self, configReader):
     self.__configReader=configReader
+    self.setBaseDir(os.path.abspath('.'))
+
+  def setConfigReader(self,configReader):
+    self.__configReader=configReader
+    
+  def setBaseDir(self, path):
+    self.__baseDir=path
+
+  def getBaseDir(self):
+    return self.__baseDir
 
   def fileNotPresent(self, url):
     if os.path.isfile(url):
@@ -35,7 +44,8 @@ class ProjectHelper:
 
 
   def findTemplateFile(self, filename):
-    url=BASE_DIR+os.sep+filename
+    baseDir=self.getBaseDir()
+    url=baseDir+os.sep+filename
     if os.path.isfile(url):
       return url
     url=NOORA_DIR+os.sep+filename
@@ -47,19 +57,22 @@ class ProjectHelper:
     return None
 
   def getAlterFolder(self):
-    alterFolder=BASE_DIR+os.sep+'alter'
+    baseDir=self.getBaseDir()
+    alterFolder=baseDir+os.sep+'alter'
     return alterFolder
 
   def getCreateFolder(self):
-    createFolder=BASE_DIR+os.sep+'create'
+    baseDir=self.getBaseDir()
+    createFolder=baseDir+os.sep+'create'
     return createFolder
 
   def getBuildFolder(self, versions, version):
     createVersion=versions[0]
+    baseDir=self.getBaseDir()
     if createVersion==version:
-      buildFolder=BASE_DIR+os.sep+'create'
+      buildFolder=baseDir+os.sep+'create'
     else:
-      buildFolder=BASE_DIR+os.sep+'alter'+os.sep+version
+      buildFolder=baseDir+os.sep+'alter'+os.sep+version
     return buildFolder
 
   # deprecated, use failOnFolderNotPresent instead.
