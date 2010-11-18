@@ -1,0 +1,13 @@
+create or replace package iconverter as
+
+  G_UTF8                 CONSTANT VARCHAR2(50) := 'UTF-8';
+  G_ISO88591             CONSTANT VARCHAR2(50) := 'ISO-8859-1';
+
+
+ procedure convert
+    (url                in varchar2
+    ,sourceCharset      in varchar2
+    ,targetCharset      in varchar2);  
+
+end;
+/ 
