@@ -2,6 +2,7 @@ create or replace and compile java source named iconv as
 package com.twoorganize.kpn;
 
 import java.io.*;
+import java.util.*;
 
 public class IConv {
 
@@ -32,6 +33,11 @@ public class IConv {
   public static void convert(String url, String sourceCharset, String targetCharset) throws Exception {
 
     try {
+      File f = new File(url);
+      Properties prop = new Properties(System.getProperties());
+      prop.setProperty("user.dir",f.getAbsolutePath() );
+      System.setProperties(prop); 
+
       String content = readFile(url,sourceCharset);
       writeFile(url,content,targetCharset);
     }

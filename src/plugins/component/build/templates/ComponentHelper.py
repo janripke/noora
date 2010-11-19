@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 import os
-import sys
 import platform
 import NooraException as NooraException
+import subprocess
 
 BASE_DIR    = os.path.abspath('.')
 # 'constant' to determine if we're on the cyswin platform
@@ -84,7 +84,7 @@ class ComponentHelper:
   # (exec.. so pretty expensive :-( )
   def cleanPath(self, path):
     if ON_CYGWIN:
-       return path
+      return path
     else:
       proc = subprocess.Popen(["cygpath -wa "+ path], stdout=subprocess.PIPE, shell=True);
       (out, err) = proc.communicate();

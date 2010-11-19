@@ -1,11 +1,8 @@
-create or replace and compile java source named hkppcontenthandler as
+create or replace and compile java source named contenthandler as
 package com.twoorganize.kpn;
 
-import java.io.IOException;
 import java.io.StringWriter;
-
-import java.io.Writer;
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
@@ -13,7 +10,6 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CharacterCodingException;
 import java.nio.CharBuffer;
 import java.nio.ByteBuffer;
-
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -23,35 +19,26 @@ import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import java.net.URLEncoder;
+
 import oracle.jdbc.OracleConnection;
 import oracle.jdbc.OracleDriver;
 
 import oracle.jdbc.OraclePreparedStatement;
 import oracle.jdbc.OracleCallableStatement;
 
-import oracle.sql.BFILE;
-import oracle.sql.CLOB;
-import oracle.xdb.XMLType;
-
-import oracle.xml.parser.v2.SAXParser;
-import oracle.xml.parser.v2.XMLDocument;
-import oracle.xml.parser.v2.XMLElement;
-import oracle.xml.parser.v2.XMLNode;
-
-//import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
-
-
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
+
+
+import oracle.xdb.XMLType;
+
 // vanuit het aanroepende oracle package kan worden
 // bepaald of er wordt gecommit of dat er een rollback wordt gegeven.
-public class HKPPContentHandler extends ContentFormatter {
+public class ContentHandler extends ContentFormatter {
 
   private static final char M_LF  = 10;	
 	
@@ -132,10 +119,6 @@ public class HKPPContentHandler extends ContentFormatter {
   }
 	  
 	  
-  private String getSqlString(String value) {
-    return "'" + value + "'";
-  }
-	  
 	  
   private int getElementTypeId(String name) {
     if (this.rootElements.contains(name)) {
@@ -148,9 +131,8 @@ public class HKPPContentHandler extends ContentFormatter {
   }
 	
 
+  // converteer een string van de ene naar de andere encoding
   private String decode(String value, String sourceCharset, String targetCharset) throws CharacterCodingException {
-    // UTF-8
-    // ISO-8859-1
 
     Charset utf8Charset = Charset.forName(sourceCharset);
     Charset latin1Charset = Charset.forName(targetCharset);
@@ -162,32 +144,41 @@ public class HKPPContentHandler extends ContentFormatter {
   }
 
 
-
+  // insert het xml fragment in de database.
   private void insertDocument(String jobName, int rowId, String type, String document, String tableName) throws SQLException {
 
-        String sqlStatement = "INSERT INTO " + tableName + "(job_name, row_id, content, type, type_id) VALUES (?,?,?,?,?)";
-      	int typeId = getElementTypeId(type);	
+    String sqlStatement = "INSERT INTO " + tableName + "(job_name, row_id, content, type, type_id) VALUES (?,?,?,?,?)";
+    int typeId = getElementTypeId(type);	
 
-        OraclePreparedStatement ps=(OraclePreparedStatement) conn.prepareStatement(sqlStatement);
-      	ps.setString(1,jobName);
-       	ps.setInt(2,rowId);
-      	ps.setString(3,this.document);
-	      ps.setString(4,type);
-        ps.setInt(5,typeId);
-	      ps.execute();
-        ps.close();
+    
+    XMLType poXML = XMLType.createXML(conn, document);
 
+    // now bind the string..
+    
+
+    
+    OraclePreparedStatement ps=(OraclePreparedStatement) conn.prepareStatement(sqlStatement);
+    ps.setString(1,jobName);
+    ps.setInt(2,rowId);
+    //ps.setString(3,this.document);
+    ps.setObject(3,poXML);
+    ps.setString(4,type);
+    ps.setInt(5,typeId);
+    ps.execute();
+    ps.close();
   }
 
   
-	  
+  // insert de element data in de database.
   private void insertElement(String jobName, int rowId, String type, String tableName, String errorTableName) throws SQLException {
 
     int typeId = getElementTypeId(type);
     String sqlFields = "job_name, row_id, type, type_id";
     String sqlValueParameters = "?,?,?,?";
     String sqlLog = " log errors into " + errorTableName + " reject limit 0";     
-	    
+
+    // bepaal het sql statment.
+    // alle elementen vanaf het opgegeven element worden gebruikt.
     Hashtable values = getElementValues(this.currentElement);
     Enumeration keys = values.keys();
     while(keys.hasMoreElements()) {
@@ -198,11 +189,12 @@ public class HKPPContentHandler extends ContentFormatter {
       sqlValueParameters = sqlValueParameters + ",?";
     }
 
+    // bepaal de waarden en voer het insert statement uit
     String sqlStatement = "INSERT INTO " + tableName + " (" + sqlFields + ") VALUES (" + sqlValueParameters + ")" + sqlLog;
     OraclePreparedStatement ps=(OraclePreparedStatement) conn.prepareStatement(sqlStatement);
     ps.setString(1,this.jobName);
     ps.setInt(2,this.rowId);
-	  ps.setString(3,type);
+    ps.setString(3,type);
     ps.setInt(4,typeId);
 
     keys = values.keys();
@@ -244,7 +236,7 @@ public class HKPPContentHandler extends ContentFormatter {
       if (this.rootElements.contains(this.currentElement)) { 
 
         insertElement(this.jobName,this.rowId,this.currentElement,this.tableName,this.errorTableName);
-        insertDocument(this.jobName,this.rowId,this.currentElement,this.document,this.xmlTableName);
+        //insertDocument(this.jobName,this.rowId,this.currentElement,this.document,this.xmlTableName);
         this.rowCount=this.rowCount + 1;
         
         this.elementValues.clear();
@@ -254,6 +246,11 @@ public class HKPPContentHandler extends ContentFormatter {
       }
     }
     catch (SQLException sqlE) {
+    int length=this.document.length();
+    if (length>4000) { 
+    	length=4000;
+    }
+      logger(this.jobName, "hkppcontenthandler", "endElement", this.document.substring(0,length));
       throw new SAXException(sqlE);
     }
     
@@ -263,20 +260,26 @@ public class HKPPContentHandler extends ContentFormatter {
 
 
   public void characters(char[] p0, int p1, int p2) throws SAXException {
-    try {
-      StringWriter sw = new StringWriter();
-      sw.write(p0, p1, p2);
-      String value = decode(sw.toString().trim(),this.sourceCharset,this.targetCharset);    
+    
+	try {
+	  StringWriter sw = new StringWriter();
+      sw.write(p0, p1, p2);      
+      String value = sw.toString().trim();
       if (value != null && !"".equals(value)) {
-        elementValues.put(currentElement,value);
-        this.document = this.document + value;
+      
+        if (this.elementValues.containsKey(currentElement)) {
+            String currentValue = (String)this.elementValues.get(currentElement);
+            String newValue = currentValue+value;
+            elementValues.put(currentElement,newValue);
+        } else {
+          elementValues.put(currentElement,value);
+        }
+        this.document = this.document + URLEncoder.encode(value,sourceCharset);
       }
-    }
-    catch (CharacterCodingException cce) {
-      throw new SAXException(cce);
-    }
-
-
+	} 
+	catch (UnsupportedEncodingException e) {
+	  throw new SAXException(e);
+	}
   }
 
 
