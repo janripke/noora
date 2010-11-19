@@ -21,7 +21,7 @@ class ParameterHelper:
         return True
     return False
 
-  def find_parameter(parameters,p):
+  def findParameter(self, parameters,p):
     result=None
     for parameter in parameters:
       if parameter.find(p)!=-1:

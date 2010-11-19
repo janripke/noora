@@ -35,7 +35,8 @@ class RecreatePlugin(Plugin.Plugin):
 
   def showErrors(self):
     try:
-      stream=read_file('feedback.log')
+      projectHelper=self.getProjectHelper()
+      stream=projectHelper.readFile('feedback.log')
       print stream
     except:
       exit(1)
