@@ -8,7 +8,7 @@ import core.ParameterHelper as ParameterHelper
 import core.NooraException  as NooraException
 import core.ClassLoader     as ClassLoader
 
-__revision__ = "$Revision: $"
+__revision__ = "$Revision$"
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
 BASE_DIR     = os.path.abspath('.')
