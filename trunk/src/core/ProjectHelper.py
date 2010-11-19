@@ -262,7 +262,7 @@ class ProjectHelper:
   # (exec.. so pretty expensive :-( )
   def cleanPath(self, path):
     if ON_CYGWIN:
-       return path
+      return path
     else:
       proc = subprocess.Popen(["cygpath -wa "+ path], stdout=subprocess.PIPE, shell=True);
       (out, err) = proc.communicate();

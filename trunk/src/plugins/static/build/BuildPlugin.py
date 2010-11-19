@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 import core.Plugin as Plugin
-import core.ProjectHelper as ProjectHelper
-import core.ConfigReader  as ConfigReader
 import core.StreamHelper  as StreamHelper
 import os
 
@@ -147,11 +145,11 @@ class BuildPlugin(Plugin.Plugin):
           stream = M_LF.join(globalDdlObjects)  
           for specificDdlObject in specificDdlObjects:
             if specificDdlObject[0]==environment:
-               stream = stream + M_LF + specificDdlObject[1]
+              stream = stream + M_LF + specificDdlObject[1]
           stream = stream + M_LF + M_LF.join(globalDatObjects)  
           for specificDatObject in specificDatObjects:
             if specificDatObject[0]==environment:
-               stream = stream + M_LF + specificDatObject[1]
+              stream = stream + M_LF + specificDatObject[1]
 
           projectHelper.writeFile(url,stream)      
 

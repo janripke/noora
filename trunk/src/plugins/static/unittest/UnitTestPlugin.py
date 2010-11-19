@@ -50,8 +50,8 @@ class UnitTestPlugin(Plugin.Plugin):
       exit(1)
 
   def unittest(self, oracleSid, oracleUser, oraclePasswd):
-   oracleScript=SCRIPT_DIR+os.sep+'unittest.sql'
-   self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, oracleScript)
+    oracleScript=SCRIPT_DIR+os.sep+'unittest.sql'
+    self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, oracleScript)
 
 
   def execute(self, parameterHelper):
