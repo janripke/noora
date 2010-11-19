@@ -3,8 +3,6 @@
 import core.Plugin as Plugin
 import core.VersionHelper as VersionHelper
 import os
-import sys
-import subprocess
 
 
 

@@ -71,8 +71,8 @@ class UpdatePlugin(Plugin.Plugin):
  
 
   def recompile(self, oracleSid, oracleUser, oraclePasswd):
-   oracleScript=SCRIPT_DIR+os.sep+'recompile.sql'
-   self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, oracleScript,'', '')
+    oracleScript=SCRIPT_DIR+os.sep+'recompile.sql'
+    self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, oracleScript,'', '')
 
 
   def execute(self, parameterHelper):

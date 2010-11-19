@@ -43,7 +43,7 @@ class VersionHelper:
     versions=self.getVersions()
     versions.sort()
     for version in versions:
-       items.append(version[1])
+      items.append(version[1])
     return items
 
 

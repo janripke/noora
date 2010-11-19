@@ -80,7 +80,6 @@ class DropPlugin(Plugin.Plugin):
         for file in files:
           url=folder+os.sep+file
           print scheme+':'+url.split(NOORA_DIR)[1]
-          templateScript='@'+NOORA_DIR+os.sep+'drop.sql'
           self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, url)
 
       print "scheme '"+scheme+"' dropped."

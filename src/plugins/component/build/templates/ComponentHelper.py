@@ -12,7 +12,7 @@ ON_CYGWIN=platform.system().lower().find("cygwin") == -1;
 class ComponentHelper:
   
   def __init__(self):
-   pass
+    pass
 
   def fileNotPresent(self, url):
     if os.path.isfile(url):

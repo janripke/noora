@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 import core.Plugin as Plugin
-import core.ProjectHelper as ProjectHelper
-import core.ConfigReader  as ConfigReader
 import core.VersionHelper as VersionHelper
 import os
 import sys
