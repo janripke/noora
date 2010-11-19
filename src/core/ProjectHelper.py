@@ -4,6 +4,7 @@ import os
 import sys
 import zipfile
 import platform
+import subprocess
 import core.NooraException as NooraException
 
 NOORA_DIR   = os.path.abspath(os.path.dirname(sys.argv[0]))
