@@ -36,5 +36,5 @@ class Plugin:
   def getRevision(self):
     return self.__revision__
 
-  def exececute(self, parameters):
+  def execute(self, parameters):
     pass
