@@ -23,7 +23,6 @@ def getRevision():
 def findTemplateFile(filename):
   url=BASE_DIR+os.sep+filename
   if os.path.isfile(url):
-    print url
     return url
   url=NOORA_DIR+os.sep+filename
   if os.path.isfile(url):
