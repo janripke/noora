@@ -57,10 +57,12 @@ class DropPlugin(Plugin.Plugin):
     oracleSid=oracleSid[0]
     
     schemes=configReader.getValue('SCHEMES')
+    projectHelper.failOnNone(schemes,'the variable SCHEMES is not set.')
     schemes=parameterHelper.getParameterValue(['-u=','--scheme=','--user='],schemes)
     configReader.failOnValueNotFound('SCHEMES',schemes,'the given scheme is not valid for this project.')
 
     environment=configReader.getValue('DEFAULT_ENVIRONMENT')
+    projectHelper.failOnNone(environment,'the variable DEFAULT_ENVIRONMENT is not set.')
     environment=parameterHelper.getParameterValue(['-e=','--env='],[environment])
     projectHelper.failOnEmpty(environment,'no environment was found')
     configReader.failOnValueNotFound('ENVIRONMENTS',environment,'the given environment is not valid for this project.')

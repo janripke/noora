@@ -25,6 +25,9 @@ class ConfigReader:
       self.parse(stream)
     except IOError:
       self.setMessage('project configuration file "' + filename + '" not found.')
+      
+  def loadFromStream(self, stream):
+    self.parse(stream)
 
   def saveToFile(self, filename):
     stream=M_LF.join(self.__lines)
@@ -51,9 +54,10 @@ class ConfigReader:
 
   def hasValue(self, keyword, value):
     values=self.getValue(keyword)
-    for val in values:
-      if val.lower()==value.lower():
-        return True
+    if values!=None:
+      for val in values:
+        if val.lower()==value.lower():
+          return True
     return False
 
   # deprecated, use failOnValueNotFound instead.
