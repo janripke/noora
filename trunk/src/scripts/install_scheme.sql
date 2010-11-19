@@ -8,7 +8,7 @@ set serveroutput on size unlimited
 spool feedback.log
 define ENVIRONMENT=&1
 
-@@<install>
+@@"<install>"
 
 commit;
 exit
