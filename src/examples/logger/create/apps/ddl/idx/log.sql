@@ -1,1 +1,1 @@
-create index LOG_LOGTYPE_CODE_IDX on LOG (LOGTYPE_CODE) tablespace KPNLC_INDEX;
+create index LOG_LOGTYPE_CODE_IDX on LOG (LOGTYPE_CODE);
