@@ -7,10 +7,11 @@ import wx.stc
 def create(parent):
     return TopFrame(parent)
 
-[wxID_TOPFRAME, wxID_TOPFRAMEDIRBROWSEBUTTON1, wxID_TOPFRAMEOUTPUTPANEL, 
- wxID_TOPFRAMEPROJECTGROUP, wxID_TOPFRAMEPROJECTHOMELABEL, 
- wxID_TOPFRAMESTATICBOX1, wxID_TOPFRAMESTYLEDTEXTCTRL1, 
-] = [wx.NewId() for _init_ctrls in range(7)]
+[wxID_TOPFRAME, wxID_TOPFRAMEACTIONGROUP, wxID_TOPFRAMECHOICE1, 
+ wxID_TOPFRAMECOMMAND, wxID_TOPFRAMEDIRBROWSEBUTTON1, 
+ wxID_TOPFRAMEOUTPUTPANEL, wxID_TOPFRAMEPROJECTGROUP, 
+ wxID_TOPFRAMEPROJECTHOMELABEL, wxID_TOPFRAMESTYLEDTEXTCTRL1, 
+] = [wx.NewId() for _init_ctrls in range(9)]
 
 class TopFrame(wx.Frame):
     def _init_ctrls(self, prnt):
@@ -32,20 +33,28 @@ class TopFrame(wx.Frame):
               label='Project', name='ProjectGroup', parent=self, pos=wx.Point(8,
               16), size=wx.Size(320, 104), style=0)
 
-        self.staticBox1 = wx.StaticBox(id=wxID_TOPFRAMESTATICBOX1,
-              label='staticBox1', name='staticBox1', parent=self,
-              pos=wx.Point(8, 128), size=wx.Size(320, 352), style=0)
+        self.ActionGroup = wx.StaticBox(id=wxID_TOPFRAMEACTIONGROUP,
+              label='Action', name='ActionGroup', parent=self, pos=wx.Point(8,
+              128), size=wx.Size(320, 352), style=0)
 
         self.ProjectHomeLabel = wx.StaticText(id=wxID_TOPFRAMEPROJECTHOMELABEL,
               label='Project home', name='ProjectHomeLabel', parent=self,
               pos=wx.Point(16, 32), size=wx.Size(64, 13), style=0)
 
         self.dirBrowseButton1 = wx.lib.filebrowsebutton.DirBrowseButton(buttonText='Browse',
-              dialogTitle='', id=wxID_TOPFRAMEDIRBROWSEBUTTON1,
+              dialogTitle='Choose directory', id=wxID_TOPFRAMEDIRBROWSEBUTTON1,
               labelText='Select a directory:', newDirectory=False, parent=self,
               pos=wx.Point(24, 56), size=wx.Size(296, 48), startDirectory='.',
               style=wx.TAB_TRAVERSAL,
               toolTip='Type directory name or browse to select')
+
+        self.choice1 = wx.Choice(choices=['generate', 'recreate', 'update'], id=wxID_TOPFRAMECHOICE1,
+              name='choice1', parent=self, pos=wx.Point(80, 152),
+              size=wx.Size(130, 21), style=0)
+
+        self.Command = wx.StaticText(id=wxID_TOPFRAMECOMMAND, label='Command',
+              name='Command', parent=self, pos=wx.Point(24, 152),
+              size=wx.Size(48, 13), style=0)
 
     def __init__(self, parent):
         self._init_ctrls(parent)
