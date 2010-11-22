@@ -68,7 +68,10 @@ class DropPlugin(Plugin.Plugin):
     configReader.failOnValueNotFound('ENVIRONMENTS',environment,'the given environment is not valid for this project.')
     environment=environment[0]
 
+    oracleUsers=configReader.getValue('ORACLE_USERS')
+    projectHelper.failOnNone(oracleUsers,'the variable ORACLE_USERS is not set.')
     objects = configReader.getValue('DROP_OBJECTS')
+    projectHelper.failOnNone(objects,'the variable DROP_OBJECTS is not set.')
 
     for scheme in schemes:
       print "dropping scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"

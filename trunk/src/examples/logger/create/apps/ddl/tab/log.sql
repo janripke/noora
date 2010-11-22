@@ -15,7 +15,7 @@ create table LOG (
   UPDATED_BY              varchar2(45)  
 );
 
-alter table LOG add constraint LOG_ID_PK primary key (ID) using index tablespace KPNLC_INDEX;
+alter table LOG add constraint LOG_ID_PK primary key (ID) using index;
 alter table LOG add constraint LOG_LOGTYPE_CODE_NN check (logtype_code is not null);
 alter table LOG add constraint LOG_LOGTYPE_CODE_IN check (logtype_code in('TRACE','DEBUG','INFO','WARN','ERROR','FATAL'));
 alter table LOG add constraint LOG_MESSAGE_NN check (message is not null);

@@ -15,6 +15,7 @@ import core.ClassLoader     as ClassLoader
 import core.ParameterHelper as ParameterHelper
 import core.NooraException  as NooraException
 import core.ConfigReader    as ConfigReader
+import core.ProjectHelper   as ProjectHelper
 
 M_LF         = chr(10)
 
@@ -31,6 +32,10 @@ class TestBase(unittest.TestCase):
   def getConfigReader(self, filename):
     configReader=ConfigReader.ConfigReader(filename)
     return configReader
+  
+  def getProjectHelper(self, configReader):
+    projectHelper=ProjectHelper.ProjectHelper(configReader)
+    return projectHelper
   
   def setPluginClass(self,pattern):
     classLoader=self.getClassLoader()
@@ -138,6 +143,63 @@ class TestBase(unittest.TestCase):
     except NooraException.NooraException as e:
       self.assertEquals(e.getMessage(),"the variable DEFAULT_ENVIRONMENT is not set.")
  
+  def testInvalidEnvironmentFail(self):    
+    pluginClass=self.getPluginClass()
+    parameterHelper=self.getParameterHelper()
+    parameterHelper.setParameters(['-s=orcl','-e=uat'])
+    
+    configReader=self.getConfigReader('project.conf')
+    lines=[]
+    lines.append("ORACLE_SIDS=['orcl']")
+    lines.append("SCHEMES=['apps']")
+    lines.append("DEFAULT_ENVIRONMENT=['dev']")
+    lines.append("ENVIRONMENTS=['dev']")
+    stream = M_LF.join(lines)
+    configReader.loadFromStream(stream)
+    pluginClass.setConfigReader(configReader)
+    try:
+      pluginClass.execute(parameterHelper)  
+    except NooraException.NooraException as e:
+      self.assertEquals(e.getMessage(),"the given environment is not valid for this project.")
+ 
+  def testOracleUsersNotSetFail(self):    
+    pluginClass=self.getPluginClass()
+    parameterHelper=self.getParameterHelper()
+    parameterHelper.setParameters(['-s=orcl','-e=dev'])
+    
+    configReader=self.getConfigReader('project.conf')
+    lines=[]
+    lines.append("ORACLE_SIDS=['orcl']")
+    lines.append("SCHEMES=['apps']")
+    lines.append("DEFAULT_ENVIRONMENT=['dev']")
+    lines.append("ENVIRONMENTS=['dev']")
+    stream = M_LF.join(lines)
+    configReader.loadFromStream(stream)
+    pluginClass.setConfigReader(configReader)
+    try:
+      pluginClass.execute(parameterHelper)  
+    except NooraException.NooraException as e:
+      self.assertEquals(e.getMessage(),"the variable ORACLE_USERS is not set.")
+
+  def testDropObjectsNotSetFail(self):    
+    pluginClass=self.getPluginClass()
+    parameterHelper=self.getParameterHelper()
+    parameterHelper.setParameters(['-s=orcl','-e=dev'])
+    
+    configReader=self.getConfigReader('project.conf')
+    lines=[]
+    lines.append("ORACLE_SIDS=['orcl']")
+    lines.append("SCHEMES=['apps']")
+    lines.append("DEFAULT_ENVIRONMENT=['dev']")
+    lines.append("ENVIRONMENTS=['dev']")
+    lines.append("ORACLE_USERS=[['orcl','apps','apps','apps']]")
+    stream = M_LF.join(lines)
+    configReader.loadFromStream(stream)
+    pluginClass.setConfigReader(configReader)
+    try:
+      pluginClass.execute(parameterHelper)  
+    except NooraException.NooraException as e:
+      self.assertEquals(e.getMessage(),"the variable DROP_OBJECTS is not set.")
        
        
 
