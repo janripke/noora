@@ -3,7 +3,7 @@
 
 import wx
 
-import TopFrame
+import gui.TopFrame as TopFrame
 
 modules ={'TopFrame': [1, 'Main frame of the Application', u'TopFrame.py']}
 
