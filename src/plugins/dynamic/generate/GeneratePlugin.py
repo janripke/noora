@@ -171,7 +171,6 @@ class GeneratePlugin(Plugin.Plugin):
     objects=configReader.getValue('CREATE_OBJECTS')
     projectHelper.failOnNone(objects,'the variable CREATE_OBJECTS is not configured for this project.')
 
-
     # create the version folder
     os.makedirs(versionFolder)
   
@@ -190,36 +189,36 @@ class GeneratePlugin(Plugin.Plugin):
         sqlScript=self.getSqlVersionStatement(versions, version)
         projectHelper.writeFile(datFolder+os.sep+'version.sql', sqlScript)
 
-    # create the environment folders in the dat folder
-    for environment in environments:
-      os.mkdir(datFolder+os.sep+environment)
+      # create the environment folders in the dat folder
+      for environment in environments:
+        os.mkdir(datFolder+os.sep+environment)
 
-      # create the environment script in the dat folder.
-      if scheme==versionScheme and versions[0]==version:
-        sqlScript=self.getSqlEnvironmentStatement(environment)
-        projectHelper.writeFile(datFolder+os.sep+environment+os.sep+'environment.sql', sqlScript)
+        # create the environment script in the dat folder.
+        if scheme==versionScheme and versions[0]==version:
+          sqlScript=self.getSqlEnvironmentStatement(environment)
+          projectHelper.writeFile(datFolder+os.sep+environment+os.sep+'environment.sql', sqlScript)
                 
 
-    # create the ddl folder
-    ddlFolder=schemeFolder+os.sep+'ddl'
-    os.mkdir(ddlFolder)
+      # create the ddl folder
+      ddlFolder=schemeFolder+os.sep+'ddl'
+      os.mkdir(ddlFolder)
 
-    # create the object folders in the ddl folder
-    for object in objects:
-      os.mkdir(ddlFolder+os.sep+object)
-      
-    # create the template code on create.
-    if scheme==versionScheme and versions[0]==version:
-      
-      files=projectHelper.findFiles(folder)
+      # create the object folders in the ddl folder
       for object in objects:
-        folder=PLUGIN_DIR+os.sep+'templates'+os.sep+object
-        if projectHelper.folderPresent(folder):
-          files=projectHelper.findFiles(folder)
-          for file in files:
-            sourceFile=folder+os.sep+file
-            targetFile=ddlFolder+os.sep+object+os.sep+file
-            projectHelper.copyFile(sourceFile,targetFile)
+        os.mkdir(ddlFolder+os.sep+object)
+      
+      # create the template code on create.
+      if scheme==versionScheme and versions[0]==version:
+      
+        files=projectHelper.findFiles(folder)
+        for object in objects:
+          folder=PLUGIN_DIR+os.sep+'templates'+os.sep+object
+          if projectHelper.folderPresent(folder):
+            files=projectHelper.findFiles(folder)
+            for file in files:
+              sourceFile=folder+os.sep+file
+              targetFile=ddlFolder+os.sep+object+os.sep+file
+              projectHelper.copyFile(sourceFile,targetFile)
 
     print "version "+version+" created."
 
