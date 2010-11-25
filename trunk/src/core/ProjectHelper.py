@@ -7,8 +7,6 @@ import platform
 import subprocess
 import core.NooraException as NooraException
 
-NOORA_DIR   = os.path.abspath(os.path.dirname(sys.argv[0]))
-SCRIPT_DIR  = NOORA_DIR+os.sep+'scripts'
 # 'constant' to determine if we're on the cyswin platform
 ON_CYGWIN=platform.system().lower().find("cygwin") == -1;
 
@@ -17,6 +15,7 @@ class ProjectHelper:
   def __init__(self, configReader):
     self.__configReader=configReader
     self.setBaseDir(os.path.abspath('.'))
+    self.setNooraDir(os.path.abspath(os.path.dirname(sys.argv[0])))
 
   def setConfigReader(self,configReader):
     self.__configReader=configReader
@@ -26,6 +25,16 @@ class ProjectHelper:
 
   def getBaseDir(self):
     return self.__baseDir
+  
+  def setNooraDir(self,path):
+    self.__nooraDir=path
+    
+  def getNooraDir(self):
+    return self.__nooraDir
+  
+  def getScriptDir(self):
+    return self.getNooraDir()+os.sep+'scripts'
+  
 
   def fileNotPresent(self, url):
     if os.path.isfile(url):
@@ -49,10 +58,10 @@ class ProjectHelper:
     url=baseDir+os.sep+filename
     if os.path.isfile(url):
       return url
-    url=NOORA_DIR+os.sep+filename
+    url=self.getNooraDir()+os.sep+filename
     if os.path.isfile(url):
       return url
-    url=SCRIPT_DIR+os.sep+filename
+    url=self.GetScriptDir()+os.sep+filename
     if os.path.isfile(url):
       return url
     return None
@@ -177,11 +186,13 @@ class ProjectHelper:
 
   def isFileExcluded(self, url):
     excludedFiles=self.__configReader.getValue('EXCLUDED_FILES')
+    self.failOnNone(excludedFiles,'the variable EXCLUDED_FILES is not set.')
     for excludedFile in excludedFiles:
       if self.getFilename(url).lower()==excludedFile.lower():
         return True
 
     excludedExtensions=self.__configReader.getValue('EXCLUDED_EXTENSIONS')
+    self.failOnNone(excludedExtensions,'the variable EXCLUDED_EXTENSIONS is not set.')
     for excludedExtension in excludedExtensions:
       if self.getFileExtension(url)==excludedExtension:
         return True
