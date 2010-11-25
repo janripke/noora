@@ -2,12 +2,6 @@
 
 import core.Plugin as Plugin
 import os
-import sys
-import subprocess
-
-NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
-DROP_DIR     = NOORA_DIR+os.sep+'plugins'+os.sep+'static'+os.sep+'drop'
-SCRIPT_DIR   = NOORA_DIR+os.sep+'scripts'
 
 class DropPlugin(Plugin.Plugin):
   def __init__(self):
@@ -25,22 +19,11 @@ class DropPlugin(Plugin.Plugin):
     print "                the username and password."
 
 
-  def showErrors(self):
-    try:
-      projectHelper=self.getProjectHelper()
-      stream=projectHelper.readFile('feedback.log')
-      print stream
-    except:
-      exit(1)
-
-  def executeSqlplus(self, oracleSid, oracleUser, oraclePasswd, oracleScript):
-    projectHelper=self.getProjectHelper()
-    connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
-    templateScript=projectHelper.cleanPath('@'+SCRIPT_DIR+os.sep+'template.sql')
-    result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript])
-    if result!=0:
-      self.showErrors()
-      exit(1)
+  def getDropDir(self):
+    return self.getNooraDir()+os.sep+'plugins'+os.sep+'static'+os.sep+'drop'
+  
+  def getScriptDir(self):
+    return self.getNooraDir()+os.sep+'scripts'
 
   def execute(self, parameterHelper):
     if parameterHelper.hasParameter('-h'):
@@ -73,6 +56,8 @@ class DropPlugin(Plugin.Plugin):
     objects = configReader.getValue('DROP_OBJECTS')
     projectHelper.failOnNone(objects,'the variable DROP_OBJECTS is not set.')
 
+    connector=self.getConnector()
+
     for scheme in schemes:
       print "dropping scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"
       oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
@@ -80,12 +65,12 @@ class DropPlugin(Plugin.Plugin):
       for object in objects:
       
         # ddl objects
-        folder=DROP_DIR+os.sep+object
+        folder=self.getDropDir()+os.sep+object
         files=projectHelper.findFiles(folder)
         for file in files:
           url=folder+os.sep+file
-          print scheme+':'+url.split(NOORA_DIR)[1]
-          self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, url)
+          print scheme+':'+url.split(self.getNooraDir())[1]
+          connector.execute(oracleSid, oracleUser, oraclePasswd, url)
 
       print "scheme '"+scheme+"' dropped."
 

@@ -16,6 +16,7 @@ import core.ParameterHelper as ParameterHelper
 import core.NooraException  as NooraException
 import core.ConfigReader    as ConfigReader
 import core.ProjectHelper   as ProjectHelper
+import connectors.OracleConnectorStub as OracleConnectorStub
 
 M_LF         = chr(10)
 
@@ -36,6 +37,10 @@ class TestBase(unittest.TestCase):
   def getProjectHelper(self, configReader):
     projectHelper=ProjectHelper.ProjectHelper(configReader)
     return projectHelper
+  
+  def getOracleConnectorSub(self):
+    oracleConnectorStub=OracleConnectorStub.OracleConnectorStub()
+    return oracleConnectorStub
   
   def setPluginClass(self,pattern):
     classLoader=self.getClassLoader()
@@ -176,6 +181,8 @@ class TestBase(unittest.TestCase):
     stream = M_LF.join(lines)
     configReader.loadFromStream(stream)
     pluginClass.setConfigReader(configReader)
+    
+
     try:
       pluginClass.execute(parameterHelper)  
     except NooraException.NooraException as e:
@@ -200,7 +207,89 @@ class TestBase(unittest.TestCase):
       pluginClass.execute(parameterHelper)  
     except NooraException.NooraException as e:
       self.assertEquals(e.getMessage(),"the variable DROP_OBJECTS is not set.")
-       
+
+  def testExcludedFilesNotSetFail(self):    
+    pluginClass=self.getPluginClass()
+    parameterHelper=self.getParameterHelper()
+    parameterHelper.setParameters(['-s=orcl','-e=dev'])
+    
+    configReader=self.getConfigReader('project.conf')
+    lines=[]
+    lines.append("ORACLE_SIDS=['orcl']")
+    lines.append("SCHEMES=['apps']")
+    lines.append("DEFAULT_ENVIRONMENT=['dev']")
+    lines.append("ENVIRONMENTS=['dev']")
+    lines.append("ORACLE_USERS=[['orcl','apps','apps','apps']]")
+    lines.append("DROP_OBJECTS=['scm','usr','vw','syn','trg','typ','tab','prc','fct','pkg','jar','seq','idx','dbl']")
+    stream = M_LF.join(lines)
+    configReader.loadFromStream(stream)
+    
+    projectHelper=self.getProjectHelper(configReader)
+    projectHelper.setNooraDir(NOORA_DIR)
+    pluginClass.setConfigReader(configReader)
+    pluginClass.setProjectHelper(projectHelper)
+    pluginClass.setNooraDir(NOORA_DIR)
+    try:
+      pluginClass.execute(parameterHelper)  
+    except NooraException.NooraException as e:
+      self.assertEquals(e.getMessage(),"the variable EXCLUDED_FILES is not set.")
+      
+  def testExcludedExtensionsNotSetFail(self):    
+    pluginClass=self.getPluginClass()
+    parameterHelper=self.getParameterHelper()
+    parameterHelper.setParameters(['-s=orcl','-e=dev'])
+    
+    configReader=self.getConfigReader('project.conf')
+    lines=[]
+    lines.append("ORACLE_SIDS=['orcl']")
+    lines.append("SCHEMES=['apps']")
+    lines.append("DEFAULT_ENVIRONMENT=['dev']")
+    lines.append("ENVIRONMENTS=['dev']")
+    lines.append("ORACLE_USERS=[['orcl','apps','apps','apps']]")
+    lines.append("DROP_OBJECTS=['scm','usr','vw','syn','trg','typ','tab','prc','fct','pkg','jar','seq','idx','dbl']")
+    lines.append("EXCLUDED_FILES=['install.sql']")
+    
+    stream = M_LF.join(lines)
+    configReader.loadFromStream(stream)
+    
+    projectHelper=self.getProjectHelper(configReader)
+    projectHelper.setNooraDir(NOORA_DIR)
+    pluginClass.setConfigReader(configReader)
+    pluginClass.setProjectHelper(projectHelper)
+    pluginClass.setNooraDir(NOORA_DIR)
+    try:
+      pluginClass.execute(parameterHelper)  
+    except NooraException.NooraException as e:
+      self.assertEquals(e.getMessage(),"the variable EXCLUDED_EXTENSIONS is not set.")      
+
+  def testDropPass(self):    
+    pluginClass=self.getPluginClass()
+    parameterHelper=self.getParameterHelper()
+    parameterHelper.setParameters(['-s=orcl','-e=dev'])
+    
+    configReader=self.getConfigReader('project.conf')
+    lines=[]
+    lines.append("ORACLE_SIDS=['orcl']")
+    lines.append("SCHEMES=['apps']")
+    lines.append("DEFAULT_ENVIRONMENT=['dev']")
+    lines.append("ENVIRONMENTS=['dev']")
+    lines.append("ORACLE_USERS=[['orcl','apps','apps','apps']]")
+    lines.append("DROP_OBJECTS=['scm','usr','vw','syn','trg','typ','tab','prc','fct','pkg','jar','seq','idx','dbl']")
+    lines.append("EXCLUDED_FILES=['install.sql']")
+    lines.append("EXCLUDED_EXTENSIONS=['bak','~','pyc','log']")
+    stream = M_LF.join(lines)
+    configReader.loadFromStream(stream)
+    
+    projectHelper=self.getProjectHelper(configReader)
+    projectHelper.setNooraDir(NOORA_DIR)
+    pluginClass.setConfigReader(configReader)
+    pluginClass.setProjectHelper(projectHelper)
+    pluginClass.setNooraDir(NOORA_DIR)
+    
+    oracleConnectorStub=self.getOracleConnectorSub()
+    pluginClass.setConnector(oracleConnectorStub)
+        
+    pluginClass.execute(parameterHelper)
        
 
 if __name__=='__main__':

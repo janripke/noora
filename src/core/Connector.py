@@ -2,26 +2,18 @@
 
 import core.ProjectHelper as ProjectHelper
 import core.ConfigReader  as ConfigReader
-import connectors.OracleConnector as OracleConnector
 import os
 import sys
 
 __revision__ = "$Revision: $"
 
-class Plugin:
+class Connector:
 
   def __init__(self):
     configReader=ConfigReader.ConfigReader('project.conf')
     self.setConfigReader(configReader)
-    self.setProjectHelper(ProjectHelper.ProjectHelper(configReader))
-    self.setConnector(OracleConnector.OracleConnector())
+    self.setProjectHelper(ProjectHelper.ProjectHelper(configReader))    
     self.setNooraDir(os.path.abspath(os.path.dirname(sys.argv[0])))
-
-  def setNooraDir(self, path):
-    self.__nooraDir=path
-    
-  def getNooraDir(self):
-    return self.__nooraDir
 
   def setConfigReader(self, configReader):
     self.__configReader=configReader
@@ -35,23 +27,12 @@ class Plugin:
   def getProjectHelper(self):
     return self.__projectHelper
 
-  def setConnector(self, connector):
-    self.__connector=connector
-
-  def getConnector(self):
-    return self.__connector
-
-  def getUsage(self):
+  def setNooraDir(self, path):
+    self.__nooraDir=path
+    
+  def getNooraDir(self):
+    return self.__nooraDir
+  
+  def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript):
     pass
-
-  def setType(self, type):
-    self.__type = type
-
-  def getType(self):
-    return self.__type
-
-  def getRevision(self):
-    return self.__revision__
-
-  def execute(self, parameters):
-    pass
+    
