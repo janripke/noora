@@ -1,19 +1,21 @@
 #!/usr/bin/env python
 import wx
-import gui.TopFrame as TopFrame
 
-modules ={'TopFrame': [1, 'Main frame of the Application', u'TopFrame.py']}
+import gui.TopFrame
 
-# interesting help pages : http://zetcode.com/wxpython/
+modules = {'TopFrame': [1, 'Main frame of the Application', u'gui/TopFrame.py']}
 
-class MyApp(wx.App):
+class NooraGuiApp(wx.App):
   
   def OnInit(self):
-    frame=TopFrame.create(None)
-    #frame = wx.Frame(None, -1, "Hello from wxPython")
-    frame.Show()
-    self.SetTopWindow(frame)
+    self.main = gui.TopFrame.TopFrame(None)
+    self.main.Show()
+    self.SetTopWindow(self.main)
     return True
 
-app = MyApp(0)
-app.MainLoop()
+def main():
+    application = NooraGuiApp(0)
+    application.MainLoop()
+
+if __name__ == '__main__':
+    main()
