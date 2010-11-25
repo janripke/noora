@@ -59,7 +59,7 @@ create or replace package body app_utl as
            , data_length
            , data_precision
            , data_scale
-      from   user_tab_cols
+      from   user_tab_columns
       where table_name=upper(p_table_name)
       order by column_id;
 
@@ -109,11 +109,11 @@ create or replace package body app_utl as
     l_field      t_field;
 
     l_select         varchar2(4000);
-    l_column_name    user_tab_cols.column_name%type;
-    l_data_type      user_tab_cols.data_type%type;
-    l_data_length    user_tab_cols.data_length%type;
-    l_data_precision user_tab_cols.data_precision%type;
-    l_data_scale     user_tab_cols.data_scale%type;
+    l_column_name    user_tab_columns.column_name%type;
+    l_data_type      user_tab_columns.data_type%type;
+    l_data_length    user_tab_columns.data_length%type;
+    l_data_precision user_tab_columns.data_precision%type;
+    l_data_scale     user_tab_columns.data_scale%type;
     type t_refcur    is ref cursor;
     r_cols           t_refcur;
   
@@ -127,7 +127,7 @@ create or replace package body app_utl as
        when ''VARCHAR2'' then data_type || ''('' || data_length || '')''
        else data_type
        end type
-      from   user_tab_cols@' || p_dblink ||
+      from   user_tab_columns@' || p_dblink ||
                 ' where table_name=''' || upper(p_table_name) ||
                 ''' order by column_id';
                 
