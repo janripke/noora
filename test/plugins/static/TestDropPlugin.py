@@ -63,7 +63,7 @@ class TestBase(unittest.TestCase):
       pluginClass.execute(parameterHelper)  
     except NooraException.NooraException as e:
       self.assertEquals(e.getMessage(),"no oracle sid was given.")
-      
+            
         
   def testInvalidOracleSidFail(self):
     pluginClass=self.getPluginClass()
@@ -98,21 +98,6 @@ class TestBase(unittest.TestCase):
     except NooraException.NooraException as e:
       self.assertEquals(e.getMessage(),"dropping is blocked for the given oracle_sid.")
 
-  def testSchemesNotSetFail(self):    
-    pluginClass=self.getPluginClass()
-    parameterHelper=self.getParameterHelper()
-    parameterHelper.setParameters(['-s=orcl'])
-    configReader=self.getConfigReader('project.conf')
-    lines=[]
-    lines.append("ORACLE_SIDS=['orcl']")
-    stream = M_LF.join(lines)
- 
-    configReader.loadFromStream(stream)
-    pluginClass.setConfigReader(configReader)
-    try:
-      pluginClass.execute(parameterHelper)  
-    except NooraException.NooraException as e:
-      self.assertEquals(e.getMessage(),"the variable SCHEMES is not set.")
 
   def testInvalidSchemeFail(self):    
     pluginClass=self.getPluginClass()
@@ -131,22 +116,6 @@ class TestBase(unittest.TestCase):
     except NooraException.NooraException as e:
       self.assertEquals(e.getMessage(),"the given scheme is not valid for this project.")
 
-  def testDefaultEnvironmentNotSetFail(self):    
-    pluginClass=self.getPluginClass()
-    parameterHelper=self.getParameterHelper()
-    parameterHelper.setParameters(['-s=orcl'])
-    
-    configReader=self.getConfigReader('project.conf')
-    lines=[]
-    lines.append("ORACLE_SIDS=['orcl']")
-    lines.append("SCHEMES=['apps']")
-    stream = M_LF.join(lines)
-    configReader.loadFromStream(stream)
-    pluginClass.setConfigReader(configReader)
-    try:
-      pluginClass.execute(parameterHelper)  
-    except NooraException.NooraException as e:
-      self.assertEquals(e.getMessage(),"the variable DEFAULT_ENVIRONMENT is not set.")
  
   def testInvalidEnvironmentFail(self):    
     pluginClass=self.getPluginClass()
@@ -166,101 +135,7 @@ class TestBase(unittest.TestCase):
       pluginClass.execute(parameterHelper)  
     except NooraException.NooraException as e:
       self.assertEquals(e.getMessage(),"the given environment is not valid for this project.")
- 
-  def testOracleUsersNotSetFail(self):    
-    pluginClass=self.getPluginClass()
-    parameterHelper=self.getParameterHelper()
-    parameterHelper.setParameters(['-s=orcl','-e=dev'])
-    
-    configReader=self.getConfigReader('project.conf')
-    lines=[]
-    lines.append("ORACLE_SIDS=['orcl']")
-    lines.append("SCHEMES=['apps']")
-    lines.append("DEFAULT_ENVIRONMENT=['dev']")
-    lines.append("ENVIRONMENTS=['dev']")
-    stream = M_LF.join(lines)
-    configReader.loadFromStream(stream)
-    pluginClass.setConfigReader(configReader)
-    
-
-    try:
-      pluginClass.execute(parameterHelper)  
-    except NooraException.NooraException as e:
-      self.assertEquals(e.getMessage(),"the variable ORACLE_USERS is not set.")
-
-  def testDropObjectsNotSetFail(self):    
-    pluginClass=self.getPluginClass()
-    parameterHelper=self.getParameterHelper()
-    parameterHelper.setParameters(['-s=orcl','-e=dev'])
-    
-    configReader=self.getConfigReader('project.conf')
-    lines=[]
-    lines.append("ORACLE_SIDS=['orcl']")
-    lines.append("SCHEMES=['apps']")
-    lines.append("DEFAULT_ENVIRONMENT=['dev']")
-    lines.append("ENVIRONMENTS=['dev']")
-    lines.append("ORACLE_USERS=[['orcl','apps','apps','apps']]")
-    stream = M_LF.join(lines)
-    configReader.loadFromStream(stream)
-    pluginClass.setConfigReader(configReader)
-    try:
-      pluginClass.execute(parameterHelper)  
-    except NooraException.NooraException as e:
-      self.assertEquals(e.getMessage(),"the variable DROP_OBJECTS is not set.")
-
-  def testExcludedFilesNotSetFail(self):    
-    pluginClass=self.getPluginClass()
-    parameterHelper=self.getParameterHelper()
-    parameterHelper.setParameters(['-s=orcl','-e=dev'])
-    
-    configReader=self.getConfigReader('project.conf')
-    lines=[]
-    lines.append("ORACLE_SIDS=['orcl']")
-    lines.append("SCHEMES=['apps']")
-    lines.append("DEFAULT_ENVIRONMENT=['dev']")
-    lines.append("ENVIRONMENTS=['dev']")
-    lines.append("ORACLE_USERS=[['orcl','apps','apps','apps']]")
-    lines.append("DROP_OBJECTS=['scm','usr','vw','syn','trg','typ','tab','prc','fct','pkg','jar','seq','idx','dbl']")
-    stream = M_LF.join(lines)
-    configReader.loadFromStream(stream)
-    
-    projectHelper=self.getProjectHelper(configReader)
-    projectHelper.setNooraDir(NOORA_DIR)
-    pluginClass.setConfigReader(configReader)
-    pluginClass.setProjectHelper(projectHelper)
-    pluginClass.setNooraDir(NOORA_DIR)
-    try:
-      pluginClass.execute(parameterHelper)  
-    except NooraException.NooraException as e:
-      self.assertEquals(e.getMessage(),"the variable EXCLUDED_FILES is not set.")
-      
-  def testExcludedExtensionsNotSetFail(self):    
-    pluginClass=self.getPluginClass()
-    parameterHelper=self.getParameterHelper()
-    parameterHelper.setParameters(['-s=orcl','-e=dev'])
-    
-    configReader=self.getConfigReader('project.conf')
-    lines=[]
-    lines.append("ORACLE_SIDS=['orcl']")
-    lines.append("SCHEMES=['apps']")
-    lines.append("DEFAULT_ENVIRONMENT=['dev']")
-    lines.append("ENVIRONMENTS=['dev']")
-    lines.append("ORACLE_USERS=[['orcl','apps','apps','apps']]")
-    lines.append("DROP_OBJECTS=['scm','usr','vw','syn','trg','typ','tab','prc','fct','pkg','jar','seq','idx','dbl']")
-    lines.append("EXCLUDED_FILES=['install.sql']")
-    
-    stream = M_LF.join(lines)
-    configReader.loadFromStream(stream)
-    
-    projectHelper=self.getProjectHelper(configReader)
-    projectHelper.setNooraDir(NOORA_DIR)
-    pluginClass.setConfigReader(configReader)
-    pluginClass.setProjectHelper(projectHelper)
-    pluginClass.setNooraDir(NOORA_DIR)
-    try:
-      pluginClass.execute(parameterHelper)  
-    except NooraException.NooraException as e:
-      self.assertEquals(e.getMessage(),"the variable EXCLUDED_EXTENSIONS is not set.")      
+  
 
   def testDropPass(self):    
     pluginClass=self.getPluginClass()
