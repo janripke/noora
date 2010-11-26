@@ -21,9 +21,6 @@ class DropPlugin(Plugin.Plugin):
 
   def getDropDir(self):
     return self.getNooraDir()+os.sep+'plugins'+os.sep+'static'+os.sep+'drop'
-  
-  def getScriptDir(self):
-    return self.getNooraDir()+os.sep+'scripts'
 
   def execute(self, parameterHelper):
     if parameterHelper.hasParameter('-h'):
@@ -70,7 +67,7 @@ class DropPlugin(Plugin.Plugin):
         for file in files:
           url=folder+os.sep+file
           print scheme+':'+url.split(self.getNooraDir())[1]
-          connector.execute(oracleSid, oracleUser, oraclePasswd, url)
+          connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','')
 
       print "scheme '"+scheme+"' dropped."
 

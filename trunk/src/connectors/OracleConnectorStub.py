@@ -21,7 +21,7 @@ class OracleConnectorStub(Connector.Connector):
     except:
       exit(1)
 
-  def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript):
+  def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB):
     pass
 
 

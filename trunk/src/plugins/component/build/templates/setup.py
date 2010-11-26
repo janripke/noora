@@ -5,12 +5,12 @@ import subprocess
 
 
 import ComponentHelper   as ComponentHelper
-import ConfigReader    as ConfigReader
-import ParameterHelper as ParameterHelper
-import NooraException  as NooraException
+import ConfigReader      as ConfigReader
+import ParameterHelper   as ParameterHelper
+import NooraException    as NooraException
 
 OBJECTS        = ['usr','dbl','dir','scm','seq','syn','tab','cst','fct','prc','pkg','jar','vw','trg','idx','gra']
-BASE_DIR      = os.path.abspath(os.path.dirname(sys.argv[0]))
+BASE_DIR       = os.path.abspath(os.path.dirname(sys.argv[0]))
 
 def getUsage():
   print "NoOra database installer, setup.py"

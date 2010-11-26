@@ -16,12 +16,25 @@ class Plugin:
     self.setProjectHelper(ProjectHelper.ProjectHelper(configReader))
     self.setConnector(OracleConnector.OracleConnector())
     self.setNooraDir(os.path.abspath(os.path.dirname(sys.argv[0])))
+    self.setBaseDir(os.path.abspath('.'))
 
   def setNooraDir(self, path):
     self.__nooraDir=path
     
   def getNooraDir(self):
     return self.__nooraDir
+  
+  def setBaseDir(self, path):
+    self.__baseDir=path
+    
+  def getBaseDir(self):
+    return self.__baseDir
+  
+  def getScriptDir(self):
+    return self.getNooraDir()+os.sep+'scripts'
+  
+  def getAlterDir(self):
+    return self.getBaseDir()+os.sep+'alter'
 
   def setConfigReader(self, configReader):
     self.__configReader=configReader

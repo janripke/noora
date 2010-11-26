@@ -3,20 +3,18 @@
 import core.Plugin as Plugin
 import core.VersionHelper as VersionHelper
 import os
-import sys
 import zipfile
 
 M_LF         = chr(10)
 M_QUOTE      = chr(39)
 
-NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
-BASE_DIR     = os.path.abspath('.')
-PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'+os.sep+'component'+os.sep+'build'
-
 class BuildPlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setType("BUILD")
+
+  def getPluginDir(self):
+    return self.getNooraDir()+os.sep+'plugins'+os.sep+'component'+os.sep+'build'
 
   def getUsage(self):
     print "NoOra database installer, build.py"
@@ -66,7 +64,7 @@ class BuildPlugin(Plugin.Plugin):
 
     componentTargetFolder=configReader.getValue('COMPONENT_TARGET_FOLDER')
     projectHelper.failOnNone(componentTargetFolder,'the variable COMPONENT_TARGET_FOLDER is not set.')
-    targetFolder = BASE_DIR + os.sep + componentTargetFolder
+    targetFolder = self.getBaseDir() + os.sep + componentTargetFolder
 
     componentExcludedFiles=configReader.getValue('COMPONENT_EXCLUDED_FILES')
     projectHelper.failOnNone(componentExcludedFiles,'the variable COMPONENT_EXCLUDED_FILES is not set.')
@@ -147,7 +145,7 @@ class BuildPlugin(Plugin.Plugin):
     
 
     # add template files
-    folder=PLUGIN_DIR+os.sep+'templates'
+    folder=self.getPluginDir()+os.sep+'templates'
     zipFolder=componentName+'_'+version+os.sep
     if projectHelper.folderPresent(folder):
       files=projectHelper.findFiles(folder)
