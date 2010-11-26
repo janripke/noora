@@ -17,6 +17,8 @@ class Project:
     '''
     
     def _init_controls(self, parent):
+        
+        self.__parent = parent
                
         # not all wx implementations (e.g. wxGTK) will support children _inside_ the static box so
         # we make them siblings of the static box instead.
