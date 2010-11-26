@@ -11,6 +11,7 @@ import NooraException    as NooraException
 
 OBJECTS        = ['usr','dbl','dir','scm','seq','syn','tab','cst','fct','prc','pkg','jar','vw','trg','idx','gra']
 BASE_DIR       = os.path.abspath(os.path.dirname(sys.argv[0]))
+SILENTMODE     = False
 
 def getUsage():
   print "NoOra database installer, setup.py"
@@ -59,6 +60,9 @@ if __name__ == "__main__":
     if parameterHelper.hasParameter('-h'):
       getUsage()
       exit(1)
+      
+    if parameterHelper.hasParameter('-silent'):
+      SILENTMODE=True      
 
     componentHelper=ComponentHelper.ComponentHelper()
     configReader=ConfigReader.ConfigReader(BASE_DIR+os.sep+'component.conf')
@@ -91,7 +95,8 @@ if __name__ == "__main__":
     previousVersion=getPreviousVersion(componentVersions,componentVersion)
     checkVersion(componentHelper,oracleSid,oracleUser,oraclePasswd,previousVersion,componentSelectStatement)
 
-    print "installing component "+componentName+'_'+componentVersion
+    if SILENTMODE==False:
+      print "installing component "+componentName+'_'+componentVersion
 
     for object in OBJECTS:
       
@@ -101,7 +106,8 @@ if __name__ == "__main__":
         files=componentHelper.findFiles(folder)
         for file in files:
           url=folder+os.sep+file
-          print url.split(BASE_DIR)[1]
+          if SILENTMODE==False:
+            print url.split(BASE_DIR)[1]
           executeSqlplus(componentHelper, oracleSid, oracleUser, oraclePasswd, url, "", "")  
 
     # global dat files
@@ -110,11 +116,12 @@ if __name__ == "__main__":
       files=componentHelper.findFiles(folder)
       for file in files:
         url=folder+os.sep+file
-        print url.split(BASE_DIR)[1]
+        if SILENTMODE==False:
+          print url.split(BASE_DIR)[1]
         executeSqlplus(componentHelper, oracleSid, oracleUser, oraclePasswd, url, "", "")  
 
-
-    print "component "+componentName+'_'+componentVersion+" created."
+    if SILENTMODE==False:
+      print "component "+componentName+'_'+componentVersion+" created."
 
   except NooraException.NooraException as e:
     print e.getMessage()
