@@ -11,7 +11,10 @@ class ParameterHelper:
   def setParameters(self,parameters):
     for param in parameters:
       self.__parameters.append(param)
-
+      
+  def clearParameters(self):
+      self.__parameters=[]
+      
   def getParameters(self):
     return self.__parameters
 
