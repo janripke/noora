@@ -3,15 +3,12 @@
 import gui.Action
 import gui.Project
 import wx
-import wx.lib.filebrowsebutton
 import wx.stc
 
 
-[wxID_TOPFRAME, wxID_TOPFRAMEACTIONGROUP, wxID_TOPFRAMECHOICE1, 
- wxID_TOPFRAMECOMMAND, wxID_TOPFRAMEOUTPUTPANEL, wxID_TOPFRAMEPROJECTDIR, 
- wxID_TOPFRAMEPROJECTGROUP, wxID_TOPFRAMEPROJECTHOMELABEL, 
+[wxID_TOPFRAME, wxID_TOPFRAMEOUTPUTPANEL, 
  wxID_TOPFRAMESTYLEDTEXTCTRL1, 
-] = [wx.NewId() for _init_ctrls in range(9)]
+] = [wx.NewId() for _init_ctrls in range(3)]
 
 class TopFrame(wx.Frame):
     def _init_ctrls(self, prnt):
