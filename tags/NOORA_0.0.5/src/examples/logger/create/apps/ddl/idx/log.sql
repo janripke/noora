@@ -1,0 +1,1 @@
+create index LOG_LOGTYPE_CODE_IDX on LOG (LOGTYPE_CODE);
