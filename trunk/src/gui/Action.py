@@ -1,4 +1,3 @@
-
 import gui.LabelText
 import wx;
 
