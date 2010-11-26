@@ -4,11 +4,6 @@ import core.Plugin as Plugin
 import core.VersionHelper as VersionHelper
 import core.ConfigReader  as ConfigReader
 import os
-import sys
-
-
-NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
-PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'+os.sep+'static'+os.sep+'generate'
 
 
 class GeneratePlugin(Plugin.Plugin):
@@ -16,12 +11,10 @@ class GeneratePlugin(Plugin.Plugin):
     Plugin.Plugin.__init__(self)
     self.setType("GENERATE")
     self.setBaseDir(os.path.abspath('.'))
-    
-  def setBaseDir(self, path):
-    self.__baseDir=path   
-
-  def getBaseDir(self):
-    return self.__baseDir
+  
+  def getPluginDir(self):
+    return self.getNooraDir()+os.sep+'plugins'+os.sep+'dynamic'+os.sep+'generate'
+  
 
   def getUsage(self):  
     print "NoOra database installer, GeneratePlugin"
@@ -32,14 +25,7 @@ class GeneratePlugin(Plugin.Plugin):
     print "-u= --username=   not required, contains the username."
     print "-p= --password=   not required, contains the password."
     print "-v= --version=    required, contains the version to create."
-
-  def showErrors(self):
-    try:
-      projectHelper=self.getProjectHelper()
-      stream=projectHelper.readFile('feedback.log')
-      print stream
-    except:
-      exit(1)
+    
 
   def getSqlVersionStatement(self, versions, version):
     configReader=self.getConfigReader()
@@ -100,7 +86,7 @@ class GeneratePlugin(Plugin.Plugin):
       
       # create the project.conf file
       filename='project.conf'
-      folder=PLUGIN_DIR+os.sep+'templates'
+      folder=self.getPluginDir()+os.sep+'templates'
       sourceFile=folder+os.sep+filename
       targetFile=projectFolder+os.sep+filename
       projectHelper.copyFile(sourceFile,targetFile)
@@ -212,7 +198,7 @@ class GeneratePlugin(Plugin.Plugin):
       
         files=projectHelper.findFiles(folder)
         for object in objects:
-          folder=PLUGIN_DIR+os.sep+'templates'+os.sep+object
+          folder=self.getPluginDir()+os.sep+'templates'+os.sep+object
           if projectHelper.folderPresent(folder):
             files=projectHelper.findFiles(folder)
             for file in files:

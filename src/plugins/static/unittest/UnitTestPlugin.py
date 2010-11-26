@@ -2,14 +2,7 @@
 
 import core.Plugin as Plugin
 import os
-import sys
-import subprocess
 
-
-NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
-BASE_DIR     = os.path.abspath('.')
-PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'+os.sep+'static'+os.sep+'unittest'
-SCRIPT_DIR   = NOORA_DIR+os.sep+'scripts'
 
 class UnitTestPlugin(Plugin.Plugin):
   def __init__(self):
@@ -31,27 +24,10 @@ class UnitTestPlugin(Plugin.Plugin):
     print "               the username and password."
 
 
-  def showErrors(self):
-    try:
-      projectHelper=self.getProjectHelper()
-      stream=projectHelper.readFile('feedback.log')
-      print stream
-    except:
-      exit(1)
-
-  def executeSqlplus(self, oracleSid, oracleUser, oraclePasswd, oracleScript):
-    projectHelper=self.getProjectHelper()
-    os.chdir(os.path.dirname(oracleScript))
-    connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
-    templateScript=projectHelper.cleanPath('@'+SCRIPT_DIR+os.sep+'template.sql')
-    result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript])
-    if result!=0:
-      self.showErrors()
-      exit(1)
-
   def unittest(self, oracleSid, oracleUser, oraclePasswd):
-    oracleScript=SCRIPT_DIR+os.sep+'unittest.sql'
-    self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, oracleScript)
+    connector=self.getConnector()
+    oracleScript=self.getScriptDir()+os.sep+'unittest.sql'
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
 
 
   def execute(self, parameterHelper):

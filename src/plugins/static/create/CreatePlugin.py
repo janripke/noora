@@ -2,21 +2,12 @@
 
 import core.Plugin as Plugin
 import os
-import sys
-import subprocess
-
-NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
-BASE_DIR     = os.path.abspath('.')
-PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'+os.sep+'static'+os.sep+'create'
-SCRIPT_DIR   = NOORA_DIR+os.sep+'scripts'
-CREATE_DIR   = BASE_DIR+os.sep+'create'
 
 
 class CreatePlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setType("CREATE")
-
 
   def getUsage(self):  
     print "NoOra database installer, create.py"
@@ -28,28 +19,15 @@ class CreatePlugin(Plugin.Plugin):
     print "               the username and password."
     print "-nocompile     not required, disable the compilation of "
     print "               packages, triggers and views."
+    
 
-  def showErrors(self):
-    try:
-      projectHelper=self.getProjectHelper()
-      stream=projectHelper.readFile('feedback.log')
-      print stream
-    except:
-      exit(1)
-
-  def executeSqlplus(self, oracleSid, oracleUser, oraclePasswd, oracleScript):
-    projectHelper=self.getProjectHelper()
-    os.chdir(os.path.dirname(oracleScript))
-    connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
-    templateScript=projectHelper.cleanPath('@'+SCRIPT_DIR+os.sep+'template.sql')
-    result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript])
-    if result!=0:
-      self.showErrors()
-      exit(1)
+  def getCreateDir(self):
+    return self.getBaseDir()+os.sep+'create'
 
   def recompile(self, oracleSid, oracleUser, oraclePasswd):
-    oracleScript=SCRIPT_DIR+os.sep+'recompile.sql'
-    self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, oracleScript)
+    connector=self.getConnector()
+    oracleScript=self.getScriptDir()+os.sep+'recompile.sql'
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
 
 
   def execute(self, parameterHelper):
@@ -81,7 +59,7 @@ class CreatePlugin(Plugin.Plugin):
       oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
       oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
 
-      url=CREATE_DIR+os.sep+scheme+os.sep+'install_scheme_'+environment+'.sql'
+      url=self.getCreateDir()+os.sep+scheme+os.sep+'install_scheme_'+environment+'.sql'
       projectHelper.failOnFileNotPresent(url,scheme+os.sep+'install_scheme_'+environment+'.sql not found, try to build this scheme.')
       self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, url)
     

@@ -5,10 +5,6 @@ import core.VersionHelper as VersionHelper
 import os
 
 
-
-BASE_DIR     = os.path.abspath('.')
-
-
 class PreparePlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
@@ -24,14 +20,6 @@ class PreparePlugin(Plugin.Plugin):
     print "-v= --version= required, contains the version to create."
     print "-u= --scheme= --user=  not required, contains the scheme to create. "
 
-
-  def showErrors(self):
-    try:
-      projectHelper=self.getProjectHelper()
-      stream=projectHelper.readFile('feedback.log')
-      print stream
-    except:
-      exit(1)
 
   def getSqlVersionStatement(self, versions, version):
     configReader=self.getConfigReader()
@@ -135,7 +123,7 @@ class PreparePlugin(Plugin.Plugin):
 
     # update or create the VERSION variable
     configReader.setValue('VERSIONS', versions)
-    url=BASE_DIR+os.sep+'project.conf'
+    url=self.getBaseDir()+os.sep+'project.conf'
     configReader.saveToFile(url)
 
     print "version "+version+" created."

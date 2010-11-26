@@ -21,11 +21,11 @@ class OracleConnector(Connector.Connector):
     except:
       exit(1)
 
-  def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript):
+  def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB):
     projectHelper=self.getProjectHelper()
     connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
     templateScript=projectHelper.cleanPath('@'+self.getScriptDir()+os.sep+'template.sql')
-    result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript])
+    result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB])
     if result!=0:
       self.showErrors()
       exit(1)

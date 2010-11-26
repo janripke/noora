@@ -2,14 +2,6 @@
 
 import core.Plugin as Plugin
 import os
-import sys
-import subprocess
-
-NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
-BASE_DIR     = os.path.abspath('.')
-ALTER_DIR    = BASE_DIR+os.sep+'alter'
-PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'+os.sep+'static'+os.sep+'update'
-SCRIPT_DIR   = NOORA_DIR+os.sep+'scripts'
 
 
 class UpdatePlugin(Plugin.Plugin):
@@ -31,13 +23,8 @@ class UpdatePlugin(Plugin.Plugin):
     print "-nocompile     not required, disable the compilation of "
     print "               packages, triggers and views."
 
-  def showErrors(self):
-    try:
-      projectHelper=self.getProjectHelper()
-      stream=projectHelper.readFile('feedback.log')
-      print stream
-    except:
-      exit(1)
+  def getPluginDir(self):
+    return self.getNooraDir()+os.sep+'plugins'+os.sep+'static'+os.sep+'update'
 
   def getPreviousVersion(self, version):
     configReader=self.getConfigReader()
@@ -50,29 +37,22 @@ class UpdatePlugin(Plugin.Plugin):
     return None
 
 
-  def executeSqlplus(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB):
-    projectHelper=self.getProjectHelper()      
-    os.chdir(os.path.dirname(oracleScript))
-    connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
-    templateScript=projectHelper.cleanPath('@'+SCRIPT_DIR+os.sep+'template.sql')
-    result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB])
-    if result!=0:
-      self.showErrors()
-      exit(1)
-
-
   def checkVersion(self, oracleSid,oracleUser,oraclePasswd,previousVersion, versionSelectStatement):
-    oracleScript=PLUGIN_DIR+os.sep+'checkversion.sql'
-    self.executeSqlplus(oracleSid,oracleUser,oraclePasswd, oracleScript,previousVersion,versionSelectStatement)
+    connector=self.getConnector()
+    oracleScript=self.getPluginDir()+os.sep+'checkversion.sql'
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,previousVersion,versionSelectStatement)
+
 
   def checkEnvironment(self, oracleSid,oracleUser,oraclePasswd, environment, environmentSelectStatement):
-    oracleScript=PLUGIN_DIR+os.sep+'checkenvironment.sql'
-    self.executeSqlplus(oracleSid,oracleUser,oraclePasswd, oracleScript,environment,environmentSelectStatement)
+    connector=self.getConnector()
+    oracleScript=self.getPluginDir()+os.sep+'checkenvironment.sql'
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,environment,environmentSelectStatement)
  
 
   def recompile(self, oracleSid, oracleUser, oraclePasswd):
-    oracleScript=SCRIPT_DIR+os.sep+'recompile.sql'
-    self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, oracleScript,'', '')
+    connector=self.getConnector()
+    oracleScript=self.getPluginDir()+os.sep+'recompile.sql'
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'', '')
 
 
   def execute(self, parameterHelper):
@@ -103,7 +83,7 @@ class UpdatePlugin(Plugin.Plugin):
     projectHelper.failOnEmpty(version,'no version was given')
     configReader.failOnValueNotFound('VERSIONS',version,'the given version is not valid for this project.')
     version=version[0]
-    projectHelper.failOnFolderNotPresent(ALTER_DIR+os.sep+version,'the update folder for this version is not present.')
+    projectHelper.failOnFolderNotPresent(self.getAlterDir()+os.sep+version,'the update folder for this version is not present.')
 
     previousVersion=self.getPreviousVersion(version)
     projectHelper.failOnNone(previousVersion,'the previous version of this version could not be found.')
@@ -126,7 +106,7 @@ class UpdatePlugin(Plugin.Plugin):
       oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
       oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
 
-      url=ALTER_DIR+os.sep+version+os.sep+scheme+os.sep+'install_scheme_'+environment+'.sql'
+      url=self.getAlterDir()+os.sep+version+os.sep+scheme+os.sep+'install_scheme_'+environment+'.sql'
       projectHelper.failOnFileNotPresent(url,scheme+os.sep+'install_scheme_'+environment+'.sql not found, try to build this scheme.')
       self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, url,'','')
    

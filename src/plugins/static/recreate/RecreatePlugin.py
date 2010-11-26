@@ -2,14 +2,7 @@
 
 import core.Plugin as Plugin
 import os
-import sys
 import subprocess
-
-NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
-BASE_DIR     = os.path.abspath('.')
-CREATE_DIR   = BASE_DIR+os.sep+'create'
-PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'+os.sep+'static'+os.sep+'recreate'
-SCRIPT_DIR   = NOORA_DIR+os.sep+'scripts'
 
 
 class RecreatePlugin(Plugin.Plugin):
@@ -32,45 +25,26 @@ class RecreatePlugin(Plugin.Plugin):
     print "-test          not required, executes the defined unit tests after recreation."
 
 
-
-  def showErrors(self):
-    try:
-      projectHelper=self.getProjectHelper()
-      stream=projectHelper.readFile('feedback.log')
-      print stream
-    except:
-      exit(1)
-
   def getMaxVersion(self,versions):
     return versions[len(versions)-1]
 
-  def executeSqlplus(self, oracleSid, oracleUser, oraclePasswd, oracleScript):
-    projectHelper=self.getProjectHelper()
-    os.chdir(os.path.dirname(oracleScript))
-    connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
-    templateScript=projectHelper.cleanPath('@'+SCRIPT_DIR+os.sep+'template.sql')
-    result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript])
-    if result!=0:
-      self.showErrors()
-      exit(1)
-
   def dropDatabase(self, oracleSid, scheme, environment):
     if len(scheme)==0:
-      result=subprocess.call(['python',NOORA_DIR+os.sep+'noora.py','drop','--sid='+oracleSid,'--env='+environment])
+      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--env='+environment])
       if result!=0:
         exit(1)    
     else:
-      result=subprocess.call(['python',NOORA_DIR+os.sep+'noora.py','drop','--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment])
+      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment])
       if result!=0:
         exit(1)
 
   def createDatabase(self, oracleSid, scheme, environment):
     if len(scheme)==0:
-      result=subprocess.call(['python',NOORA_DIR+os.sep+'noora.py', 'create','--sid='+oracleSid,'--env='+environment,'-nocompile'])
+      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py', 'create','--sid='+oracleSid,'--env='+environment,'-nocompile'])
       if result!=0:
         exit(1)
     else:      
-      result=subprocess.call(['python',NOORA_DIR+os.sep+'noora.py','create', '--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment,'-nocompile'])
+      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','create', '--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment,'-nocompile'])
       if result!=0:
         exit(1)
 
@@ -79,11 +53,11 @@ class RecreatePlugin(Plugin.Plugin):
     for version in versions:
       if version!=versions[0]:
         if len(scheme)==0:
-          result=subprocess.call(['python',NOORA_DIR+os.sep+'noora.py','update','-v='+version,'--sid='+oracleSid,'--env='+environment,'-nocompile'])        
+          result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','update','-v='+version,'--sid='+oracleSid,'--env='+environment,'-nocompile'])        
           if result!=0:
             exit(1)
         else:
-          result=subprocess.call(['python',NOORA_DIR+os.sep+'noora.py','update','-v='+version,'--sid='+oracleSid,'--scheme='+scheme,'--env='+environment,'-nocompile'])
+          result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','update','-v='+version,'--sid='+oracleSid,'--scheme='+scheme,'--env='+environment,'-nocompile'])
           if result!=0:
             exit(1)
         if version==maxVersion:
@@ -91,13 +65,15 @@ class RecreatePlugin(Plugin.Plugin):
 
 
   def recompile(self, oracleSid, oracleUser, oraclePasswd):
-    oracleScript=SCRIPT_DIR+os.sep+'recompile.sql'
-    self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, oracleScript)
+    connector=self.getConnector()
+    oracleScript=self.getScriptDir()+os.sep+'recompile.sql'
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
+
 
   def unittest(self, oracleSid, oracleUser, oraclePasswd):
-    oracleScript=SCRIPT_DIR+os.sep+'unittest.sql'
-    self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, oracleScript)
-
+    connector=self.getConnector()
+    oracleScript=self.getScriptDir()+os.sep+'unittest.sql'
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
 
 
   def execute(self, parameterHelper):

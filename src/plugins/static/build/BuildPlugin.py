@@ -5,7 +5,7 @@ import core.StreamHelper  as StreamHelper
 import os
 
 M_LF=chr(10)
-BASE_DIR    = os.path.abspath('.')
+
 
 class BuildPlugin(Plugin.Plugin):
   def __init__(self):
@@ -47,19 +47,19 @@ class BuildPlugin(Plugin.Plugin):
     lines=stream.split(M_LF)
     for file in files:
       if self.hasItem(lines,'@@'+file)==False:
-        print "adding "+folder.split(BASE_DIR)[1]+os.sep+file
-      lines=self.appendNotPresent(lines,'prompt '+folder.split(BASE_DIR)[1]+os.sep+file)
+        print "adding "+folder.split(self.getBaseDir())[1]+os.sep+file
+      lines=self.appendNotPresent(lines,'prompt '+folder.split(self.getBaseDir())[1]+os.sep+file)
       lines=self.appendNotPresent(lines,'@@'+file)
 
     synchronized_lines=list(lines)
     for line in lines:
 
       if line.startswith('prompt '):
-        if self.hasItem(files,line.replace('prompt '+folder.split(BASE_DIR)[1]+os.sep,''))==False:
+        if self.hasItem(files,line.replace('prompt '+folder.split(self.getBaseDir())[1]+os.sep,''))==False:
           synchronized_lines.remove(line)
       if line.startswith('@@'):        
         if self.hasItem(files,line.replace('@@',''))==False:
-          print "removing "+folder.split(BASE_DIR)[1]+os.sep+line
+          print "removing "+folder.split(self.getBaseDir())[1]+os.sep+line
           synchronized_lines.remove(line)
               
     stream = M_LF.join(synchronized_lines)              
