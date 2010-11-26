@@ -38,7 +38,7 @@ class UpdatePlugin(Plugin.Plugin):
 
 
   def installComponent(self, url, oracleSid, oracleUser, oraclePasswd):
-    result=subprocess.call(['python',url+os.sep+'setup.py','-s='+oracleSid,'-u='+oracleUser,'-p='+oraclePasswd])
+    result=subprocess.call(['python',url+os.sep+'setup.py','-s='+oracleSid,'-u='+oracleUser,'-p='+oraclePasswd,'-silent'])
     if result!=0:
       exit(1)
 
