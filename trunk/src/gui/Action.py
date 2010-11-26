@@ -31,16 +31,7 @@ class Action:
                                  id=wxID_COMMANDCHOICE, name='command_choice', parent=parent,
                                  pos=wx.Point(88, 152), size=wx.Size(130, 21),
                                  style=0)
-        
-        #self.databaseLabel = wx.StaticText(id=wxID_DATABASELABEL, label='database',
-        #                                   name='database_label', parent=parent, 
-        #                                   pos=wx.Point(20, 180),
-        #      size=wx.Size(48, 13), style=0)
-
-        #self.databaseText = wx.TextCtrl(id=wxID_DATABASETEXT,
-        #      name='database_text', parent=parent, pos=wx.Point(88, 176),
-        #      size=wx.Size(100, 21), style=0, value='textCtrl1')
-        
+                
         self.database = gui.LabelText.LabelText(parent=parent,pos=wx.Point(20,176),
                                                 labelWidth=64, textWidth=100, name='database', value='')
         self.environment = gui.LabelText.LabelText(parent=parent,pos=wx.Point(20,200),
