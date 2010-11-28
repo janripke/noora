@@ -16,7 +16,7 @@ class Project:
     that you want to use
     '''
     
-    def _init_controls(self, parent):
+    def __init_controls(self, parent):
         
         self.__parent = parent
                
@@ -48,8 +48,7 @@ class Project:
         self.projectDir.SetValue('')
         self.projectDir.SetName('projectDir')
         self.projectDir.SetToolTipString('choose project directory')
-
+        self.projectDir.Bind(WX_EVTBUTTON,)
 
     def __init__(self, parent):
-        self._init_controls(parent)
-
+        self.__init_controls(parent)

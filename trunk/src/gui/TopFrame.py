@@ -11,7 +11,8 @@ import wx.stc
 ] = [wx.NewId() for _init_ctrls in range(3)]
 
 class TopFrame(wx.Frame):
-    def _init_ctrls(self, prnt):
+    
+    def __init_ctrls(self, prnt):
 
         wx.Frame.__init__(self, id=wxID_TOPFRAME, name='wxTopFrame', parent=prnt,
               pos=wx.DefaultPosition, size=wx.Size(884, 542),
@@ -28,10 +29,6 @@ class TopFrame(wx.Frame):
         self.styledTextCtrl1 = wx.stc.StyledTextCtrl(id=wxID_TOPFRAMESTYLEDTEXTCTRL1,
               name='styledTextCtrl1', parent=self, pos=wx.Point(368, 32),
               size=wx.Size(296, 440), style=0)
-
-
-
-
-
+        
     def __init__(self, parent):
-        self._init_ctrls(parent)
+        self.__init_ctrls(parent)
