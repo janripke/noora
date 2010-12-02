@@ -25,7 +25,7 @@ class OracleConnector(Connector.Connector):
     projectHelper=self.getProjectHelper()
     connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
     templateScript=projectHelper.cleanPath('@'+self.getScriptDir()+os.sep+'template.sql')
-    result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB])
+    result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB],shell=False)    
     if result!=0:
       self.showErrors()
       exit(1)

@@ -32,21 +32,21 @@ class RecreatePlugin(Plugin.Plugin):
 
   def dropDatabase(self, oracleSid, scheme, environment):
     if len(scheme)==0:
-      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--env='+environment])
+      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--env='+environment],shell=False)
       if result!=0:
         exit(1)    
     else:
-      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment])
+      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment],shell=False)
       if result!=0:
         exit(1)
 
   def createDatabase(self, oracleSid, scheme, environment):
     if len(scheme)==0:
-      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py', 'create','--sid='+oracleSid,'--env='+environment,'-nocompile'])
+      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py', 'create','--sid='+oracleSid,'--env='+environment,'-nocompile'],shell=False)
       if result!=0:
         exit(1)
     else:      
-      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','create', '--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment,'-nocompile'])
+      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','create', '--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment,'-nocompile'],shell=False)
       if result!=0:
         exit(1)
 
@@ -55,11 +55,11 @@ class RecreatePlugin(Plugin.Plugin):
     for version in versions:
       if version!=versions[0]:
         if len(scheme)==0:
-          result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','update','-v='+version,'--sid='+oracleSid,'--env='+environment,'-nocompile'])        
+          result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','update','-v='+version,'--sid='+oracleSid,'--env='+environment,'-nocompile'],shell=False)        
           if result!=0:
             exit(1)
         else:
-          result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','update','-v='+version,'--sid='+oracleSid,'--scheme='+scheme,'--env='+environment,'-nocompile'])
+          result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','update','-v='+version,'--sid='+oracleSid,'--scheme='+scheme,'--env='+environment,'-nocompile'],shell=False)
           if result!=0:
             exit(1)
         if version==maxVersion:

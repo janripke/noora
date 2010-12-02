@@ -30,11 +30,11 @@ class RecreatePlugin(Plugin.Plugin):
 
   def dropDatabase(self, oracleSid, scheme, environment):
     if len(scheme)==0:
-      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--env='+environment])
+      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--env='+environment],shell=False)
       if result!=0:
         exit(1)    
     else:
-      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment])
+      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment],shell=False)
       if result!=0:
         exit(1)
 
