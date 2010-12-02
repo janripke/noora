@@ -33,7 +33,7 @@ class Action:
 
         self.commandChoice = wx.Choice(choices=['drop', 'clean', 'build', 'create', 'generate', 'recreate', 'update'],
                                  id=wxID_COMMANDCHOICE, name='command_choice', parent=parent,
-                                 pos=wx.Point(88, 152), size=wx.Size(130, 21),
+                                 pos=wx.Point(88, 152), size=wx.Size(130, 25),
                                  style=0)
 
         self.database = gui.LabelText.LabelText(parent=parent, pos=wx.Point(20, 176),

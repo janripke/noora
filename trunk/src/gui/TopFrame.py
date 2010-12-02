@@ -24,7 +24,7 @@ class TopFrame(wx.Frame):
 
         self.OutputPanel = wx.StaticBox(id=wxID_TOPFRAMEOUTPUTPANEL,
               label='Output', name='OutputPanel', parent=self, pos=wx.Point(344,
-              8), size=wx.Size(416, 480), style=0)
+              16), size=wx.Size(416, 480), style=0)
 
         self.styledTextCtrl1 = wx.stc.StyledTextCtrl(id=wxID_TOPFRAMESTYLEDTEXTCTRL1,
               name='styledTextCtrl1', parent=self, pos=wx.Point(368, 32),

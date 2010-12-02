@@ -28,10 +28,10 @@ class Project:
                                          pos=wx.Point(8, 16), size=wx.Size(320, 104),
                                          style=0)
 
-        self.projectDirLabel = wx.StaticText(id=wxID_PROJECTDIRLABEL, label='Project home directory:',
-                                             name='ProjectHomeLabel', parent=parent,
-                                             pos=wx.Point(16, 32), size=wx.Size(64, 13),
-                                             style=0)
+        #self.projectDirLabel = wx.StaticText(id=wxID_PROJECTDIRLABEL, label='Project home directory:',
+        #                                     name='ProjectHomeLabel', parent=parent,
+        #                                     pos=wx.Point(16, 32), size=wx.Size(64, 13),
+        #                                     style=0)
 
         self.projectDir = wx.lib.filebrowsebutton.DirBrowseButton(buttonText='Browse',
                                                                   dialogTitle='Choose directory',
@@ -48,7 +48,7 @@ class Project:
         self.projectDir.SetValue('')
         self.projectDir.SetName('projectDir')
         self.projectDir.SetToolTipString('choose project directory')
-        self.projectDir.Bind(WX_EVTBUTTON,)
+        #self.projectDir.Bind(WX_EVTBUTTON,)
 
     def __init__(self, parent):
         self.__init_controls(parent)
