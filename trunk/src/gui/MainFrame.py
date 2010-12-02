@@ -11,6 +11,7 @@ import core.ClassLoader     as ClassLoader
 import core.ParameterHelper as ParameterHelper
 import core.Redirect as Redirect
 import core.NooraException as NooraException
+import subprocess
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
 PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'
@@ -60,10 +61,13 @@ class MainFrame(AbstractFrame.AbstractFrame):
     self.__schemeControl = ComboBoxPanel.ComboBoxPanel(actionPanel,-1,"Scheme",[])
     self.__environmentControl = ComboBoxPanel.ComboBoxPanel(actionPanel,-1,"Environment",[])
     self.__executeButton = wx.Button(actionPanel,12000,"Execute")
+    self.__clearButton = wx.Button(actionPanel,12001,"Clear")
     self.__console = wx.TextCtrl(actionPanel,-1,style=wx.TE_MULTILINE)
+    self.__console.SetEditable(False)
     redirect=Redirect.Redirect(self.__console)
     sys.stdout=redirect
     sys.stderr=redirect
+    
     
 
 
@@ -74,12 +78,14 @@ class MainFrame(AbstractFrame.AbstractFrame):
     sizer.Add(self.__schemeControl,1,wx.EXPAND)
     sizer.Add(self.__environmentControl,1,wx.EXPAND)
     sizer.Add(self.__executeButton,0)
+    sizer.Add(self.__clearButton,0)
     sizer.Add(self.__console,1,wx.EXPAND)
     
     actionPanel.SetSizer(sizer)
     
     self.Bind(wx.EVT_BUTTON, self.OnOpen, id=wx.ID_OPEN) 
     self.Bind(wx.EVT_BUTTON, self.OnExecute, id=12000)   
+    self.Bind(wx.EVT_BUTTON, self.OnClear, id=12001)
     self.Bind(wx.EVT_MENU, self.OnOpen, id=wx.ID_OPEN)
 
   def OnOpen(self, evt): 
@@ -90,10 +96,11 @@ class MainFrame(AbstractFrame.AbstractFrame):
       dirname=openDialog.GetDirectory()
       for filename in filenames:
         browsePanel.setValue(dirname+os.sep+filename)
+        os.chdir(dirname)
         configReader=ConfigReader.ConfigReader(dirname+os.sep+filename)
         self.setConfigReader(configReader)
         commandControl=self.getCommandControl()
-        commandControl.clear()
+        commandControl.clear()        
         plugins = configReader.getValue('PLUGINS')
         console=self.getConsole()
         classLoader = ClassLoader.ClassLoader()
@@ -136,10 +143,14 @@ class MainFrame(AbstractFrame.AbstractFrame):
         pluginClass=classLoader.findByPattern(plugin)
         if pluginClass.getType()==self.getCommandControl().getValue():
           parameterHelper=self.getParameterHelper()
-          folder,filename=os.path.split(self.getBrowsePanel().getValue())
-          os.chdir(folder)
+          
+          
+          
           parameterHelper.setParameters(['-s=orcl','-e=dev'])
           pluginClass.execute(parameterHelper)
     except NooraException.NooraException as e:
       print e.getMessage()
-    
+
+  def OnClear(self, evt):
+    console=self.getConsole()
+    console.Clear()    

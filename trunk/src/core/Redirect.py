@@ -5,4 +5,4 @@ class Redirect:
     self.out=control
 
   def write(self,string):
-    self.out.WriteText(string)
+    self.out.AppendText(string)
