@@ -19,8 +19,13 @@ class TextPanel(AbstractPanel.AbstractPanel):
     
     sizer=wx.BoxSizer(wx.HORIZONTAL)  
     self.__staticText = wx.StaticText(self, id, label)  
-    self.__staticText.SetMinSize((100,20))      
+    
+    
+         
     self.__textControl=wx.TextCtrl(self, id)
+    width,height=self.__textControl.GetSize().Get()   
+    self.__textControl.SetMinSize((300,height))
+    self.__staticText.SetMinSize((100,height))  
     sizer.Add(self.__staticText,0)  
     sizer.Add(self.__textControl,1)
     self.SetSizer(sizer)    
