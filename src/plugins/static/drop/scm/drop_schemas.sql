@@ -1,4 +1,3 @@
-set serveroutput on
 declare
   cursor c_user_xml_schemas is
     select schema_url
@@ -18,4 +17,3 @@ begin
   end loop;
 end;
 /
-set serveroutput off

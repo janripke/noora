@@ -53,6 +53,7 @@ class CreatePlugin(Plugin.Plugin):
     configReader.failOnValueNotFound('ENVIRONMENTS',environment,'the given environment is not valid for this project.')
     environment=environment[0]
 
+    connector=self.getConnector()
 
     for scheme in schemes:
       print "creating scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"
@@ -61,7 +62,7 @@ class CreatePlugin(Plugin.Plugin):
 
       url=self.getCreateDir()+os.sep+scheme+os.sep+'install_scheme_'+environment+'.sql'
       projectHelper.failOnFileNotPresent(url,scheme+os.sep+'install_scheme_'+environment+'.sql not found, try to build this scheme.')
-      self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, url)
+      connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','')
     
       print "scheme '"+scheme+"' created."
 
