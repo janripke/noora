@@ -2,6 +2,7 @@
 
 import core.Plugin as Plugin
 import core.VersionHelper as VersionHelper
+import core.NooraException as NooraException
 import os
 import subprocess
 
@@ -38,9 +39,12 @@ class UpdatePlugin(Plugin.Plugin):
 
 
   def installComponent(self, url, oracleSid, oracleUser, oraclePasswd):
-    result=subprocess.call(['python',url+os.sep+'setup.py','-s='+oracleSid,'-u='+oracleUser,'-p='+oraclePasswd,'-silent'])
+    projectHelper=self.getProjectHelper()
+    handle=open('feedback.log','wb')
+    result=subprocess.call(['python',url+os.sep+'setup.py','-s='+oracleSid,'-u='+oracleUser,'-p='+oraclePasswd,'-silent'],shell=False,stdout=handle,stderr=handle)
     if result!=0:
-      exit(1)
+      stream=projectHelper.readFile('feedback.log')
+      raise NooraException.NooraException(stream)
 
 
   def installFiles(self, folder, oracleSid, oracleUser, oraclePasswd):

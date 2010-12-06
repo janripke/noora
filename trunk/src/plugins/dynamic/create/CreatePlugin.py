@@ -3,6 +3,7 @@
 import core.Plugin as Plugin
 import os
 import subprocess
+import core.NooraException as NooraException
 
 class CreatePlugin(Plugin.Plugin):
   def __init__(self):
@@ -27,9 +28,12 @@ class CreatePlugin(Plugin.Plugin):
 
 
   def installComponent(self, url, oracleSid, oracleUser, oraclePasswd):
-    result=subprocess.call(['python',url+os.sep+'setup.py','-s='+oracleSid,'-u='+oracleUser,'-p='+oraclePasswd,'-silent'])
+    projectHelper=self.getProjectHelper()
+    handle=open('feedback.log','wb')
+    result=subprocess.call(['python',url+os.sep+'setup.py','-s='+oracleSid,'-u='+oracleUser,'-p='+oraclePasswd,'-silent'],shell=False,stdout=handle,stderr=handle)
     if result!=0:
-      exit(1)
+      stream=projectHelper.readFile('feedback.log')
+      raise NooraException.NooraException(stream)
 
 
   def installFiles(self, folder, oracleSid, oracleUser, oraclePasswd):

@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
-import core.Plugin as Plugin
-import core.VersionHelper as VersionHelper
+import core.Plugin          as Plugin
+import core.VersionHelper   as VersionHelper
+import core.NooraException  as NooraException
+import core.ClassLoader     as ClassLoader
+import core.ParameterHelper as ParameterHelper
 import os
 import sys
 import subprocess
@@ -28,43 +31,89 @@ class RecreatePlugin(Plugin.Plugin):
 
   def getMaxVersion(self,versions):
     return versions[len(versions)-1]
+  
+  def getPlugin(self, plugins, pluginType):
+    classLoader = ClassLoader.ClassLoader()
+    for plugin in plugins:
+      pluginClass=classLoader.findByPattern(plugin)
+      if pluginClass.getType().lower()==pluginType.lower():
+        return pluginClass
 
 
-  def dropDatabase(self, oracleSid, scheme, environment):
-    if len(scheme)==0:
-      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--env='+environment],shell=False)
-      if result!=0:
-        exit(1)    
-    else:
-      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','drop','--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment],shell=False)
-      if result!=0:
-        exit(1)
+  def addParameter(self, parameters, parameterType, parameterValue):
+    if parameterValue:
+      parameters.append(parameterType+parameterValue)
+    return parameters
+  
+  def addOption(self, parameters, optionType):
+    parameters.append(optionType)
+    return parameters
 
-  def createDatabase(self, oracleSid, scheme, environment):
-    if len(scheme)==0:
-      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py', 'create','--sid='+oracleSid,'--env='+environment,'-nocompile'],shell=False)
-      if result!=0:
-        exit(1)
-    else:      
-      result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','create', '--sid='+oracleSid,'--scheme='+scheme[0],'--env='+environment,'-nocompile'],shell=False)
-      if result!=0:
-        exit(1)
+  def dropDatabase(self, plugins, oracleSid, scheme, environment):
+    try:
+      dropPlugin = self.getPlugin(plugins, 'drop')
+      parameters=[]
+      parameters=self.addParameter(parameters, "--sid=", oracleSid)
+      parameters=self.addParameter(parameters, "--scheme=", scheme)
+      parameters=self.addParameter(parameters, "--env=", environment)
+    
+      parameterHelper=ParameterHelper.ParameterHelper()
+      parameterHelper.setParameters(parameters)
+      dropPlugin.execute(parameterHelper)
+    except NooraException.NooraException as e:
+      print e.getMessage()    
+      exit(1)
+    except:
+      print "unknown error"
+      exit(1)
 
 
-  def updateDatabase(self, oracleSid, scheme, environment, versions, maxVersion):
-    for version in versions:
-      if version!=versions[0]:
-        if len(scheme)==0:
-          result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','update','-v='+version,'--sid='+oracleSid,'--env='+environment,'-nocompile'],shell=False)        
-          if result!=0:
-            exit(1)
-        else:
-          result=subprocess.call(['python',self.getNooraDir()+os.sep+'noora.py','update','-v='+version,'--sid='+oracleSid,'--scheme='+scheme,'--env='+environment,'-nocompile'],shell=False)
-          if result!=0:
-            exit(1)
-        if version==maxVersion:
-          break
+  def createDatabase(self, plugins, oracleSid, scheme, environment):
+    try:
+      createPlugin = self.getPlugin(plugins, 'create')
+      parameters=[]
+      parameters=self.addParameter(parameters, "--sid=", oracleSid)
+      parameters=self.addParameter(parameters, "--scheme=", scheme)
+      parameters=self.addParameter(parameters, "--env=", environment)
+      parameters=self.addOption(parameters, "-nocompile")
+    
+      parameterHelper=ParameterHelper.ParameterHelper()
+      parameterHelper.setParameters(parameters)
+      createPlugin.execute(parameterHelper)
+    except NooraException.NooraException as e:
+      print e.getMessage()    
+      exit(1)
+    except:
+      print "unknown error"
+      exit(1)
 
+  def updateDatabase(self, plugins, oracleSid, scheme, environment, versions, maxVersion):
+    try:
+      for version in versions:
+        if version!=versions[0]:
+        
+          updatePlugin = self.getPlugin(plugins, 'update')
+          parameters=[]
+          parameters=self.addParameter(parameters, "--sid=", oracleSid)
+          parameters=self.addParameter(parameters, "--scheme=", scheme)
+          parameters=self.addParameter(parameters, "--env=", environment)
+          parameters=self.addParameter(parameters, "--version=", version)
+          parameters=self.addOption(parameters, "-nocompile")
+    
+          parameterHelper=ParameterHelper.ParameterHelper()
+          parameterHelper.setParameters(parameters)
+          updatePlugin.execute(parameterHelper)
+          
+          if version==maxVersion:
+            break
+          
+    except NooraException.NooraException as e:
+      print e.getMessage()    
+      exit(1)
+    except:
+      print "unknown error"
+      exit(1)
+      
 
   def recompile(self, oracleSid, oracleUser, oraclePasswd):
     connector=self.getConnector()
@@ -120,11 +169,16 @@ class RecreatePlugin(Plugin.Plugin):
     maxVersion=self.getMaxVersion(versions)
     maxVersion=parameterHelper.getParameterValue(['-m=','--max='],[maxVersion])
     maxVersion=maxVersion[0]
-    projectHelper.failOnValueNotFound(versions,maxVersion,'the given max version is not valid for this project.')    
+    projectHelper.failOnValueNotFound(versions,maxVersion,'the given max version is not valid for this project.')
+    
+    plugins=configReader.getValue('PLUGINS')
+    projectHelper.failOnNone(plugins,'the variable PLUGINS is not set.')
+    projectHelper.failOnEmpty(plugins,'the variable PLUGINS is not set.')
+        
 
-    self.dropDatabase(oracleSid, scheme, environment)
-    self.createDatabase(oracleSid, scheme, environment)
-    self.updateDatabase(oracleSid, scheme, environment, versions, maxVersion)
+    self.dropDatabase(plugins, oracleSid, scheme, environment)
+    self.createDatabase(plugins, oracleSid, scheme, environment)
+    self.updateDatabase(plugins, oracleSid, scheme, environment, versions, maxVersion)
 
     if  parameterHelper.hasParameter('-nocompile')==False:
       for scheme in schemes:
