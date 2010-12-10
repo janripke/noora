@@ -63,7 +63,7 @@ class Action:
             arguments.append('-sc=' + self.schema.text.GetValue())
 
         self.__dispatcher.setParameters(arguments)
-        # self.__dispatcher.execute()
+        self.__dispatcher.execute()
 
     def __init__(self, parent):
         self._init_controls(parent)

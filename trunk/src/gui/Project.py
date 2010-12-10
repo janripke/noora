@@ -48,7 +48,7 @@ class Project:
         self.projectDir.SetValue('')
         self.projectDir.SetName('projectDir')
         self.projectDir.SetToolTipString('choose project directory')
-        #self.projectDir.Bind(WX_EVTBUTTON,)
+        # self.projectDir.Bind(WX_EVTBUTTON,)
 
     def __init__(self, parent):
         self.__init_controls(parent)
