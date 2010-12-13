@@ -1,14 +1,15 @@
 #Boa:Frame:TopFrame
 
 import gui.Action
-import gui.Project
+import gui.ProjectDialog
 import AbstractFrame
 import wx
 import wx.stc
 
 
-[ID_NEW_PROJECT, ID_OPEN_PROJECT, ID_CLOSE_PROJECT, ID_EXIT
-] = [wx.NewId() for _init_ctrls in range(4)]
+[ID_NEW_PROJECT, ID_PROJECT_DLG, 
+ ID_OPEN_PROJECT, ID_CLOSE_PROJECT, ID_EXIT
+] = [wx.NewId() for _init_ctrls in range(5)]
 [ID_CMD_CREATE, ID_CMD_RECREATE, ID_CMD_UPDATE, ID_CMD_PREPARE
 ] = [wx.NewId() for _init_ctrls in range(4)]
 [ID_HELP_ABOUT, ID_HELP_CONTENT
@@ -43,6 +44,7 @@ class TopFrame(AbstractFrame.AbstractFrame):
         
         self.SetMenuBar(menuBar)
 
+        wx.EVT_MENU(self, ID_NEW_PROJECT, self.onNewProject)
         wx.EVT_MENU(self, ID_EXIT, self.onExit)
         wx.EVT_MENU(self, ID_HELP_ABOUT, self.onAbout)
         
@@ -57,6 +59,12 @@ class TopFrame(AbstractFrame.AbstractFrame):
 
         self.__createMenuBar()
         self.__createStatusBar()
+
+    def onNewProject(self,event):
+        dia = gui.ProjectDialog.ProjectDialog(self, ID_PROJECT_DLG, 'New Project', gui.ProjectDialog.DIALOG_TYPE_NEW)
+        dia.ShowModal()
+        dia.Destroy()
+
 
     def onExit(self, event):
         self.Close(True);
