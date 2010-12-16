@@ -1,5 +1,5 @@
 import wx
-import gui.panels.AbstractPanel as AbstractPanel
+import AbstractPanel as AbstractPanel
 
 class ChoicePanel(AbstractPanel.AbstractPanel):
 
