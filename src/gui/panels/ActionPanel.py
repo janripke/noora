@@ -1,7 +1,7 @@
 import wx
 import AbstractPanel        as AbstractPanel
-import panels.ComboBoxPanel as ComboBoxPanel
-import panels.TextPanel     as TextPanel
+import gui.panels.ComboBoxPanel as ComboBoxPanel
+import gui.panels.TextPanel     as TextPanel
 
 class ActionPanel(AbstractPanel.AbstractPanel):
 

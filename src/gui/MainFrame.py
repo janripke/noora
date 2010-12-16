@@ -12,6 +12,9 @@ import core.ClassLoader     as ClassLoader
 import core.ParameterHelper as ParameterHelper
 import core.Redirect        as Redirect
 import core.NooraException  as NooraException
+import MainMenuBar          as MainMenuBar
+import Settings             as Settings
+import NewProjectDialog     as NewProjectDialog
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
 PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'
@@ -59,10 +62,12 @@ class MainFrame(AbstractFrame.AbstractFrame):
 
     AbstractFrame.AbstractFrame.__init__(self, parent, title)		
     
+    mainMenuBar=MainMenuBar.MainMenuBar()
+    self.SetMenuBar(mainMenuBar)
     
     sizer=wx.BoxSizer(wx.VERTICAL)
     actionPanel = wx.Panel(self,-1, style=wx.SUNKEN_BORDER)
-    self.__browseControl = BrowsePanel.BrowsePanel(actionPanel,-1)
+    self.__browseControl = BrowsePanel.BrowsePanel(actionPanel,-1,"Direcory")
     self.__actionControl = ActionPanel.ActionPanel(actionPanel,-1)
     self.__executeControl=ExecutePanel.ExecutePanel(actionPanel,-1)
     self.__console = wx.TextCtrl(actionPanel,-1,style=wx.TE_MULTILINE)
@@ -79,12 +84,27 @@ class MainFrame(AbstractFrame.AbstractFrame):
     
     actionPanel.SetSizer(sizer)
     
-    self.Bind(wx.EVT_BUTTON, self.OnOpen, id=wx.ID_OPEN) 
+    self.Bind(wx.EVT_BUTTON, self.OnOpenProject, id=Settings.ID_OPEN_PROJECT) 
     self.Bind(wx.EVT_BUTTON, self.OnExecute, id=12000)   
     self.Bind(wx.EVT_BUTTON, self.OnClear, id=12001)
-    self.Bind(wx.EVT_MENU, self.OnOpen, id=wx.ID_OPEN)
+    self.Bind(wx.EVT_MENU, self.OnOpenProject, id=Settings.ID_OPEN_PROJECT)
+    self.Bind(wx.EVT_MENU, self.OnNewProject, id=Settings.ID_NEW_PROJECT)
+    
+    self.__statusBar = self.CreateStatusBar();
+    self.__statusBar.SetStatusText("To generate a new project, click on New Project in the Project menu, select a project directory and click on execute")
 
-  def OnOpen(self, evt): 
+
+  def OnNewProject(self, evt): 
+    newProjectDialog = NewProjectDialog.NewProjectDialog(self, -1, 'New Project')
+    result = newProjectDialog.ShowModal()
+    if result == Settings.ID_FINISH:
+      configReader=ConfigReader.ConfigReader(NOORA_DIR+os.sep+"project.conf")
+      self.setConfigReader(configReader)
+      print "finished"
+    newProjectDialog.Destroy()
+
+
+  def OnOpenProject(self, evt): 
     openDialog = wx.FileDialog(self, "Choose a NoOra project file", "", "", "NoOra project files (project.conf)|project.conf", wx.OPEN)  
     if openDialog.ShowModal() == wx.ID_OK:
       browseControl=self.getBrowseControl()
