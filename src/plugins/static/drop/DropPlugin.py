@@ -6,7 +6,10 @@ import os
 class DropPlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
-    self.setType("DROP")
+    self.setType("DROP")    
+    
+    self.addParameterDefinition('database',['-s','-si','--sid'])
+    self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
 
 
   def getUsage(self):
@@ -15,8 +18,6 @@ class DropPlugin(Plugin.Plugin):
     print "-s=  --sid=     required contains the tnsname of the database."
     print "-u=  --scheme=  not required, contains the scheme of "
     print "                the database objects to drop."
-    print "-e=  --env=     not required, used for mapping "
-    print "                the username and password."
 
 
   def getDropDir(self):
@@ -41,13 +42,6 @@ class DropPlugin(Plugin.Plugin):
     schemes=parameterHelper.getParameterValue(['-u=','--scheme=','--user='],schemes)
     configReader.failOnValueNotFound('SCHEMES',schemes,'the given scheme is not valid for this project.')
 
-    environment=configReader.getValue('DEFAULT_ENVIRONMENT')
-    projectHelper.failOnNone(environment,'the variable DEFAULT_ENVIRONMENT is not set.')
-    environment=parameterHelper.getParameterValue(['-e=','--env='],[environment])
-    projectHelper.failOnEmpty(environment,'no environment was found')
-    configReader.failOnValueNotFound('ENVIRONMENTS',environment,'the given environment is not valid for this project.')
-    environment=environment[0]
-
     oracleUsers=configReader.getValue('ORACLE_USERS')
     projectHelper.failOnNone(oracleUsers,'the variable ORACLE_USERS is not set.')
     objects = configReader.getValue('DROP_OBJECTS')
@@ -56,7 +50,7 @@ class DropPlugin(Plugin.Plugin):
     connector=self.getConnector()
 
     for scheme in schemes:
-      print "dropping scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"
+      print "dropping scheme '"+scheme+"' in database '"+oracleSid+"'"
       oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
       oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
       for object in objects:

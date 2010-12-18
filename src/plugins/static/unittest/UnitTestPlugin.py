@@ -8,6 +8,10 @@ class UnitTestPlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setType("UNITTEST")
+    
+    self.addParameterDefinition('database',['-s','-si','--sid'])
+    self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
+    
 
 
   def getUsage(self):  
@@ -20,8 +24,6 @@ class UnitTestPlugin(Plugin.Plugin):
     print "-s= --sid=     required contains the tnsname of the database."
     print "-u= --scheme=  not required, contains the scheme of "
     print "               the unit tests to execute."
-    print "-e= --env=     not required, used for mapping "
-    print "               the username and password."
 
 
   def unittest(self, oracleSid, oracleUser, oraclePasswd):
@@ -47,15 +49,8 @@ class UnitTestPlugin(Plugin.Plugin):
     schemes=parameterHelper.getParameterValue(['-u=','--scheme=','--user='],schemes)
     configReader.failOnValueNotFound('SCHEMES',schemes,'the given scheme is not valid for this project.')
 
-    environment=configReader.getValue('DEFAULT_ENVIRONMENT')
-    environment=parameterHelper.getParameterValue(['-e=','--env='],[environment])
-    projectHelper.failOnEmpty(environment,'no environment was found')
-    configReader.failOnValueNotFound('ENVIRONMENTS',environment,'the given environment is not valid for this project.')
-    environment=environment[0]
-
-
     for scheme in schemes:
-      print "executing unit tests for scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"
+      print "executing unit tests for scheme '"+scheme+"' in database '"+oracleSid+"'"
       oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
       oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
       self.unittest(oracleSid,oracleUser,oraclePasswd)

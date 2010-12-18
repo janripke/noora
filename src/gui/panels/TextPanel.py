@@ -28,4 +28,5 @@ class TextPanel(AbstractPanel.AbstractPanel):
     self.__staticText.SetMinSize((100,height))  
     sizer.Add(self.__staticText,0)  
     sizer.Add(self.__textControl,1)
-    self.SetSizer(sizer)    
+    self.SetSizer(sizer)
+    self.SetAutoLayout(True)    
