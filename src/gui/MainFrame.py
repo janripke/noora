@@ -37,8 +37,11 @@ class ExecuteThread(Thread):
     self.start()
  
   def run(self):
-    self.__pluginClass.execute(self.__parameterHelper)
-
+    try:
+      self.__pluginClass.execute(self.__parameterHelper)
+    except NooraException.NooraException as e:      
+      print e.getMessage()
+      exit(1)
 
 
 class MainFrame(AbstractFrame.AbstractFrame):
@@ -276,7 +279,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
           parameterHelper.setParameters(parameters)
           ExecuteThread(pluginClass, parameterHelper)
           
-    except NooraException.NooraException as e:
+    except NooraException.NooraException as e:      
       print e.getMessage()
     except:
       print "unknown error"
