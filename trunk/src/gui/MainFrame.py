@@ -17,10 +17,27 @@ import core.NooraException  as NooraException
 import MainMenuBar          as MainMenuBar
 import Settings             as Settings
 import NewProjectDialog     as NewProjectDialog
+from threading import Thread
+
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
 PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'
 sys.path.append(PLUGIN_DIR)
+
+
+
+
+class ExecuteThread(Thread):
+
+  def __init__(self, pluginClass, parameterHelper):
+    Thread.__init__(self)
+    self.__pluginClass=pluginClass
+    self.__parameterHelper=parameterHelper
+    self.start()
+ 
+  def run(self):
+    self.__pluginClass.execute(self.__parameterHelper)
+
 
 
 class MainFrame(AbstractFrame.AbstractFrame):
@@ -103,8 +120,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     
     self.__statusBar = self.CreateStatusBar();
     self.__statusBar.SetStatusText("To create a new project, click on New Project in the Project menu")
-    #self.SetMinSize((600,600))
-    #actionPanel.SetAutoLayout(True)
+
 
 
   def OnNewProject(self, evt): 
@@ -246,7 +262,8 @@ class MainFrame(AbstractFrame.AbstractFrame):
                 parameters.append(parameterDefinition.getParameters()[0]+"="+versionControl.getValue())
           
           parameterHelper.setParameters(parameters)
-          pluginClass.execute(parameterHelper)
+          ExecuteThread(pluginClass, parameterHelper)
+          
     except NooraException.NooraException as e:
       print e.getMessage()
     except:
