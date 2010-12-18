@@ -116,26 +116,7 @@ class TestBase(unittest.TestCase):
     except NooraException.NooraException as e:
       self.assertEquals(e.getMessage(),"the given scheme is not valid for this project.")
 
- 
-  def testInvalidEnvironmentFail(self):    
-    pluginClass=self.getPluginClass()
-    parameterHelper=self.getParameterHelper()
-    parameterHelper.setParameters(['-s=orcl','-e=uat'])
-    
-    configReader=self.getConfigReader('project.conf')
-    lines=[]
-    lines.append("ORACLE_SIDS=['orcl']")
-    lines.append("SCHEMES=['apps']")
-    lines.append("DEFAULT_ENVIRONMENT=['dev']")
-    lines.append("ENVIRONMENTS=['dev']")
-    stream = M_LF.join(lines)
-    configReader.loadFromStream(stream)
-    pluginClass.setConfigReader(configReader)
-    try:
-      pluginClass.execute(parameterHelper)  
-    except NooraException.NooraException as e:
-      self.assertEquals(e.getMessage(),"the given environment is not valid for this project.")
-  
+   
 
   def testDropPass(self):    
     pluginClass=self.getPluginClass()

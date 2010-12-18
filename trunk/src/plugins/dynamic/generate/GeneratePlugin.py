@@ -11,6 +11,13 @@ class GeneratePlugin(Plugin.Plugin):
     Plugin.Plugin.__init__(self)
     self.setType("GENERATE")
     self.setBaseDir(os.path.abspath('.'))
+    
+    self.addParameterDefinition('project',['-pr','--project'])
+    self.addParameterDefinition('database',['-si','--sid'])
+    self.addParameterDefinition('scheme',['-sc','--scheme'])
+    self.addParameterDefinition('username',['-u','--username'])
+    self.addParameterDefinition('password',['-p','--password'])
+    self.addParameterDefinition('version',['-v','--version'])
   
   def getPluginDir(self):
     return self.getNooraDir()+os.sep+'plugins'+os.sep+'dynamic'+os.sep+'generate'

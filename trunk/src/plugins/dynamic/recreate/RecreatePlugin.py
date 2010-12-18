@@ -13,6 +13,12 @@ class RecreatePlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setType("RECREATE")
+    
+    self.addParameterDefinition('database',['-s','-si','--sid'])
+    self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
+    self.addParameterDefinition('environment',['-e','--env'])
+    self.addParameterDefinition('version',['-m','--max'])
+    
 
 
   def getUsage(self):  
@@ -31,6 +37,24 @@ class RecreatePlugin(Plugin.Plugin):
 
   def getMaxVersion(self,versions):
     return versions[len(versions)-1]
+  
+  def getDefaultVersion(self):
+    configReader=self.getConfigReader()
+    defaultVersion=configReader.getValue('DEFAULT_VERSION')
+    return defaultVersion
+  
+  def getVersions(self, defaultVersion):
+    projectHelper=self.getProjectHelper()    
+    versions=[]
+    alterFolder=projectHelper.getAlterFolder()
+    if projectHelper.folderPresent(alterFolder):
+      versions=projectHelper.findFolders(alterFolder)
+    createFolder=projectHelper.getCreateFolder()
+    if projectHelper.folderPresent(createFolder):
+      versions.append(defaultVersion)
+    versionHelper=VersionHelper.VersionHelper(versions)
+    versions=versionHelper.sort()
+    return versions  
   
   def getPlugin(self, plugins, pluginType):
     classLoader = ClassLoader.ClassLoader()
@@ -64,7 +88,7 @@ class RecreatePlugin(Plugin.Plugin):
       print e.getMessage()    
       exit(1)
     except:
-      print "unknown error"
+      print "iam,unknown error"
       exit(1)
 
 
@@ -72,6 +96,7 @@ class RecreatePlugin(Plugin.Plugin):
     try:
       createPlugin = self.getPlugin(plugins, 'create')
       parameters=[]
+      
       parameters=self.addParameter(parameters, "--sid=", oracleSid)
       parameters=self.addParameter(parameters, "--scheme=", scheme)
       parameters=self.addParameter(parameters, "--env=", environment)
@@ -140,7 +165,9 @@ class RecreatePlugin(Plugin.Plugin):
     configReader.failOnValueNotFound('ORACLE_SIDS',oracleSid,'the given oracle sid is not valid for this project.')
     oracleSid=oracleSid[0]
 
-    scheme=parameterHelper.getParameterValue(['-u=','--scheme=','--user='],[])
+    scheme=parameterHelper.getParameterValue(['-u=','--scheme=','--user='],"")
+    
+    
     
     schemes=configReader.getValue('SCHEMES')
     schemes=parameterHelper.getParameterValue(['-u=','--scheme=','--user='],schemes)
@@ -152,19 +179,11 @@ class RecreatePlugin(Plugin.Plugin):
     configReader.failOnValueNotFound('ENVIRONMENTS',environment,'the given environment is not valid for this project.')
     environment=environment[0]
 
-    defaultVersion=configReader.getValue('DEFAULT_VERSION')
+    defaultVersion=self.getDefaultVersion()
     projectHelper.failOnEmpty(defaultVersion,'the variable DEFAULT_VERSION is not configured for this project.')
 
     # find the versions
-    versions=[]
-    alterFolder=projectHelper.getAlterFolder()
-    if projectHelper.folderPresent(alterFolder):
-      versions=projectHelper.findFolders(alterFolder)
-    createFolder=projectHelper.getCreateFolder()
-    if projectHelper.folderPresent(createFolder):
-      versions.append(defaultVersion)
-    versionHelper=VersionHelper.VersionHelper(versions)
-    versions=versionHelper.sort()
+    versions=self.getVersions(defaultVersion)
     
     maxVersion=self.getMaxVersion(versions)
     maxVersion=parameterHelper.getParameterValue(['-m=','--max='],[maxVersion])

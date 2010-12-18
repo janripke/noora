@@ -11,6 +11,12 @@ class UpdatePlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setType("UPDATE")
+    
+    self.addParameterDefinition('database',['-s','-si','--sid'])
+    self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
+    self.addParameterDefinition('environment',['-e','--env'])
+    self.addParameterDefinition('version',['-v','--version'])
+
 
 
   def getUsage(self):  
@@ -36,6 +42,24 @@ class UpdatePlugin(Plugin.Plugin):
       previousVersion=versions[index-1]
       return previousVersion    
     return None
+  
+  def getDefaultVersion(self):
+    configReader=self.getConfigReader()
+    defaultVersion=configReader.getValue('DEFAULT_VERSION')
+    return defaultVersion
+  
+  def getVersions(self, defaultVersion):
+    projectHelper=self.getProjectHelper()    
+    versions=[]
+    alterFolder=projectHelper.getAlterFolder()
+    if projectHelper.folderPresent(alterFolder):
+      versions=projectHelper.findFolders(alterFolder)
+    createFolder=projectHelper.getCreateFolder()
+    if projectHelper.folderPresent(createFolder):
+      versions.append(defaultVersion)
+    versionHelper=VersionHelper.VersionHelper(versions)
+    versions=versionHelper.sort()
+    return versions
 
 
   def installComponent(self, url, oracleSid, oracleUser, oraclePasswd):
@@ -107,7 +131,7 @@ class UpdatePlugin(Plugin.Plugin):
     projectHelper.failOnNone(objects,'the variable CREATE_OBJECTS is not set.')
     projectHelper.failOnEmpty(environment,'the variable CREATE_OBJECTS is not set.')
 
-    defaultVersion=configReader.getValue('DEFAULT_VERSION')
+    defaultVersion=self.getDefaultVersion()
     projectHelper.failOnNone(defaultVersion,'the variable DEFAULT_VERSION is not set.')
     projectHelper.failOnEmpty(defaultVersion,'the variable DEFAULT_VERSION is not configured for this project.')
 
@@ -115,16 +139,7 @@ class UpdatePlugin(Plugin.Plugin):
     projectHelper.failOnEmpty(version,'no version was given')
     
     # find the versions
-    versions=[]
-    alterFolder=projectHelper.getAlterFolder()
-    if projectHelper.folderPresent(alterFolder):
-      versions=projectHelper.findFolders(alterFolder)
-    createFolder=projectHelper.getCreateFolder()
-    if projectHelper.folderPresent(createFolder):
-      versions.append(defaultVersion)
-    versionHelper=VersionHelper.VersionHelper(versions)
-    versions=versionHelper.sort()
-    
+    versions=self.getVersions(defaultVersion)    
     version=version[0]
     projectHelper.failOnValueNotFound(versions,version,'the given version is not valid for this project.')
     

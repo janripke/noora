@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-import core.ProjectHelper as ProjectHelper
-import core.ConfigReader  as ConfigReader
+import core.ProjectHelper         as ProjectHelper
+import core.ConfigReader          as ConfigReader
+import core.ParameterDefinition   as ParameterDefinition
 import connectors.OracleConnector as OracleConnector
 import os
 import sys
@@ -17,6 +18,7 @@ class Plugin:
     self.setConnector(OracleConnector.OracleConnector())
     self.setNooraDir(os.path.abspath(os.path.dirname(sys.argv[0])))
     self.setBaseDir(os.path.abspath('.'))
+    self.__parameterDefinitions=[]
 
   def setNooraDir(self, path):
     self.__nooraDir=path
@@ -68,3 +70,22 @@ class Plugin:
 
   def execute(self, parameters):
     pass
+  
+  def getParameterDefinitions(self):
+    return self.__parameterDefinitions
+  
+  def addParameterDefinition(self, key, parameters):
+    parameterDefinition=ParameterDefinition.ParameterDefinition(key,parameters)
+    parameterDefinition.setKey(key)
+    parameterDefinition.setParameters(parameters)
+    
+    parameterDefinitions=self.getParameterDefinitions()
+    parameterDefinitions.append(parameterDefinition)
+    
+  def findParameterDefinition(self, key):
+    parameterDefinitions=self.getParameterDefinitions()
+    for parameterDefinition in parameterDefinitions:
+      if parameterDefinition.getKey().lower()==key.lower():
+        return parameterDefinition
+    return None
+    

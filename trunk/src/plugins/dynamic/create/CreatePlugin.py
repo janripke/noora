@@ -9,6 +9,10 @@ class CreatePlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setType("CREATE")
+    
+    self.addParameterDefinition('database',['-s','-si','--sid'])
+    self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
+    self.addParameterDefinition('environment',['-e','--env'])
 
 
   def getUsage(self):  

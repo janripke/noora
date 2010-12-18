@@ -12,6 +12,8 @@ class BuildPlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setType("BUILD")
+    
+    self.addParameterDefinition('version',['-v','--version'])
 
   def getPluginDir(self):
     return self.getNooraDir()+os.sep+'plugins'+os.sep+'component'+os.sep+'build'
@@ -19,7 +21,7 @@ class BuildPlugin(Plugin.Plugin):
   def getUsage(self):
     print "NoOra database installer, build.py"
     print "creates a database independend component."
-    print "-v= --verion=  required, the version to build"
+    print "-v= --version=  required, the version to build"
 
 
   def isFileExcluded(self, filename):
