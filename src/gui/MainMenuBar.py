@@ -11,7 +11,10 @@ class MainMenuBar(wx.MenuBar):
         menu.AppendSeparator()
         menu.Append(wx.ID_EXIT, "E&xit", "Exit the application");
         self.Append(menu, "&File")
-        
+
+        menu = wx.Menu()
+        menu.Append(Settings.ID_EDIT_PROJECT, "&Edit Project\tAlt-E","Edit the project configuration file")
+        self.Append(menu, "&Edit")        
         
         menu = wx.Menu()
         menu.Append(wx.ID_ABOUT, "&About\tAlt-A","About")

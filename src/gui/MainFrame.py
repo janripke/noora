@@ -17,6 +17,7 @@ import core.NooraException  as NooraException
 import MainMenuBar          as MainMenuBar
 import Settings             as Settings
 import NewProjectDialog     as NewProjectDialog
+import EditProjectDialog    as EditProjectDialog
 from threading import Thread
 
 
@@ -116,6 +117,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     self.Bind(wx.EVT_MENU, self.OnNewProject, id=Settings.ID_NEW_PROJECT)
     self.Bind(wx.EVT_MENU, self.onAbout, id=wx.ID_ABOUT)
     self.Bind(wx.EVT_MENU, self.onExit, id=wx.ID_EXIT)
+    self.Bind(wx.EVT_MENU, self.onEditProject, id=Settings.ID_EDIT_PROJECT)
     self.Bind(wx.EVT_COMBOBOX, self.onCommandChanged, id=Settings.ID_COMMAND)
     
     self.__statusBar = self.CreateStatusBar();
@@ -226,6 +228,16 @@ class MainFrame(AbstractFrame.AbstractFrame):
 
     
     openDialog.Destroy()
+    
+  def onEditProject(self, evt):
+    headerControl=self.getHeaderControl()
+    directory=headerControl.getDescriptionControl().GetLabel()
+    url=directory + os.sep + 'project.conf'
+    
+    editProjectDialog = EditProjectDialog.EditProjectDialog(self, -1, 'Edit Project', url)
+    result = editProjectDialog.ShowModal()
+    if result == Settings.ID_FINISH:
+      pass
 
   def OnExecute(self, evt):
     try:

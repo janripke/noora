@@ -23,6 +23,23 @@ class BuildPlugin(Plugin.Plugin):
     print "creates a database independend component."
     print "-v= --version=  required, the version to build"
 
+  def getDefaultVersion(self):
+    configReader=self.getConfigReader()
+    defaultVersion=configReader.getValue('DEFAULT_VERSION')
+    return defaultVersion
+  
+  def getVersions(self, defaultVersion):
+    projectHelper=self.getProjectHelper()    
+    versions=[]
+    alterFolder=projectHelper.getAlterFolder()
+    if projectHelper.folderPresent(alterFolder):
+      versions=projectHelper.findFolders(alterFolder)
+    createFolder=projectHelper.getCreateFolder()
+    if projectHelper.folderPresent(createFolder):
+      versions.append(defaultVersion)
+    versionHelper=VersionHelper.VersionHelper(versions)
+    versions=versionHelper.sort()
+    return versions  
 
   def isFileExcluded(self, filename):
     configReader=self.getConfigReader()
@@ -54,7 +71,7 @@ class BuildPlugin(Plugin.Plugin):
     version=parameterHelper.getParameterValue(['-v=','--version='],[])
     projectHelper.failOnEmpty(version,'no version was given')
 
-    defaultVersion = configReader.getValue('DEFAULT_VERSION')
+    defaultVersion = self.getDefaultVersion()
     projectHelper.failOnNone(defaultVersion,'the variable DEFAULT_VERSION is not set.')
 
     componentName=configReader.getValue('COMPONENT_NAME')
@@ -79,16 +96,7 @@ class BuildPlugin(Plugin.Plugin):
 
 
     # find the versions
-    versions=[]
-    alterFolder=projectHelper.getAlterFolder()
-    if projectHelper.folderPresent(alterFolder):
-      versions=projectHelper.findFolders(alterFolder)
-    createFolder=projectHelper.getCreateFolder()
-    if projectHelper.folderPresent(createFolder):
-      versions.append(defaultVersion)
-    versionHelper=VersionHelper.VersionHelper(versions)
-    versions=versionHelper.sort()
-    
+    versions=self.getVersions(defaultVersion)
     version=version[0]
     projectHelper.failOnValueNotFound(versions,version,'the given version is not valid for this project.')
 

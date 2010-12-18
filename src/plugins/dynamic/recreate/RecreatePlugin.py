@@ -8,6 +8,7 @@ import core.ParameterHelper as ParameterHelper
 import os
 import sys
 import subprocess
+import traceback
 
 class RecreatePlugin(Plugin.Plugin):
   def __init__(self):
@@ -87,8 +88,8 @@ class RecreatePlugin(Plugin.Plugin):
     except NooraException.NooraException as e:
       print e.getMessage()    
       exit(1)
-    except:
-      print "iam,unknown error"
+    except Exception as e:
+      print traceback.print_exc()
       exit(1)
 
 
@@ -109,7 +110,7 @@ class RecreatePlugin(Plugin.Plugin):
       print e.getMessage()    
       exit(1)
     except:
-      print "unknown error"
+      print traceback.print_exc()
       exit(1)
 
   def updateDatabase(self, plugins, oracleSid, scheme, environment, versions, maxVersion):
@@ -136,7 +137,7 @@ class RecreatePlugin(Plugin.Plugin):
       print e.getMessage()    
       exit(1)
     except:
-      print "unknown error"
+      print traceback.print_exc()
       exit(1)
       
 
@@ -165,8 +166,8 @@ class RecreatePlugin(Plugin.Plugin):
     configReader.failOnValueNotFound('ORACLE_SIDS',oracleSid,'the given oracle sid is not valid for this project.')
     oracleSid=oracleSid[0]
 
-    scheme=parameterHelper.getParameterValue(['-u=','--scheme=','--user='],"")
-    
+    scheme=parameterHelper.getParameterValue(['-u=','--scheme=','--user='],[""])
+    scheme=scheme[0]
     
     
     schemes=configReader.getValue('SCHEMES')
