@@ -97,10 +97,12 @@ class UpdatePlugin(Plugin.Plugin):
     oracleScript=self.getPluginDir()+os.sep+'checkenvironment.sql'
     connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,environment,environmentSelectStatement)
 
-  def recompile(self, oracleSid, oracleUser, oraclePasswd):
+  def recompile(self, oracleSid, oracleUser, oraclePasswd):    
     connector=self.getConnector()
-    oracleScript=self.getPluginDir()+os.sep+'recompile.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'', '')
+    oracleScript=self.getScriptDir()+os.sep+'recompile.sql'
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
+
+    
 
   def execute(self, parameterHelper):
     if parameterHelper.hasParameter('-h'):
