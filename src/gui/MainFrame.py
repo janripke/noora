@@ -11,6 +11,7 @@ import core.ParameterHelper as ParameterHelper
 import core.Redirect        as Redirect
 import core.NooraException  as NooraException
 import MainMenuBar          as MainMenuBar
+import MainToolBar          as MainToolBar
 import Settings             as Settings
 import NewProjectDialog     as NewProjectDialog
 import EditProjectDialog    as EditProjectDialog
@@ -88,13 +89,15 @@ class MainFrame(AbstractFrame.AbstractFrame):
     
     mainMenuBar=MainMenuBar.MainMenuBar()
     self.SetMenuBar(mainMenuBar)
-    
+    mainToolBar=MainToolBar.MainToolBar(self,-1)
+    self.SetToolBar(mainToolBar)
+    mainToolBar.Realize()
     sizer=wx.BoxSizer(wx.VERTICAL)
     actionPanel = wx.Panel(self,-1)
     self.__headerControl = HeaderPanel.HeaderPanel(actionPanel, -1,"NoOra Project","")
     
     self.__actionControl = ActionPanel.ActionPanel(actionPanel,-1)
-    self.__executeControl=ExecutePanel.ExecutePanel(actionPanel,-1)
+    #self.__executeControl=ExecutePanel.ExecutePanel(actionPanel,-1)
     self.__console = wx.TextCtrl(actionPanel,-1,style=wx.TE_MULTILINE)
     self.__console.SetEditable(False)
     redirect=Redirect.Redirect(self.__console)
@@ -103,19 +106,26 @@ class MainFrame(AbstractFrame.AbstractFrame):
     
     sizer.Add(self.__headerControl,0,wx.EXPAND)    
     sizer.Add(self.__actionControl,0,wx.ALL,5)
-    sizer.Add(self.__executeControl,0,wx.EXPAND)
+    #sizer.Add(self.__executeControl,0,wx.EXPAND)
     sizer.Add(self.__console,1,wx.EXPAND)
     
     actionPanel.SetSizer(sizer)
     
     self.Bind(wx.EVT_BUTTON, self.onOpenProject, id=Settings.ID_OPEN_PROJECT) 
-    self.Bind(wx.EVT_BUTTON, self.onExecute, id=12000)   
-    self.Bind(wx.EVT_BUTTON, self.onClear, id=12001)
+    #self.Bind(wx.EVT_BUTTON, self.onExecute, id=Settings.ID_EXECUTE)   
+    #self.Bind(wx.EVT_BUTTON, self.onClear, id=Settings.ID_CLEAR)
     self.Bind(wx.EVT_MENU, self.onOpenProject, id=Settings.ID_OPEN_PROJECT)
     self.Bind(wx.EVT_MENU, self.onNewProject, id=Settings.ID_NEW_PROJECT)
     self.Bind(wx.EVT_MENU, self.onAbout, id=wx.ID_ABOUT)
     self.Bind(wx.EVT_MENU, self.onExit, id=wx.ID_EXIT)
     self.Bind(wx.EVT_MENU, self.onEditProject, id=Settings.ID_EDIT_PROJECT)
+
+    self.Bind(wx.EVT_TOOL, self.onOpenProject, id=Settings.ID_OPEN_PROJECT)
+    self.Bind(wx.EVT_TOOL, self.onNewProject, id=Settings.ID_NEW_PROJECT)
+    self.Bind(wx.EVT_TOOL, self.onExecute, id=Settings.ID_EXECUTE)   
+    self.Bind(wx.EVT_TOOL, self.onClear, id=Settings.ID_CLEAR)
+
+    
     self.Bind(wx.EVT_COMBOBOX, self.onCommandChanged, id=Settings.ID_COMMAND)
     
     self.__statusBar = self.CreateStatusBar();
@@ -239,7 +249,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     directory=headerControl.getDescriptionControl().GetLabel()
     url=directory + os.sep + 'project.conf'
     
-    editProjectDialog = EditProjectDialog.EditProjectDialog(self, -1, 'Edit Project', url)
+    editProjectDialog = EditProjectDialog.EditProjectDialog(self, -1, 'Edit project.conf', url)
     result = editProjectDialog.ShowModal()
     if result == Settings.ID_FINISH:
       pass
