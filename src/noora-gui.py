@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 import wx
 
-import gui.TopFrame
+import gui.MainFrame as MainFrame
 
 modules = {'TopFrame': [1, 'Main frame of the Application', u'gui/TopFrame.py']}
 
 class NooraGuiApp(wx.App):
   
   def OnInit(self):
-    self.main = gui.TopFrame.TopFrame(None, 'Noora GUI')
-    self.main.SetSize(wx.Size(868, 504))
-    self.SetTopWindow(self.main)
+    appTitle='NoOra'
+    self.main = MainFrame.MainFrame(self,appTitle)
+    self.main.SetSize((600,500))
     self.main.CenterOnScreen()
-    self.main.Show()
+    self.SetTopWindow(self.main)
+    self.main.Show(True)    
     return True
 
 def main():
