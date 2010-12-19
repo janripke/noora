@@ -13,8 +13,8 @@ class MainMenuBar(wx.MenuBar):
         self.Append(menu, "&File")
 
         menu = wx.Menu()
-        menu.Append(Settings.ID_EDIT_PROJECT, "&project.conf...\tAlt-p","Edit the project configuration file")
-        self.Append(menu, "&Edit")        
+        menu.Append(Settings.ID_EDIT_PROJECT, "&project.conf...\tAlt-p","View the project configuration file")
+        self.Append(menu, "&View")        
         
         menu = wx.Menu()
         menu.Append(wx.ID_ABOUT, "&About\tAlt-A","About")
