@@ -24,8 +24,7 @@ class EditProjectDialog(wx.Dialog):
         wx.Dialog.__init__(self, parent, id, title, style=wx.DEFAULT_DIALOG_STYLE|wx.THICK_FRAME|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        self.__headerPanel = HeaderPanel.HeaderPanel(self, -1,"NoOra Project","Edit the NoOra Project configuration file")    
-        #self.__projectControl=wx.TextCtrl(self,-1,style=wx.TE_MULTILINE)
+        self.__headerPanel = HeaderPanel.HeaderPanel(self, -1,"NoOra project.conf","Edit the NoOra project configuration file, project.conf")      
         self.__projectControl=wx.ListCtrl(self, -1, style=wx.LC_REPORT|wx.LC_VRULES|wx.LC_HRULES)
         self.__projectControl.InsertColumn(0, 'Keyword')
         self.__projectControl.InsertColumn(1, 'Value')
@@ -59,7 +58,6 @@ class EditProjectDialog(wx.Dialog):
             self.__projectControl.SetStringItem(itemCount, 1, value)
           
             
-        self.__projectControl.SetColumnWidth(-1,-1)  
         self.__projectControl.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER)  
             
 
