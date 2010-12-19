@@ -84,9 +84,12 @@ class NewProjectDialog(wx.Dialog):
         sizer.Add(self.__versionControl,0,wx.ALL|wx.EXPAND,5)
         
         sizer.Add(self.__cancelFinishControl,0,wx.ALIGN_RIGHT|wx.ALL,5)
+
                 
         self.SetSizer(sizer)
-        self.SetMinSize((300,350))
+        self.SetMinSize((460,380))
+
+
         
         
         

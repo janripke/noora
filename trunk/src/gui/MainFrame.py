@@ -130,6 +130,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     
     self.__statusBar = self.CreateStatusBar();
     self.__statusBar.SetStatusText("To create a new project, click on New Project in the Project menu")
+    
 
 
 
