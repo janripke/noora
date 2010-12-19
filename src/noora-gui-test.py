@@ -10,7 +10,7 @@ class NooraGuiApp(wx.App):
   def OnInit(self):
     appTitle='NoOra'
     self.main = MainFrame.MainFrame(self,appTitle)
-    self.main.SetSize((600,600))
+    self.main.SetSize((600,500))
     self.main.CenterOnScreen()
     self.SetTopWindow(self.main)
     self.main.Show(True)    

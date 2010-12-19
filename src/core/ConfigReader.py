@@ -88,7 +88,8 @@ class ConfigReader:
   def getMessage(self):
     return self.__message
 
-
+  def getLines(self):
+    return self.__lines
 
 
 
