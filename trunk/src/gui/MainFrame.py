@@ -1,13 +1,9 @@
 import wx
-import wx.stc
 import os
 import sys
 import AbstractFrame        as AbstractFrame
-import panels.BrowsePanel   as BrowsePanel
-import panels.ComboBoxPanel as ComboBoxPanel
 import panels.ExecutePanel  as ExecutePanel
 import panels.ActionPanel   as ActionPanel
-import panels.TextPanel     as TextPanel
 import panels.HeaderPanel   as HeaderPanel
 import core.ConfigReader    as ConfigReader
 import core.ClassLoader     as ClassLoader
@@ -18,6 +14,7 @@ import MainMenuBar          as MainMenuBar
 import Settings             as Settings
 import NewProjectDialog     as NewProjectDialog
 import EditProjectDialog    as EditProjectDialog
+import traceback
 from threading import Thread
 
 
@@ -95,7 +92,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     sizer=wx.BoxSizer(wx.VERTICAL)
     actionPanel = wx.Panel(self,-1)
     self.__headerControl = HeaderPanel.HeaderPanel(actionPanel, -1,"NoOra Project","")
-    self.__spacerPanel = wx.Panel(actionPanel,-1)    
+    
     self.__actionControl = ActionPanel.ActionPanel(actionPanel,-1)
     self.__executeControl=ExecutePanel.ExecutePanel(actionPanel,-1)
     self.__console = wx.TextCtrl(actionPanel,-1,style=wx.TE_MULTILINE)
@@ -105,19 +102,17 @@ class MainFrame(AbstractFrame.AbstractFrame):
     sys.stderr=redirect
     
     sizer.Add(self.__headerControl,0,wx.EXPAND)    
-    sizer.Add(self.__spacerPanel,0,wx.EXPAND)
-    sizer.Add(self.__actionControl,0,wx.EXPAND)
-    sizer.Add(self.__spacerPanel,0,wx.EXPAND)
+    sizer.Add(self.__actionControl,0,wx.ALL,5)
     sizer.Add(self.__executeControl,0,wx.EXPAND)
     sizer.Add(self.__console,1,wx.EXPAND)
     
     actionPanel.SetSizer(sizer)
     
-    self.Bind(wx.EVT_BUTTON, self.OnOpenProject, id=Settings.ID_OPEN_PROJECT) 
-    self.Bind(wx.EVT_BUTTON, self.OnExecute, id=12000)   
-    self.Bind(wx.EVT_BUTTON, self.OnClear, id=12001)
-    self.Bind(wx.EVT_MENU, self.OnOpenProject, id=Settings.ID_OPEN_PROJECT)
-    self.Bind(wx.EVT_MENU, self.OnNewProject, id=Settings.ID_NEW_PROJECT)
+    self.Bind(wx.EVT_BUTTON, self.onOpenProject, id=Settings.ID_OPEN_PROJECT) 
+    self.Bind(wx.EVT_BUTTON, self.onExecute, id=12000)   
+    self.Bind(wx.EVT_BUTTON, self.onClear, id=12001)
+    self.Bind(wx.EVT_MENU, self.onOpenProject, id=Settings.ID_OPEN_PROJECT)
+    self.Bind(wx.EVT_MENU, self.onNewProject, id=Settings.ID_NEW_PROJECT)
     self.Bind(wx.EVT_MENU, self.onAbout, id=wx.ID_ABOUT)
     self.Bind(wx.EVT_MENU, self.onExit, id=wx.ID_EXIT)
     self.Bind(wx.EVT_MENU, self.onEditProject, id=Settings.ID_EDIT_PROJECT)
@@ -128,101 +123,108 @@ class MainFrame(AbstractFrame.AbstractFrame):
 
 
 
-  def OnNewProject(self, evt): 
-    newProjectDialog = NewProjectDialog.NewProjectDialog(self, -1, 'New Project')
-    result = newProjectDialog.ShowModal()
-    if result == Settings.ID_FINISH:
-      configReader=ConfigReader.ConfigReader(NOORA_DIR+os.sep+"project.conf")
-      self.setConfigReader(configReader)
+  def onNewProject(self, evt): 
+    try:
+      newProjectDialog = NewProjectDialog.NewProjectDialog(self, -1, 'New Project')
+      result = newProjectDialog.ShowModal()
+      if result == Settings.ID_FINISH:
+        configReader=ConfigReader.ConfigReader(NOORA_DIR+os.sep+"project.conf")
+        self.setConfigReader(configReader)
       
-      plugins = configReader.getValue('PLUGINS')
-      classLoader = ClassLoader.ClassLoader()
-      for plugin in plugins:
-        pluginClass=classLoader.findByPattern(plugin)
-        if pluginClass.getType().lower()=="generate":
-          parameterHelper=self.getParameterHelper()
+        plugins = configReader.getValue('PLUGINS')
+        classLoader = ClassLoader.ClassLoader()
+        for plugin in plugins:
+          pluginClass=classLoader.findByPattern(plugin)
+          if pluginClass.getType().lower()=="generate":
+            parameterHelper=self.getParameterHelper()
           
-          os.chdir(newProjectDialog.getDirectory())
+            os.chdir(newProjectDialog.getDirectory())
           
-          parameters=[]
-          if newProjectDialog.getProject():
+            parameters=[]
+            if newProjectDialog.getProject():
             
-            parameterDefinition=pluginClass.findParameterDefinition('project')
-            parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject())
+              parameterDefinition=pluginClass.findParameterDefinition('project')
+              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject())
           
-          if newProjectDialog.getDatabase():
-            parameterDefinition=pluginClass.findParameterDefinition('database')
-            parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getDatabase())
+            if newProjectDialog.getDatabase():
+              parameterDefinition=pluginClass.findParameterDefinition('database')
+              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getDatabase())
 
-          if newProjectDialog.getScheme():
-            parameterDefinition=pluginClass.findParameterDefinition('scheme')
-            parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getScheme())
+            if newProjectDialog.getScheme():
+              parameterDefinition=pluginClass.findParameterDefinition('scheme')
+              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getScheme())
 
-          if newProjectDialog.getUsername():
-            parameterDefinition=pluginClass.findParameterDefinition('username')
-            parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getUsername())
+            if newProjectDialog.getUsername():
+              parameterDefinition=pluginClass.findParameterDefinition('username')
+              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getUsername())
 
-          if newProjectDialog.getPassword():
-            parameterDefinition=pluginClass.findParameterDefinition('password')
-            parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getPassword())
+            if newProjectDialog.getPassword():
+              parameterDefinition=pluginClass.findParameterDefinition('password')
+              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getPassword())
           
-          if newProjectDialog.getVersion():
-            parameterDefinition=pluginClass.findParameterDefinition('version')
-            parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getVersion())
+            if newProjectDialog.getVersion():
+              parameterDefinition=pluginClass.findParameterDefinition('version')
+              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getVersion())
 
-          parameterHelper.setParameters(parameters)
-          pluginClass.execute(parameterHelper)
+            parameterHelper.setParameters(parameters)
+            pluginClass.execute(parameterHelper)
           
-          self.openProject(newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject(), 'project.conf')
+            self.openProject(newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject(), 'project.conf')
+             
+      newProjectDialog.Destroy()
+    except NooraException.NooraException as e: 
+      newProjectDialog.Destroy()     
+      print e.getMessage()
+    except:
+      newProjectDialog.Destroy()
+      print traceback.print_exc()
+
+
+  def openProject(self, directory, filename):  
+
+    headerControl=self.getHeaderControl()
+    headerControl.getDescriptionControl().SetLabel(directory)
+      
+    os.chdir(directory)
+    
+    configReader=ConfigReader.ConfigReader(directory+os.sep+filename)
+    self.setConfigReader(configReader)
+      
+    commandControl=self.getCommandControl()
+    commandControl.clear()
+    commandControl.setValue("")  
+    commandControl.Enable(True)      
+      
+    plugins = configReader.getValue('PLUGINS')
+    classLoader = ClassLoader.ClassLoader()
+    for plugin in plugins:
+      pluginClass=classLoader.findByPattern(plugin)
+      if pluginClass.getType().lower()!="generate":
+        commandControl.append(pluginClass.getType().lower())
+      
+    databases = configReader.getValue('ORACLE_SIDS')
+    databaseControl=self.getDatabaseControl()
+    databaseControl.clear()
+    for database in databases:
+      databaseControl.append(database)
+    
+    schemes = configReader.getValue('SCHEMES')
+    schemeControl=self.getSchemeControl()
+    schemeControl.clear()
+    for scheme in schemes:
+      schemeControl.append(scheme)
         
-     
-    newProjectDialog.Destroy()
-
-
-  def openProject(self, directory, filename):
-      
-      
-      headerControl=self.getHeaderControl()
-      headerControl.getDescriptionControl().SetLabel(directory)
-      
-      os.chdir(directory)
-      
-      configReader=ConfigReader.ConfigReader(directory+os.sep+filename)
-      self.setConfigReader(configReader)
-      
-      commandControl=self.getCommandControl()
-      commandControl.clear()
-      commandControl.setValue("")        
-      
-      plugins = configReader.getValue('PLUGINS')
-      classLoader = ClassLoader.ClassLoader()
-      for plugin in plugins:
-        pluginClass=classLoader.findByPattern(plugin)
-        if pluginClass.getType().lower()!="generate":
-          commandControl.append(pluginClass.getType().lower())
+    environments = configReader.getValue('ENVIRONMENTS')
+    defaultEnvironment = configReader.getValue('DEFAULT_ENVIRONMENT')
+    environmentControl=self.getEnvironmentControl()
+    environmentControl.clear()
+    for environment in environments:
+      environmentControl.append(environment)
+    environmentControl.setValue(defaultEnvironment)  
         
-      databases = configReader.getValue('ORACLE_SIDS')
-      databaseControl=self.getDatabaseControl()
-      databaseControl.clear()
-      for database in databases:
-        databaseControl.append(database)
-      
-      schemes = configReader.getValue('SCHEMES')
-      schemeControl=self.getSchemeControl()
-      schemeControl.clear()
-      for scheme in schemes:
-        schemeControl.append(scheme)
-          
-      environments = configReader.getValue('ENVIRONMENTS')
-      defaultEnvironment = configReader.getValue('DEFAULT_ENVIRONMENT')
-      environmentControl=self.getEnvironmentControl()
-      environmentControl.clear()
-      for environment in environments:
-        environmentControl.append(environment)
-      environmentControl.setValue(defaultEnvironment)          
 
 
-  def OnOpenProject(self, evt): 
+  def onOpenProject(self, evt): 
     openDialog = wx.FileDialog(self, "Choose a NoOra project file", "", "", "NoOra project files (project.conf)|project.conf", wx.OPEN)  
     if openDialog.ShowModal() == wx.ID_OK:
       filename=openDialog.GetFilenames()[0]
@@ -242,7 +244,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     if result == Settings.ID_FINISH:
       pass
 
-  def OnExecute(self, evt):
+  def onExecute(self, evt):
     try:
       classLoader = ClassLoader.ClassLoader()
       configReader=self.getConfigReader()
@@ -282,9 +284,9 @@ class MainFrame(AbstractFrame.AbstractFrame):
     except NooraException.NooraException as e:      
       print e.getMessage()
     except:
-      print "unknown error"
+      print traceback.print_exc()
 
-  def OnClear(self, evt):
+  def onClear(self, evt):
     console=self.getConsole()
     console.Clear()  
     
@@ -292,7 +294,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     info = wx.AboutDialogInfo()
     info.Name = "NoOra Gui"
     info.Version = "0.0.6"
-    info.Description ="NoOra is an attempt to apply a pattern to installing/updating Oracle database projects in order to promote portability and productivity. "
+    info.Description ="NoOra is an attempt to apply a pattern to installing/updating Oracle database projects\r\nin order to promote portability and productivity. "
     info.Copyright = "(L) 2010 NoOra"
     info.WebSite = ("https://sourceforge.net/apps/trac/noora/", "NoOra home page")
     info.Developers = [ "Jan Ripke","Peter Kist","Gerry Duinkerken" ]

@@ -65,7 +65,6 @@ class NewProjectDialog(wx.Dialog):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.__headerPanel = HeaderPanel.HeaderPanel(self, -1,"NoOra Project","Create a new NoOra Project")
-        #self.__headerPanel.SetBackgroundColour('WHITE');
         self.__projectControl=TextPanel.TextPanel(self,-1,"Project name:")
         self.__browseControl = BrowsePanel.BrowsePanel(self,-1,"Directory")
         self.__databaseControl = TextPanel.TextPanel(self,-1,"Database")
@@ -73,19 +72,18 @@ class NewProjectDialog(wx.Dialog):
         self.__usernameControl = TextPanel.TextPanel(self,-1,"Username")
         self.__passwordControl = TextPanel.TextPanel(self,-1,"Password")
         self.__versionControl = TextPanel.TextPanel(self,-1,"Version")
-        self.__spacerPanel = wx.Panel(self,-1)
         self.__cancelFinishControl=CancelFinishPanel.CancelFinishPanel(self,-1)
+        
         sizer.Add(self.__headerPanel,0,wx.EXPAND)   
-        sizer.Add(self.__spacerPanel,0,wx.EXPAND)
-        sizer.Add(self.__projectControl,0,wx.EXPAND)
-        sizer.Add(self.__browseControl,0,wx.EXPAND)
-        sizer.Add(self.__databaseControl,0,wx.EXPAND)
-        sizer.Add(self.__schemeControl,0,wx.EXPAND)
-        sizer.Add(self.__usernameControl,0,wx.EXPAND)
-        sizer.Add(self.__passwordControl,0,wx.EXPAND)
-        sizer.Add(self.__versionControl,0,wx.EXPAND)
-        sizer.Add(self.__spacerPanel,1,wx.EXPAND)
-        sizer.Add(self.__cancelFinishControl,0,wx.ALIGN_RIGHT)
+        sizer.Add(self.__projectControl,0,wx.ALL|wx.EXPAND,5)
+        sizer.Add(self.__browseControl,0,wx.ALL|wx.EXPAND,5)
+        sizer.Add(self.__databaseControl,0,wx.ALL|wx.EXPAND,5)
+        sizer.Add(self.__schemeControl,0,wx.ALL|wx.EXPAND,5)
+        sizer.Add(self.__usernameControl,0,wx.ALL|wx.EXPAND,5)
+        sizer.Add(self.__passwordControl,0,wx.ALL|wx.EXPAND,5)
+        sizer.Add(self.__versionControl,0,wx.ALL|wx.EXPAND,5)
+        
+        sizer.Add(self.__cancelFinishControl,0,wx.ALIGN_RIGHT|wx.ALL,5)
                 
         self.SetSizer(sizer)
         self.SetMinSize((300,350))
@@ -93,19 +91,18 @@ class NewProjectDialog(wx.Dialog):
         
         
         
-        self.Bind(wx.EVT_BUTTON, self.OnCancel, id=Settings.ID_CANCEL)
-        self.Bind(wx.EVT_BUTTON, self.OnFinish, id=Settings.ID_FINISH)
-        self.Bind(wx.EVT_BUTTON, self.OnOpen, id=Settings.ID_OPEN)
+        self.Bind(wx.EVT_BUTTON, self.onCancel, id=Settings.ID_CANCEL)
+        self.Bind(wx.EVT_BUTTON, self.onFinish, id=Settings.ID_FINISH)
+        self.Bind(wx.EVT_BUTTON, self.onOpen, id=Settings.ID_OPEN)
 
-    def OnCancel(self, evt):
+    def onCancel(self, evt):
       self.EndModal(Settings.ID_CANCEL)
-      self.Close() 
-      
-    def OnFinish(self, evt): 
-      self.EndModal(Settings.ID_FINISH)          
-      self.Close() 
+            
+    def onFinish(self, evt): 
+      self.EndModal(Settings.ID_FINISH)
+ 
 
-    def OnOpen(self, evt): 
+    def onOpen(self, evt): 
       dirDialog = wx.DirDialog(self, "Choose a directory:", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)  
       if dirDialog.ShowModal() == wx.ID_OK:
         dirname=dirDialog.GetPath()
