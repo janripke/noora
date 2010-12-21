@@ -20,7 +20,7 @@ class OracleConnector(Connector.Connector):
       handle=open('feedback.log','wb')
       connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
       templateScript=projectHelper.cleanPath('@'+self.getScriptDir()+os.sep+'template.sql')
-      result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB],shell=False,stdout=handle,stderr=handle)
+      result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB],shell=True,stdout=handle,stderr=handle)
       if result!=0:
         stream=projectHelper.readFile('feedback.log')
         raise NooraException.NooraException(stream)
