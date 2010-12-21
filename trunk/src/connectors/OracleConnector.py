@@ -13,17 +13,26 @@ class OracleConnector(Connector.Connector):
   
   def getScriptDir(self):
     return self.getNooraDir()+os.sep+'scripts'
+
+  def getStartupInfo(self):
+    startupInfo=None
+    if os.name=='nt':    
+      startupInfo=subprocess.STARTUPINFO()
+      #USESHOWWINDOW
+      startupInfo.dwFlags |=1
+      #SW_HIDE
+      startupInfo.wShowWindow=0
+    return startupInfo
+
   
   def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB):
     try:
+      startupInfo=self.getStartupInfo()
       projectHelper=self.getProjectHelper()
       handle=open('feedback.log','wb')
       connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
-      startupInfo=subprocess.STARTUPINFO()
-      startupInfo.dwFlags |=subprocess.STARTF_USESHOWWINDOW
-      startupInfo.wShowWindow=subprocess.SW_HIDE
       templateScript=projectHelper.cleanPath('@'+self.getScriptDir()+os.sep+'template.sql')
-      result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB],shell=False,stdout=handle,stderr=handle,startupinfo=startupInfo,creationflags=subprocess.SW_HIDE)
+      result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB],shell=False,stdout=handle,stderr=handle,startupinfo=startupInfo)
       
       if result!=0:
         stream=projectHelper.readFile('feedback.log')
