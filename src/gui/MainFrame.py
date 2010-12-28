@@ -67,8 +67,10 @@ class MainFrame(AbstractFrame.AbstractFrame):
     return self.__configReader
       
   def getCommandDispatcher(self):
-    commandDispatcher=CommandDispatcher.CommandDispatcher()
-    return commandDispatcher
+    return self.__commandDispatcher
+  
+  def setCommandDispatcher(self, commandDispatcher):
+    self.__commandDispatcher=commandDispatcher
     
   def __init__(self, parent, title):
 
@@ -137,7 +139,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
         configReader=ConfigReader.ConfigReader(NOORA_DIR+os.sep+"project.conf")
         self.setConfigReader(configReader)
         
-        commandDispatcher=self.getCommandDispatcher(configReader, "generate")
+        commandDispatcher=CommandDispatcher.CommandDispatcher(configReader, "generate")
         parameterHelper=self.getParameterHelper()
       
         os.chdir(newProjectDialog.getDirectory())
@@ -169,7 +171,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
           parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getVersion())
 
         parameterHelper.setParameters(parameters)
-        commandDispatcher.executePlugin(pluginClass, parameterHelper)
+        commandDispatcher.executePlugin(parameterHelper)
       
         self.openProject(newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject(), 'project.conf')
              
@@ -251,37 +253,35 @@ class MainFrame(AbstractFrame.AbstractFrame):
       classLoader = ClassLoader.ClassLoader()
       configReader=self.getConfigReader()
       plugins = configReader.getValue('PLUGINS')
-      for plugin in plugins:
-        pluginClass=classLoader.findByPattern(plugin)
-        if pluginClass.getType().lower()==self.getCommandControl().getValue():
-          parameterHelper=self.getParameterHelper()
-          
-          parameters=[]
-          parameterDefinitions=pluginClass.getParameterDefinitions()
-          for parameterDefinition in parameterDefinitions:
-            
-            if parameterDefinition.getKey()=="database":
-              databaseControl=self.getDatabaseControl()
-              if databaseControl.getValue():
-                parameters.append(parameterDefinition.getParameters()[0]+"="+databaseControl.getValue())
-          
-            if parameterDefinition.getKey()=="scheme":
-              schemeControl=self.getSchemeControl()
-              if schemeControl.getValue():
-                parameters.append(parameterDefinition.getParameters()[0]+"="+schemeControl.getValue())
+      commandDispatcher=CommandDispatcher.CommandDispatcher(configReader,self.getCommandControl().getValue())
+      parameterHelper=self.getParameterHelper()
+      
+      parameters=[]
+      parameterDefinitions=commandDispatcher.getPlugin().getParameterDefinitions()
+      for parameterDefinition in parameterDefinitions:
+        
+        if parameterDefinition.getKey()=="database":
+          databaseControl=self.getDatabaseControl()
+          if databaseControl.getValue():
+            parameters.append(parameterDefinition.getParameters()[0]+"="+databaseControl.getValue())
+      
+        if parameterDefinition.getKey()=="scheme":
+          schemeControl=self.getSchemeControl()
+          if schemeControl.getValue():
+            parameters.append(parameterDefinition.getParameters()[0]+"="+schemeControl.getValue())
 
-            if parameterDefinition.getKey()=="environment":
-              environmentControl=self.getEnvironmentControl()
-              if environmentControl.getValue():
-                parameters.append(parameterDefinition.getParameters()[0]+"="+environmentControl.getValue())
+        if parameterDefinition.getKey()=="environment":
+          environmentControl=self.getEnvironmentControl()
+          if environmentControl.getValue():
+            parameters.append(parameterDefinition.getParameters()[0]+"="+environmentControl.getValue())
 
-            if parameterDefinition.getKey()=="version":
-              versionControl=self.getVersionControl()
-              if versionControl.getValue():
-                parameters.append(parameterDefinition.getParameters()[0]+"="+versionControl.getValue())
-          
-          parameterHelper.setParameters(parameters)
-          ExecuteThread(pluginClass, parameterHelper)
+        if parameterDefinition.getKey()=="version":
+          versionControl=self.getVersionControl()
+          if versionControl.getValue():
+            parameters.append(parameterDefinition.getParameters()[0]+"="+versionControl.getValue())
+      
+      parameterHelper.setParameters(parameters)
+      commandDispatcher.executePlugin(parameterHelper)
           
     except NooraException.NooraException as e:      
       print e.getMessage()
