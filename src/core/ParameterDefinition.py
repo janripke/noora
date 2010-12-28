@@ -20,6 +20,9 @@ class ParameterDefinition:
   def getParameters(self):
     return self.__parameters
   
+  def getFirstParameter(self):
+    return self.getParameters()[0]
+  
   def addParameter(self, key, parameters):
     self.setKey(key)
     self.setParameters(parameters)
