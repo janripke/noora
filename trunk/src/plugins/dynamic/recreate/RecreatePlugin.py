@@ -130,8 +130,8 @@ class RecreatePlugin(Plugin.Plugin):
           parameterHelper.setParameters(parameters)
           updatePlugin.execute(parameterHelper)
           
-          if version==maxVersion:
-            break
+        if version==maxVersion:
+          break
           
     except NooraException.NooraException as e:
       print e.getMessage()    

@@ -1,45 +1,28 @@
 import wx
 import os
 import sys
-import AbstractFrame        as AbstractFrame
-import panels.ExecutePanel  as ExecutePanel
-import panels.ActionPanel   as ActionPanel
-import panels.HeaderPanel   as HeaderPanel
-import core.ConfigReader    as ConfigReader
-import core.ClassLoader     as ClassLoader
-import core.ParameterHelper as ParameterHelper
-import core.Redirect        as Redirect
-import core.NooraException  as NooraException
-import MainMenuBar          as MainMenuBar
-import MainToolBar          as MainToolBar
-import Settings             as Settings
-import NewProjectDialog     as NewProjectDialog
-import EditProjectDialog    as EditProjectDialog
+import AbstractFrame           as AbstractFrame
+import panels.ExecutePanel     as ExecutePanel
+import panels.ActionPanel      as ActionPanel
+import panels.HeaderPanel      as HeaderPanel
+import core.ConfigReader       as ConfigReader
+import core.ClassLoader        as ClassLoader
+import core.ParameterHelper    as ParameterHelper
+import core.Redirect           as Redirect
+import core.NooraException     as NooraException
+import core.CommandDispatcher  as CommandDispatcher
+import MainMenuBar             as MainMenuBar
+import MainToolBar             as MainToolBar
+import Settings                as Settings
+import NewProjectDialog        as NewProjectDialog
+import EditProjectDialog       as EditProjectDialog
+import wx.lib.agw.flatnotebook as FlatNoteBook
+import MainArtProvider         as MainArtProvider
 import traceback
-from threading import Thread
-
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
 PLUGIN_DIR   = NOORA_DIR+os.sep+'plugins'
 sys.path.append(PLUGIN_DIR)
-
-
-
-
-class ExecuteThread(Thread):
-
-  def __init__(self, pluginClass, parameterHelper):
-    Thread.__init__(self)
-    self.__pluginClass=pluginClass
-    self.__parameterHelper=parameterHelper
-    self.start()
- 
-  def run(self):
-    try:
-      self.__pluginClass.execute(self.__parameterHelper)
-    except NooraException.NooraException as e:      
-      print e.getMessage()
-      exit(1)
 
 
 class MainFrame(AbstractFrame.AbstractFrame):
@@ -82,6 +65,10 @@ class MainFrame(AbstractFrame.AbstractFrame):
     
   def getConfigReader(self):
     return self.__configReader
+      
+  def getCommandDispatcher(self):
+    commandDispatcher=CommandDispatcher.CommandDispatcher()
+    return commandDispatcher
     
   def __init__(self, parent, title):
 
@@ -94,26 +81,34 @@ class MainFrame(AbstractFrame.AbstractFrame):
     mainToolBar.Realize()
     sizer=wx.BoxSizer(wx.VERTICAL)
     actionPanel = wx.Panel(self,-1)
-    self.__headerControl = HeaderPanel.HeaderPanel(actionPanel, -1,"NoOra Project","")
     
-    self.__actionControl = ActionPanel.ActionPanel(actionPanel,-1)
-    #self.__executeControl=ExecutePanel.ExecutePanel(actionPanel,-1)
-    self.__console = wx.TextCtrl(actionPanel,-1,style=wx.TE_MULTILINE)
+    self.__headerControl = HeaderPanel.HeaderPanel(actionPanel, -1,"NoOra Project","")
+    notebook = FlatNoteBook.FlatNotebook(actionPanel,-1,style=FlatNoteBook.FNB_FF2)
+    style=notebook.GetWindowStyleFlag()
+    style|=FlatNoteBook.FNB_VC8
+    notebook.SetAGWWindowStyleFlag(style)
+    images=wx.ImageList(16, 16)
+
+    image=MainArtProvider.MainArtProvider.GetBitmap(Settings.ART_CONSOLE, wx.ART_TOOLBAR, (16, 16))
+    images.Add(image)
+    
+    notebook.SetImageList(images)
+    self.__actionControl = ActionPanel.ActionPanel(notebook,-1)
+    self.__console = wx.TextCtrl(notebook,-1,style=wx.TE_MULTILINE)
     self.__console.SetEditable(False)
+    
+    notebook.AddPage(self.__actionControl,'Action')
+    notebook.AddPage(self.__console,'Console',True,0)
     redirect=Redirect.Redirect(self.__console)
     sys.stdout=redirect
     sys.stderr=redirect
     
-    sizer.Add(self.__headerControl,0,wx.EXPAND)    
-    sizer.Add(self.__actionControl,0,wx.ALL,5)
-    #sizer.Add(self.__executeControl,0,wx.EXPAND)
-    sizer.Add(self.__console,1,wx.EXPAND)
+    sizer.Add(self.__headerControl,0,wx.EXPAND)
+    sizer.Add(notebook,1,wx.EXPAND)
     
     actionPanel.SetSizer(sizer)
     
     self.Bind(wx.EVT_BUTTON, self.onOpenProject, id=Settings.ID_OPEN_PROJECT) 
-    #self.Bind(wx.EVT_BUTTON, self.onExecute, id=Settings.ID_EXECUTE)   
-    #self.Bind(wx.EVT_BUTTON, self.onClear, id=Settings.ID_CLEAR)
     self.Bind(wx.EVT_MENU, self.onOpenProject, id=Settings.ID_OPEN_PROJECT)
     self.Bind(wx.EVT_MENU, self.onNewProject, id=Settings.ID_NEW_PROJECT)
     self.Bind(wx.EVT_MENU, self.onAbout, id=wx.ID_ABOUT)
@@ -141,46 +136,42 @@ class MainFrame(AbstractFrame.AbstractFrame):
       if result == Settings.ID_FINISH:
         configReader=ConfigReader.ConfigReader(NOORA_DIR+os.sep+"project.conf")
         self.setConfigReader(configReader)
+        
+        commandDispatcher=self.getCommandDispatcher(configReader, "generate")
+        parameterHelper=self.getParameterHelper()
       
-        plugins = configReader.getValue('PLUGINS')
-        classLoader = ClassLoader.ClassLoader()
-        for plugin in plugins:
-          pluginClass=classLoader.findByPattern(plugin)
-          if pluginClass.getType().lower()=="generate":
-            parameterHelper=self.getParameterHelper()
-          
-            os.chdir(newProjectDialog.getDirectory())
-          
-            parameters=[]
-            if newProjectDialog.getProject():
-            
-              parameterDefinition=pluginClass.findParameterDefinition('project')
-              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject())
-          
-            if newProjectDialog.getDatabase():
-              parameterDefinition=pluginClass.findParameterDefinition('database')
-              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getDatabase())
+        os.chdir(newProjectDialog.getDirectory())
+      
+        parameters=[]
+        if newProjectDialog.getProject():
+        
+          parameterDefinition=pluginClass.findParameterDefinition('project')
+          parameters.append(parameterDefinition.getFirstParameter()+"="+newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject())
+      
+        if newProjectDialog.getDatabase():
+          parameterDefinition=pluginClass.findParameterDefinition('database')
+          parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getDatabase())
 
-            if newProjectDialog.getScheme():
-              parameterDefinition=pluginClass.findParameterDefinition('scheme')
-              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getScheme())
+        if newProjectDialog.getScheme():
+          parameterDefinition=pluginClass.findParameterDefinition('scheme')
+          parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getScheme())
 
-            if newProjectDialog.getUsername():
-              parameterDefinition=pluginClass.findParameterDefinition('username')
-              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getUsername())
+        if newProjectDialog.getUsername():
+          parameterDefinition=pluginClass.findParameterDefinition('username')
+          parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getUsername())
 
-            if newProjectDialog.getPassword():
-              parameterDefinition=pluginClass.findParameterDefinition('password')
-              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getPassword())
-          
-            if newProjectDialog.getVersion():
-              parameterDefinition=pluginClass.findParameterDefinition('version')
-              parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getVersion())
+        if newProjectDialog.getPassword():
+          parameterDefinition=pluginClass.findParameterDefinition('password')
+          parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getPassword())
+      
+        if newProjectDialog.getVersion():
+          parameterDefinition=pluginClass.findParameterDefinition('version')
+          parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getVersion())
 
-            parameterHelper.setParameters(parameters)
-            pluginClass.execute(parameterHelper)
-          
-            self.openProject(newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject(), 'project.conf')
+        parameterHelper.setParameters(parameters)
+        commandDispatcher.executePlugin(pluginClass, parameterHelper)
+      
+        self.openProject(newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject(), 'project.conf')
              
       newProjectDialog.Destroy()
     except NooraException.NooraException as e: 
@@ -306,7 +297,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     info.Name = "NoOra Gui"
     info.Version = "0.0.6"
     info.Description ="NoOra is an attempt to apply a pattern to installing/updating Oracle database projects\r\nin order to promote portability and productivity. "
-    info.Copyright = "(L) 2010 NoOra"
+    info.Copyright = "(L) 2010, 2011 NoOra"
     info.WebSite = ("https://sourceforge.net/apps/trac/noora/", "NoOra home page")
     info.Developers = [ "Jan Ripke","Peter Kist","Gerry Duinkerken" ]
     wx.AboutBox(info)
