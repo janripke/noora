@@ -139,39 +139,28 @@ class MainFrame(AbstractFrame.AbstractFrame):
         configReader=ConfigReader.ConfigReader(NOORA_DIR+os.sep+"project.conf")
         self.setConfigReader(configReader)
         
-        commandDispatcher=CommandDispatcher.CommandDispatcher(configReader, "generate")
-        parameterHelper=self.getParameterHelper()
-      
+        commandDispatcher=CommandDispatcher.CommandDispatcher(configReader, "generate")     
         os.chdir(newProjectDialog.getDirectory())
       
-        parameters=[]
         if newProjectDialog.getProject():
-        
-          parameterDefinition=pluginClass.findParameterDefinition('project')
-          parameters.append(parameterDefinition.getFirstParameter()+"="+newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject())
+          commandDispatcher.appendParameter("project", newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject())
       
         if newProjectDialog.getDatabase():
-          parameterDefinition=pluginClass.findParameterDefinition('database')
-          parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getDatabase())
+          commandDispatcher.appendParameter("database", newProjectDialog.getDatabase())
 
         if newProjectDialog.getScheme():
-          parameterDefinition=pluginClass.findParameterDefinition('scheme')
-          parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getScheme())
+          commandDispatcher.appendParameter("scheme", newProjectDialog.getScheme())
 
         if newProjectDialog.getUsername():
-          parameterDefinition=pluginClass.findParameterDefinition('username')
-          parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getUsername())
+          commandDispatcher.appendParameter("username", newProjectDialog.getUsername())
 
         if newProjectDialog.getPassword():
-          parameterDefinition=pluginClass.findParameterDefinition('password')
-          parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getPassword())
+          commandDispatcher.appendParameter("password", newProjectDialog.getPassword())
       
         if newProjectDialog.getVersion():
-          parameterDefinition=pluginClass.findParameterDefinition('version')
-          parameters.append(parameterDefinition.getParameters()[0]+"="+newProjectDialog.getVersion())
+          commandDispatcher.appendParameter("version", newProjectDialog.getVersion())
 
-        parameterHelper.setParameters(parameters)
-        commandDispatcher.executePlugin(parameterHelper)
+        commandDispatcher.executePlugin()
       
         self.openProject(newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject(), 'project.conf')
              
@@ -233,9 +222,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     if openDialog.ShowModal() == wx.ID_OK:
       filename=openDialog.GetFilenames()[0]
       directory=openDialog.GetDirectory()
-      self.openProject(directory, filename)
-
-    
+      self.openProject(directory, filename)    
     openDialog.Destroy()
     
   def onEditProject(self, evt):
@@ -250,38 +237,26 @@ class MainFrame(AbstractFrame.AbstractFrame):
 
   def onExecute(self, evt):
     try:
-      classLoader = ClassLoader.ClassLoader()
       configReader=self.getConfigReader()
-      plugins = configReader.getValue('PLUGINS')
       commandDispatcher=CommandDispatcher.CommandDispatcher(configReader,self.getCommandControl().getValue())
-      parameterHelper=self.getParameterHelper()
-      
-      parameters=[]
-      parameterDefinitions=commandDispatcher.getPlugin().getParameterDefinitions()
-      for parameterDefinition in parameterDefinitions:
-        
-        if parameterDefinition.getKey()=="database":
-          databaseControl=self.getDatabaseControl()
-          if databaseControl.getValue():
-            parameters.append(parameterDefinition.getParameters()[0]+"="+databaseControl.getValue())
-      
-        if parameterDefinition.getKey()=="scheme":
-          schemeControl=self.getSchemeControl()
-          if schemeControl.getValue():
-            parameters.append(parameterDefinition.getParameters()[0]+"="+schemeControl.getValue())
 
-        if parameterDefinition.getKey()=="environment":
-          environmentControl=self.getEnvironmentControl()
-          if environmentControl.getValue():
-            parameters.append(parameterDefinition.getParameters()[0]+"="+environmentControl.getValue())
+      databaseControl=self.getDatabaseControl()
+      if databaseControl.getValue():
+        commandDispatcher.appendParameter("database", databaseControl.getValue())
+          
+      schemeControl=self.getSchemeControl()
+      if schemeControl.getValue():
+        commandDispatcher.appendParameter("scheme", schemeControl.getValue())
 
-        if parameterDefinition.getKey()=="version":
-          versionControl=self.getVersionControl()
-          if versionControl.getValue():
-            parameters.append(parameterDefinition.getParameters()[0]+"="+versionControl.getValue())
-      
-      parameterHelper.setParameters(parameters)
-      commandDispatcher.executePlugin(parameterHelper)
+      environmentControl=self.getEnvironmentControl()
+      if environmentControl.getValue():
+        commandDispatcher.appendParameter("environment", environmentControl.getValue())
+
+      versionControl=self.getVersionControl()
+      if versionControl.getValue():
+        commandDispatcher.appendParameter("version", versionControl.getValue())        
+
+      commandDispatcher.executePlugin()
           
     except NooraException.NooraException as e:      
       print e.getMessage()
