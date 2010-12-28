@@ -9,6 +9,7 @@ class ConfigReader:
   def __init__(self, filename):    
     self.__lines=[]
     self.__message=None
+    self.__filename=filename
     self.loadFromFile(filename)
    
   def parse(self, stream):
@@ -90,6 +91,9 @@ class ConfigReader:
 
   def getLines(self):
     return self.__lines
+  
+  def getFilename(self):
+    return self.__filename
 
 
 

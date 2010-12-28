@@ -2,7 +2,6 @@ import wx
 import os
 import sys
 import AbstractFrame           as AbstractFrame
-import panels.ExecutePanel     as ExecutePanel
 import panels.ActionPanel      as ActionPanel
 import panels.HeaderPanel      as HeaderPanel
 import core.ConfigReader       as ConfigReader
@@ -11,6 +10,7 @@ import core.ParameterHelper    as ParameterHelper
 import core.Redirect           as Redirect
 import core.NooraException     as NooraException
 import core.CommandDispatcher  as CommandDispatcher
+import core.PluginFinishedEvent as PluginFinishedEvent
 import MainMenuBar             as MainMenuBar
 import MainToolBar             as MainToolBar
 import Settings                as Settings
@@ -122,14 +122,13 @@ class MainFrame(AbstractFrame.AbstractFrame):
     self.Bind(wx.EVT_TOOL, self.onExecute, id=Settings.ID_EXECUTE)   
     self.Bind(wx.EVT_TOOL, self.onClear, id=Settings.ID_CLEAR)
 
-    
+    self.Connect(-1, -1, Settings.EVT_PLUGIN_FINISHED, self.openProject)
     self.Bind(wx.EVT_COMBOBOX, self.onCommandChanged, id=Settings.ID_COMMAND)
+ 
     
     self.__statusBar = self.CreateStatusBar();
     self.__statusBar.SetStatusText("To create a new project, click on New Project in the Project menu")
     
-
-
 
   def onNewProject(self, evt): 
     try:
@@ -160,9 +159,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
         if newProjectDialog.getVersion():
           commandDispatcher.appendParameter("version", newProjectDialog.getVersion())
 
-        commandDispatcher.executePlugin()
-      
-        self.openProject(newProjectDialog.getDirectory()+os.sep+newProjectDialog.getProject(), 'project.conf')
+        commandDispatcher.executePlugin(self)
              
       newProjectDialog.Destroy()
     except NooraException.NooraException as e: 
@@ -173,7 +170,9 @@ class MainFrame(AbstractFrame.AbstractFrame):
       print traceback.print_exc()
 
 
-  def openProject(self, directory, filename):  
+  def openProject(self, evt):  
+    directory=evt.getDirectory()
+    filename=evt.getFilename()
 
     headerControl=self.getHeaderControl()
     headerControl.getDescriptionControl().SetLabel(directory)
@@ -216,14 +215,14 @@ class MainFrame(AbstractFrame.AbstractFrame):
     environmentControl.setValue(defaultEnvironment)  
         
 
-
   def onOpenProject(self, evt): 
     openDialog = wx.FileDialog(self, "Choose a NoOra project file", "", "", "NoOra project files (project.conf)|project.conf", wx.OPEN)  
     if openDialog.ShowModal() == wx.ID_OK:
       filename=openDialog.GetFilenames()[0]
       directory=openDialog.GetDirectory()
-      self.openProject(directory, filename)    
+      wx.PostEvent(self, PluginFinishedEvent.PluginFinishedEvent(directory, filename))   
     openDialog.Destroy()
+
     
   def onEditProject(self, evt):
     headerControl=self.getHeaderControl()
@@ -256,7 +255,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
       if versionControl.getValue():
         commandDispatcher.appendParameter("version", versionControl.getValue())        
 
-      commandDispatcher.executePlugin()
+      commandDispatcher.executePlugin(self)
           
     except NooraException.NooraException as e:      
       print e.getMessage()
@@ -270,7 +269,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
   def onAbout(self, evt):
     info = wx.AboutDialogInfo()
     info.Name = "NoOra Gui"
-    info.Version = "0.0.6"
+    info.Version = "0.0.7"
     info.Description ="NoOra is an attempt to apply a pattern to installing/updating Oracle database projects\r\nin order to promote portability and productivity. "
     info.Copyright = "(L) 2010, 2011 NoOra"
     info.WebSite = ("https://sourceforge.net/apps/trac/noora/", "NoOra home page")
