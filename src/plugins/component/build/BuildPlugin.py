@@ -18,9 +18,13 @@ class BuildPlugin(Plugin.Plugin):
   def getPluginDir(self):
     return self.getNooraDir()+os.sep+'plugins'+os.sep+'component'+os.sep+'build'
 
+  def getDescription(self):
+    return "creates a database independend component."
+
+
   def getUsage(self):
     print "NoOra database installer, build.py"
-    print "creates a database independend component."
+    print self.getDescription()
     print "-v= --version=  required, the version to build"
 
   def getDefaultVersion(self):

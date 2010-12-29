@@ -16,4 +16,3 @@ class MainToolBar(wx.ToolBar):
 
     self.AddLabelTool(Settings.ID_EXECUTE,'Execute', wx.ArtProvider.GetBitmap(wx.ART_GO_FORWARD, wx.ART_TOOLBAR, (16, 16)),wx.NullBitmap,0,'Execute command','Execute command')
     self.AddLabelTool(Settings.ID_CLEAR,'', wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, (16, 16)),wx.NullBitmap,0,'Clear console output','Clear console output')
-      

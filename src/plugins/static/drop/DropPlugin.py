@@ -11,10 +11,12 @@ class DropPlugin(Plugin.Plugin):
     self.addParameterDefinition('database',['-s','-si','--sid'])
     self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
 
+  def getDescription(self):
+    return "drops the database objects of the defined schemes."
 
   def getUsage(self):
     print "NoOra database installer, drop.py"
-    print "drops the database objects of the defined schemes."
+    print self.getDescription()
     print "-s=  --sid=     required contains the tnsname of the database."
     print "-u=  --scheme=  not required, contains the scheme of "
     print "                the database objects to drop."

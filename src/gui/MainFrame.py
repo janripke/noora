@@ -39,6 +39,10 @@ class MainFrame(AbstractFrame.AbstractFrame):
   
   def getHeaderControl(self):
     return self.__headerControl
+
+  def getDescriptionControl(self):
+    actionControl=self.getActionControl()
+    return actionControl.getDesciptionControl()
   
   def getDatabaseControl(self):
     actionControl=self.getActionControl()
@@ -94,13 +98,19 @@ class MainFrame(AbstractFrame.AbstractFrame):
     image=MainArtProvider.MainArtProvider.GetBitmap(Settings.ART_CONSOLE, wx.ART_TOOLBAR, (16, 16))
     images.Add(image)
     
+    image=MainArtProvider.MainArtProvider.GetBitmap(Settings.ART_ACTION, wx.ART_TOOLBAR, (16, 16))
+    images.Add(image)
+    
+    
     notebook.SetImageList(images)
     self.__actionControl = ActionPanel.ActionPanel(notebook,-1)
     self.__console = wx.TextCtrl(notebook,-1,style=wx.TE_MULTILINE)
     self.__console.SetEditable(False)
     
-    notebook.AddPage(self.__actionControl,'Action')
+    notebook.AddPage(self.__actionControl,'Action',True,1)
     notebook.AddPage(self.__console,'Console',True,0)
+    
+    
     redirect=Redirect.Redirect(self.__console)
     sys.stdout=redirect
     sys.stderr=redirect
@@ -122,9 +132,10 @@ class MainFrame(AbstractFrame.AbstractFrame):
     self.Bind(wx.EVT_TOOL, self.onExecute, id=Settings.ID_EXECUTE)   
     self.Bind(wx.EVT_TOOL, self.onClear, id=Settings.ID_CLEAR)
 
-    self.Connect(-1, -1, Settings.EVT_PLUGIN_FINISHED, self.openProject)
+    
+    self.Connect(Settings.ID_OPEN_PROJECT, -1, Settings.EVT_PLUGIN_FINISHED, self.openProject)
     self.Bind(wx.EVT_COMBOBOX, self.onCommandChanged, id=Settings.ID_COMMAND)
- 
+    #self.Bind(Settings.EVT_PLUGIN_FINISHED, self.openProject, id=Settings.ID_OPEN_PROJECT)
     
     self.__statusBar = self.CreateStatusBar();
     self.__statusBar.SetStatusText("To create a new project, click on New Project in the Project menu")
@@ -159,7 +170,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
         if newProjectDialog.getVersion():
           commandDispatcher.appendParameter("version", newProjectDialog.getVersion())
 
-        commandDispatcher.executePlugin(self)
+        commandDispatcher.executePlugin(Settings.ID_OPEN_PROJECT, self)
              
       newProjectDialog.Destroy()
     except NooraException.NooraException as e: 
@@ -220,7 +231,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     if openDialog.ShowModal() == wx.ID_OK:
       filename=openDialog.GetFilenames()[0]
       directory=openDialog.GetDirectory()
-      wx.PostEvent(self, PluginFinishedEvent.PluginFinishedEvent(directory, filename))   
+      wx.PostEvent(self, PluginFinishedEvent.PluginFinishedEvent(Settings.ID_OPEN_PROJECT,directory, filename))   
     openDialog.Destroy()
 
     
@@ -255,7 +266,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
       if versionControl.getValue():
         commandDispatcher.appendParameter("version", versionControl.getValue())        
 
-      commandDispatcher.executePlugin(self)
+      commandDispatcher.executePlugin(Settings.ID_EXECUTE, self)
           
     except NooraException.NooraException as e:      
       print e.getMessage()
@@ -286,6 +297,8 @@ class MainFrame(AbstractFrame.AbstractFrame):
     for plugin in plugins:
       pluginClass=classLoader.findByPattern(plugin)
       if pluginClass.getType().lower()==self.getCommandControl().getValue():
+        descriptionControl=self.getDescriptionControl()
+        descriptionControl.SetLabel(pluginClass.getDescription())
         parameterDefinition=pluginClass.findParameterDefinition('database')
         if parameterDefinition:
           self.getDatabaseControl().Enable(True)

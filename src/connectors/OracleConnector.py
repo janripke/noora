@@ -24,6 +24,12 @@ class OracleConnector(Connector.Connector):
       startupInfo.wShowWindow=0
     return startupInfo
 
+  def getDatabases(self):
+    projectHelper=self.getProjectHelper()
+    url=os.getenv('TNS_ADMIN')+os.sep+"tnsnames.ora"
+    stream=projectHelper.readFile(url)
+    print stream
+    
   
   def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB):
     try:

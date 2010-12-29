@@ -9,18 +9,19 @@ from threading import Thread
 
 class ExecuteThread(Thread):
 
-  def __init__(self, pluginClass, parameterHelper, parent):
+  def __init__(self, id, parent, pluginClass, parameterHelper):
     Thread.__init__(self)
     self.__pluginClass=pluginClass
     self.__parameterHelper=parameterHelper
     self.__parent=parent
+    self.__id=id
     self.start()
  
   def run(self):
     try:
       self.__pluginClass.execute(self.__parameterHelper)
       filename=self.__pluginClass.getConfigReader().getFilename()
-      wx.PostEvent(self.__parent, PluginFinishedEvent.PluginFinishedEvent(os.path.abspath('.'), filename))
+      wx.PostEvent(self.__parent, PluginFinishedEvent.PluginFinishedEvent(self.__id,os.path.abspath('.'), filename))
     except NooraException.NooraException as e:      
       print e.getMessage()
       exit(1)
@@ -63,10 +64,10 @@ class CommandDispatcher:
       if parameterDefinition.getKey()==parameter:
         parameters.append(parameterDefinition.getFirstParameter()+"="+value)
   
-  def executePlugin(self, parent):
+  def executePlugin(self, id, parent):
     plugin=self.getPlugin()
     parameterHelper=self.getParameterHelper()
-    ExecuteThread(plugin, parameterHelper, parent)
+    ExecuteThread(id, parent, plugin, parameterHelper)
 
             
 

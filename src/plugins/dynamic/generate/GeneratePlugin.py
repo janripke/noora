@@ -21,11 +21,14 @@ class GeneratePlugin(Plugin.Plugin):
   
   def getPluginDir(self):
     return self.getNooraDir()+os.sep+'plugins'+os.sep+'dynamic'+os.sep+'generate'
+
+  def getDescription(self):
+    return "intiates a new NoOra database project"
   
 
   def getUsage(self):  
     print "NoOra database installer, GeneratePlugin"
-    print "intiates a NoOra database project"
+    print self.getDescription()
     print "-pr= --project=   not required, contains the database project name."
     print "-si= --sid=       not required, contains the oracle sid."
     print "-sc= --scheme=    not required, contains the scheme name."

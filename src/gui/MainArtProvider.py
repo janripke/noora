@@ -24,6 +24,8 @@ class MainArtProvider(wx.ArtProvider):
       bmp=wx.Image(self.getResourceDir()+os.sep+'clear_console.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
     if artid == Settings.ART_CONSOLE:
       bmp=wx.Image(self.getResourceDir()+os.sep+'console_view.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
+    if artid == Settings.ART_ACTION:
+      bmp=wx.Image(self.getResourceDir()+os.sep+'throbber.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
     return bmp
   
   def setNooraDir(self, path):

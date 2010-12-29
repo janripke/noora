@@ -89,14 +89,12 @@ class NewProjectDialog(wx.Dialog):
         self.SetSizer(sizer)
         self.SetMinSize((460,380))
 
-
-        
-        
-        
         
         self.Bind(wx.EVT_BUTTON, self.onCancel, id=Settings.ID_CANCEL)
         self.Bind(wx.EVT_BUTTON, self.onFinish, id=Settings.ID_FINISH)
         self.Bind(wx.EVT_BUTTON, self.onOpen, id=Settings.ID_OPEN)
+        
+        self.__versionControl.setValue("1.0.0")
 
     def onCancel(self, evt):
       self.EndModal(Settings.ID_CANCEL)

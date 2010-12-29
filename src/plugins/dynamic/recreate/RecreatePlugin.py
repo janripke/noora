@@ -20,11 +20,13 @@ class RecreatePlugin(Plugin.Plugin):
     self.addParameterDefinition('environment',['-e','--env'])
     self.addParameterDefinition('version',['-m','--max'])
     
+  def getDescription(self):
+    return "recreates the database objects of the defined schemes."
 
 
   def getUsage(self):  
     print "NoOra database installer, recreate.py"
-    print "recreates the database objects of the defined schemes."
+    print self.getDescription()
     print "-s= --sid=     required contains the tnsname of the database."
     print "-u= --scheme=  not required, contains the scheme of "
     print "               the database objects to drop."

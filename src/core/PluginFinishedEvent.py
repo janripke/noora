@@ -12,8 +12,9 @@ class PluginFinishedEvent(wx.PyEvent):
   def getFilename(self):
     return self.__filename
 
-  def __init__(self, directory, filename):
-    self.__eventType = Settings.EVT_PLUGIN_FINISHED
-    wx.PyEvent.__init__(self, eventType=self.__eventType)
+  def __init__(self, id, directory, filename):
+    event_type = Settings.EVT_PLUGIN_FINISHED
+    #wx.PyEvent.__init__(self, id=id, eventType=self.__eventType)
+    wx.PyEvent.__init__(self, id, event_type)
     self.__directory = directory
     self.__filename = filename 
