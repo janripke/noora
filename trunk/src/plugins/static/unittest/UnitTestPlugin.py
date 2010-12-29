@@ -12,11 +12,13 @@ class UnitTestPlugin(Plugin.Plugin):
     self.addParameterDefinition('database',['-s','-si','--sid'])
     self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
     
+  def getDescription(self):
+    return "executes unit tests. Uses the noora unit test framework."
 
 
   def getUsage(self):  
     print "NoOra database installer, unittest.py."
-    print "executes unit tests. Uses the noora unit test framework."
+    print self.getDescription()
     print "remarks : a unit test is always a package. "
     print "          A package containing procedures that start with T_ is considered"
     print "          as a unit test."

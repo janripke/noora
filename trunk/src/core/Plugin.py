@@ -58,6 +58,9 @@ class Plugin:
 
   def getUsage(self):
     pass
+  
+  def getDescription(self):
+    return ""
 
   def setType(self, type):
     self.__type = type

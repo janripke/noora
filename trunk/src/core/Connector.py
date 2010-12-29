@@ -33,6 +33,9 @@ class Connector:
   def getNooraDir(self):
     return self.__nooraDir
   
+  def getDatabases(self):
+    return []
+  
   def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB):
     pass
     

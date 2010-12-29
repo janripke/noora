@@ -14,10 +14,12 @@ class CreatePlugin(Plugin.Plugin):
     self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
     self.addParameterDefinition('environment',['-e','--env'])
 
+  def getDescription(self):
+    return "executes the defined baseline scripts in the create folder."
 
   def getUsage(self):  
     print "NoOra database installer, create.py"
-    print "executes the defined baseline scripts in the create folder"
+    print self.getDescription()
     print "-s= --sid=     required contains the tnsname of the database."
     print "-u= --scheme=  not required, contains the scheme of "
     print "               the database objects to drop."

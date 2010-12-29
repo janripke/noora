@@ -17,11 +17,12 @@ class UpdatePlugin(Plugin.Plugin):
     self.addParameterDefinition('environment',['-e','--env'])
     self.addParameterDefinition('version',['-v','--version'])
 
-
+  def getDescription(self):
+    return "executes the defined update scripts in the alter folders."
 
   def getUsage(self):  
     print "Noora database installer, update.py"
-    print "executes the defined update scripts in the alter folders."
+    print self.getDescription()
     print "-s= --sid=     required, contains the tnsname of the database."
     print "-v= --version= required, contains the version of the update"
     print "                         to execute"
