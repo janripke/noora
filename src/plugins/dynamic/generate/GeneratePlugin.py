@@ -23,7 +23,7 @@ class GeneratePlugin(Plugin.Plugin):
     return self.getNooraDir()+os.sep+'plugins'+os.sep+'dynamic'+os.sep+'generate'
 
   def getDescription(self):
-    return "intiates a new NoOra database project"
+    return "intiates a new NoOra database project, or a new release of an existing database project."
   
 
   def getUsage(self):  
@@ -36,6 +36,24 @@ class GeneratePlugin(Plugin.Plugin):
     print "-p= --password=   not required, contains the password."
     print "-v= --version=    required, contains the version to create."
     
+  def getDefaultVersion(self):
+    configReader=self.getConfigReader()
+    defaultVersion=configReader.getValue('DEFAULT_VERSION')
+    return defaultVersion
+
+  def getVersions(self, defaultVersion):
+    projectHelper=self.getProjectHelper()    
+    versions=[]
+    alterFolder=projectHelper.getAlterFolder()
+    if projectHelper.folderPresent(alterFolder):
+      versions=projectHelper.findFolders(alterFolder)
+    createFolder=projectHelper.getCreateFolder()
+    if projectHelper.folderPresent(createFolder):
+      versions.append(defaultVersion)
+    versionHelper=VersionHelper.VersionHelper(versions)
+    versions=versionHelper.sort()
+    return versions
+
 
   def getSqlVersionStatement(self, versions, version):
     configReader=self.getConfigReader()
@@ -53,7 +71,6 @@ class GeneratePlugin(Plugin.Plugin):
     stream=configReader.getValue('ENVIRONMENT_INSERT_STATEMENT')
     stream=stream.replace('<environment>',environment)
     return stream
-
 
 
   def execute(self, parameterHelper):
@@ -136,23 +153,15 @@ class GeneratePlugin(Plugin.Plugin):
     environments=configReader.getValue('ENVIRONMENTS')
     projectHelper.failOnEmpty(environments,'the variable ENVIRONMENTS is not configured for this project.')
 
-    defaultVersion=configReader.getValue('DEFAULT_VERSION')
+    defaultVersion=self.getDefaultVersion()
     projectHelper.failOnEmpty(defaultVersion,'the variable DEFAULT_VERSION is not configured for this project.')
 
 
     # find the versions
-    versions=[]
-    alterFolder=projectHelper.getAlterFolder()
-    if projectHelper.folderPresent(alterFolder):
-      versions=projectHelper.findFolders(alterFolder)
-    createFolder=projectHelper.getCreateFolder()
-    if projectHelper.folderPresent(createFolder):
-      versions.append(defaultVersion)
-  
-    versionHelper=VersionHelper.VersionHelper(versions)
-    versions=versionHelper.sort()
-    
+    versions=self.getVersions(defaultVersion)
+        
     if len(version)==0:
+      versionHelper=VersionHelper.VersionHelper(versions)
       version.append(versionHelper.getNextRevision(defaultVersion))    
    
     version=version[0]

@@ -22,6 +22,14 @@ class ComboBoxPanel(AbstractPanel.AbstractPanel):
     comboBoxControl=self.getComboBoxControl()
     comboBoxControl.Append(choice)
   
+  def appendItems(self, choices):
+    comboBoxControl=self.getComboBoxControl()
+    comboBoxControl.AppendItems(choices)
+  
+  def setItems(self, choices):
+    comboBoxControl=self.getComboBoxControl()
+    comboBoxControl.SetItems(choices)
+    
 
   def __init__(self, parent, id, label, choices):
     AbstractPanel.AbstractPanel.__init__(self, parent, id)

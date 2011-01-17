@@ -10,4 +10,11 @@ class PluginManager:
 
   def getPlugins(self):
     return self.__plugins
+  
+  def findPlugin(self, type):
+    plugins=self.getPlugins()
+    for plugin in plugins:
+      if plugin.getType().lower()==type.lower():
+        return plugin
+    return None
     
