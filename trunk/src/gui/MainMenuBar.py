@@ -14,7 +14,16 @@ class MainMenuBar(wx.MenuBar):
 
         menu = wx.Menu()
         menu.Append(Settings.ID_EDIT_PROJECT, "&project.conf...\tAlt-p","View the project configuration file")
-        self.Append(menu, "&View")        
+        self.Append(menu, "&View")  
+        
+        menu = wx.Menu()
+        showViewMenu = wx.Menu()
+        showViewMenu.Append(Settings.ID_SHOW_ACTION_VIEW, "&Action\tAlt-a","Show the action view")
+        showViewMenu.Append(Settings.ID_SHOW_CONSOLE_VIEW, "&Console\tAlt-c","Show the console view")
+        menu.AppendSubMenu(showViewMenu, "Show View")
+        self.Append(menu, "&Window")        
+        
+        
         
         menu = wx.Menu()
         menu.Append(wx.ID_ABOUT, "&About\tAlt-A","About")
