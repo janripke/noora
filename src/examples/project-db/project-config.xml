@@ -1,0 +1,43 @@
+<project>
+
+  <!-- name of the project -->
+  <name>ExampleProject</name>
+  
+  <!-- list of plugins that are supported/required for this project -->
+  <plugins>
+  
+    <!-- 
+      Define a plugin named 'generate'.
+      The name of the plugin is used in the config file to refer to a plugin. 
+    -->
+    <plugin name="generate">
+      <!-- plugin class. 
+      These are found in plugins/dynamic and plugins/static directories 
+      -->
+      <class>dynamic.generate.GeneratePlugin.GeneratePlugin</class>
+    </plugin>
+    
+    <plugin name="drop">
+      <class>static.drop.DropPlugin.DropPlugin</class>
+    </plugin>
+        
+  </plugins>
+  
+  <environments default="dev">
+    <environment name="dev" />
+    <environment name="test">
+    <environment name="uat">
+      <blocked>
+        <plugin>recreate</plugin>
+        <plugin>drop</plugin>
+      </blocked>
+    </environment>
+    <environment name="prod">
+      <blocked>
+        <plugin>recreate</plugin>
+        <plugin>drop</plugin>
+      </blocked>
+    </environment>
+  </environments>
+  
+</project>
