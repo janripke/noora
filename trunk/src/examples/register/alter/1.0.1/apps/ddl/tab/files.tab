@@ -1,0 +1,3 @@
+alter table files add external_id number(10);
+alter table files add records_ignored number(10) default 0;
+alter table files add constraint FI_RECORDS_IGNORED_NN check (records_ignored is not null);
