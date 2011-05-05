@@ -6,11 +6,11 @@ declare
     where object_type='DATABASE LINK';
 
   statement	    varchar2(1024);
-  M_DQUOTE      varchar2(1):='"';
+  M_QUOTE      varchar2(1):=chr(39);
   
 begin
   for user_object in c_user_objects loop
-    statement:='DROP DATABASE LINK ' || M_DQUOTE || user_object.object_name || M_DQUOTE;     
+    statement:='DROP DATABASE LINK ' || M_QUOTE || user_object.object_name || M_QUOTE;     
     execute immediate statement;
   end loop;
 end;

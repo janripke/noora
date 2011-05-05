@@ -127,7 +127,6 @@ class ProjectHelper:
         return user[2]
     return None
 
-
   def getOraclePasswd(self, oracleSid, scheme):
     users=self.__configReader.getValue('ORACLE_USERS')
     for user in users:

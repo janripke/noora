@@ -4,7 +4,7 @@ declare
      select queue_table
      from   user_queue_tables;
 
-  statement	varchar2(1024);
+  statement     varchar2(1024);
   M_QUOTE       varchar2(1):=chr(39);
 begin
   for user_object in c_queue_tables loop
