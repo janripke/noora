@@ -1,0 +1,12 @@
+<versions> 
+ <version displayName="Struts 1.1">
+  <lib type="core" location="../lib/struts-1.1" />
+  <lib type="common" location="../lib/ApacheCommon2.3" />
+  <projectTempl location="./struts/1.1" />
+ </version>
+ <version displayName="Struts 1.2">
+  <lib type="core" location="../lib/struts-1.2" />
+  <lib type="common" location="../lib/ApacheCommon2.3" />
+  <projectTempl location="./struts/1.2" />
+ </version>
+</versions> 

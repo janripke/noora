@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+                               "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+ <data-sources/>
+ <form-beans>
+  <form-bean name="GetNameForm" type="demo.GetNameForm"/>
+ </form-beans>
+ <global-exceptions/>
+ <global-forwards>
+  <forward name="getName" path="/pages/inputname.jsp"/>
+ </global-forwards>
+ <action-mappings>
+  <action name="GetNameForm" path="/greeting" scope="request" type="demo.GreetingAction">
+   <forward name="sayhello" path="/pages/greeting.jsp"/>
+  </action>
+ </action-mappings>
+ <controller/>
+</struts-config>
