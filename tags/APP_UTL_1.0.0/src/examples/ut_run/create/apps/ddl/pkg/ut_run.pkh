@@ -1,0 +1,19 @@
+create or replace package ut_run as
+
+  type t_argument is
+  record 
+    (package_name                varchar2(256)
+    ,method_name                 varchar2(256));
+  
+  type t_argument_list is
+    table of                     t_argument
+    index by                     binary_integer;
+
+  function find_methods
+    (p_package_name in varchar2) return t_argument_list;
+
+  procedure run
+    (p_package_name in varchar2);
+
+end;
+/
