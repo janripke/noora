@@ -1,0 +1,54 @@
+#if($package.length()>0)
+package $package;
+
+#end
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+public class $className extends $extends {
+    
+#if($globalForwards.size()>0)
+    // Global Forwards
+#foreach($globalForward in $globalForwards) 
+    public static final String GLOBAL_FORWARD_$globalForward = "$globalForward"; 
+#end
+#end 
+
+#if($globalForwards.size()>0)
+    // Local Forwards
+#foreach($localForward in $localForwards) 
+    public static final String FORWARD_$localForward = "$localForward"; 
+#end
+#end 
+
+#if($properties.size()>0) 
+    // Properties 
+#foreach($property in $properties) 
+    private String $property.name; 
+#end 
+#end 
+    
+    public $className() {
+    }
+    
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // TODO: Write method body
+        throw new UnsupportedOperationException("Method is not implemented");
+    }
+
+#if($properties.size()>0) 
+    // Accessors for properties
+#foreach($property in $properties) 
+    public String get$property.upName () {
+        return this.$property.name;
+    }
+    public void set$property.upName (String $property.name) {
+        this.$property.name = $property.name;
+    }
+#end 
+#end 
+}

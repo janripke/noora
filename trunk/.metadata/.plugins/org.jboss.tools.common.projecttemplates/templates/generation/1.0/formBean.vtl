@@ -1,0 +1,43 @@
+#if($package.length()>0)
+package $package;
+
+#end
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMapping;
+
+public class $className extends $extends {
+
+#if($properties.size()>0) 
+    // Properties 
+#foreach($property in $properties) 
+    private String $property.name; 
+#end 
+#end 
+
+    public $className () {
+    }
+
+    public void reset(ActionMapping actionMapping, HttpServletRequest request) {
+        // TODO: Write method body
+        throw new UnsupportedOperationException("Method is not implemented");
+    }
+
+    public ActionErrors validate(ActionMapping actionMapping, HttpServletRequest request) {
+        // TODO: Write method body
+        throw new UnsupportedOperationException("Method is not implemented");
+    }
+
+#if($properties.size()>0) 
+    // Accessors for properties
+#foreach($property in $properties) 
+    public String get$property.upName () {
+        return this.$property.name;
+    }
+    public void set$property.upName (String $property.name) {
+        this.$property.name = $property.name;
+    }
+#end 
+#end 
+
+}

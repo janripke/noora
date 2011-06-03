@@ -1,0 +1,34 @@
+#if($package.length()>0)
+package $package;
+
+#end
+class $className extends $extends {
+
+#if($properties.size()>0) 
+    // Properties 
+#foreach($property in $properties) 
+    private String $property.name; 
+#end 
+#end 
+
+#if($constructors.size()>0) 
+#foreach($constructor in $constructors) 
+	$constructor.getModifiers() $className($constructor.getParametersWithType()) {
+		super($constructor.getParameters());
+	}
+#end
+#end 
+
+    
+#if($properties.size()>0) 
+    // Accessors for properties
+#foreach($property in $properties) 
+    public String get$property.upName () {
+        return this.$property.name;
+    }
+    public void set$property.upName (String $property.name) {
+        this.$property.name = $property.name;
+    }
+#end 
+#end 
+}

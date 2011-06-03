@@ -18,13 +18,13 @@ declare
 begin
   for user_object in c_user_objects loop
     table_name:=user_object.table_name;
-    for constraint in c_constraints(table_name) loop
-      statement:='ALTER TABLE ' || table_name || ' drop constraint ' || M_DQUOTE || constraint.constraint_name || M_DQUOTE || ' cascade';
-      dbms_output.put_line(statement);
-      execute immediate statement;
-    end loop;
+    --for constraint in c_constraints(table_name) loop
+    --  statement:='ALTER TABLE ' || table_name || ' drop constraint ' || M_DQUOTE || constraint.constraint_name || M_DQUOTE || ' cascade';
+    --  dbms_output.put_line(statement);
+    --  execute immediate statement;
+    -- end loop;
 
-    statement:='DROP TABLE ' || M_DQUOTE || user_object.table_name || M_DQUOTE; 
+    statement:='DROP TABLE ' || M_DQUOTE || user_object.table_name || M_DQUOTE || ' cascade constraints purge'; 
     dbms_output.put_line(statement);
     execute immediate statement;
   end loop;
