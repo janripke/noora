@@ -5,7 +5,7 @@ declare
       from user_scheduler_jobs;
 
   statement	varchar2(1024);
-  M_DQUOTE      varchar2(1):='"';
+  M_DQUOTE      varchar2(1):='''';
   
 begin
   for user_object in c_user_objects loop
