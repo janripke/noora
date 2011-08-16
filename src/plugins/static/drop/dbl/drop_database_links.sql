@@ -6,7 +6,7 @@ declare
     where object_type='DATABASE LINK';
 
   statement	    varchar2(1024);
-  M_QUOTE      varchar2(1):=chr(39);
+  M_QUOTE      varchar2(1):='"';
   
 begin
   for user_object in c_user_objects loop
