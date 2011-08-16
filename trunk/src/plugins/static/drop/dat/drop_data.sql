@@ -9,6 +9,12 @@ declare
     select constraint_name 
     from user_constraints
     where table_name=b_table_name;
+    
+  cursor c_constraints_by_type(b_table_name varchar2, b_constraint_type varchar2) is
+    select constraint_name
+    from   user_constraints
+    where  table_name      = b_table_name
+    and    constraint_type = b_constraint_type;
 
   statement	      varchar2(1024);
   table_name      varchar2(256);
@@ -34,15 +40,32 @@ begin
     execute immediate statement;    
   end loop;
   --
-  dbms_output.put_line('Enabling all constraints');
+  dbms_output.put_line('Enabling the constraints');
   for user_object in c_user_objects loop
-    table_name:=user_object.table_name;
-    for constraint in c_constraints(table_name) loop
+    table_name:=user_object.table_name;    
+    dbms_output.put_line('Enabling the primary constraints');
+    for constraint in c_constraints_by_type(table_name, 'P') loop
       statement:='ALTER TABLE ' || table_name || ' enable constraint ' || M_DQUOTE || constraint.constraint_name || M_DQUOTE;
-      --dbms_output.put_line(statement);
+      dbms_output.put_line(statement);
       execute immediate statement;
     end loop;
+    
+   
+    
+    
   end loop;
+  
+  
+  for user_object in c_user_objects loop
+    table_name:=user_object.table_name;    
+    dbms_output.put_line('Enabling all the constraints');
+    for constraint in c_constraints(table_name) loop
+      statement:='ALTER TABLE ' || table_name || ' enable constraint ' || M_DQUOTE || constraint.constraint_name || M_DQUOTE;
+      dbms_output.put_line(statement);
+      execute immediate statement;
+    end loop;
+  end loop;  
+  
 end;
 /
 set serveroutput off
