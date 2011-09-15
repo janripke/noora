@@ -21,7 +21,7 @@ create or replace package stager as
     ,p_field_list  in app_utl.t_field_list
     ,p_delimiter   in varchar2);
 
-  function get_stage_errors
+  function errors
     (p_job_name   in varchar2
     ,p_table_name in varchar2) return number; 
 

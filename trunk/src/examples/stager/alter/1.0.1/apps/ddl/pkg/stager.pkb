@@ -26,7 +26,7 @@ create or replace package body stager as
 
     l_statement:='insert into ' || p_stage_table_name                ||
                  '('                                                 ||
-                 ',file_id '                                         ||                
+                 'file_id '                                         ||                
                  ',line_id '                                         ||
                  ',job_name '                                        ||
                  ',' || l_fields                                     ||
@@ -147,7 +147,7 @@ create or replace package body stager as
     ,p_table_name        in varchar2
     ,p_id                in number
     ,p_field_list        in app_utl.t_field_list
-    ,p_delimiter         in varchar2) return number is
+    ,p_delimiter         in varchar2) return varchar2 is
 
     l_statement  varchar2(32000);
     l_prc_name   varchar2(255):='stage';
@@ -160,10 +160,12 @@ create or replace package body stager as
       (p_field_list => p_field_list
       ,p_delimiter  => '|| ' || M_QUOTE || p_delimiter || M_QUOTE || ' ||');
 
-    l_statement:=' select ' || l_fields      ||
-                 ' from   ' || p_table_name  ||
-                 ' where id = ' || p_id      ||
-                 ' into :l_result';
+    l_statement:=' begin ' ||
+                 '   select ' || l_fields        ||
+                 '   into :l_result'             ||
+                 '   from   ' || p_table_name    ||
+                 '   where id = ' || p_id || ';' ||
+                 ' end;';
 
     logger.debug(p_job_name,M_PACKAGE_NAME,l_prc_name,substr(l_statement, 1, 4000));
     execute immediate l_statement using out l_result;
@@ -172,7 +174,7 @@ create or replace package body stager as
     return l_result;
 
   end;
-
+  
 
 
   procedure write_ni_records
@@ -338,7 +340,7 @@ create or replace package body stager as
                  ')'                                              ||
                  'select '                                        ||
                  p_column_name                                    ||
-                 ',' || p_job_name                                ||
+                 ',' || M_QUOTE || p_job_name || M_QUOTE          ||
                  ',' || M_QUOTE || p_table_name || M_QUOTE        ||
                  ',' || M_QUOTE || p_error_table_name || M_QUOTE  ||
                  ',' || M_QUOTE || p_column_name || M_QUOTE       ||
@@ -380,7 +382,7 @@ create or replace package body stager as
   
   
   
-  function get_stage_errors
+  function errors
     (p_job_name   in varchar2
     ,p_table_name in varchar2) return number is
   
@@ -395,7 +397,7 @@ create or replace package body stager as
       l_table_name       varchar2(256);
       l_error_table_name varchar2(256);
       l_column_name      varchar2(256);
-      l_prc_name         varchar2(50):='get_stage_errors';
+      l_prc_name         varchar2(50):='errors';
     begin
       
       l_error_table_name:=get_error_table(p_job_name, p_table_name);
@@ -419,10 +421,12 @@ create or replace package body stager as
         ,p_column_name      => l_column_name);
       end loop;
       
+      logger.info(p_job_name, M_PACKAGE_NAME, l_prc_name, l_count || ' error record(s).');
       log_error_records(p_job_name);
       
+      
       return l_count;
-    end get_stage_errors;
+    end errors;
 
 end stager;
 /
