@@ -54,6 +54,8 @@ class CreatePlugin(Plugin.Plugin):
         extractFolder=projectHelper.getFileRoot(url)
         self.installComponent(extractFolder,oracleSid,oracleUser,oraclePasswd)
         projectHelper.removeFolderRecursive(extractFolder)
+      elif projectHelper.getFileExtension(file).lower()=='mdl':
+        pass
       else:
         connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','')  
 
