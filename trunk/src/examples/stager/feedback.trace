@@ -1,0 +1,143 @@
+DROP TRIGGER "SR_SELECTION_STAGE_BIU"                                           
+DROP TRIGGER "SR_SELECTION_BIU"                                                 
+DROP TRIGGER "SR_MAPPING_BIU"                                                   
+DROP TRIGGER "LOG_BIU"                                                          
+DROP TRIGGER "APPLICATION_PROPERTIES_BIU"                                       
+DROP TABLE "APPLICATION_PROPERTIES" cascade constraints purge                   
+DROP TABLE "LOG" cascade constraints purge                                      
+DROP TABLE "SR_MAPPING" cascade constraints purge                               
+DROP TABLE "SR_SELECTION" cascade constraints purge                             
+DROP TABLE "SR_SELECTION_ERR" cascade constraints purge                         
+DROP TABLE "SR_SELECTION_STAGE" cascade constraints purge                       
+DROP TABLE "SR_SELECTION_STAGE_ERR" cascade constraints purge                   
+
+Warning: Package Body created with compilation errors.
+
+old  11:     &3
+new  11:     select value into l_value from application_properties where name='application.version';
+old  23:   if nvl(database_version,100)<>&expected_version then
+new  23:   if nvl(database_version,100)<>to_char('1.0.0') then
+old  11:     &3
+new  11:     select value into l_value from application_properties where name='application.environment';
+old  23:   if nvl(database_environment,'dev')<>'&expected_environment' then
+new  23:   if nvl(database_environment,'dev')<>'dev' then
+
+Warning: Package Body created with compilation errors.
+
+STAGER                                                                          
+APP_UTL                                                                         
+APP_PROPS                                                                       
+UT_ASSERT                                                                       
+UT_RUN                                                                          
+LOGGER                                                                          
+DROP TRIGGER "STAGE_ERROR_BIU"                                                  
+DROP TRIGGER "LOG_BIU"                                                          
+DROP TRIGGER "APPLICATION_PROPERTIES_BIU"                                       
+DROP TABLE "APPLICATION_PROPERTIES" cascade constraints purge                   
+DROP TABLE "LOG" cascade constraints purge                                      
+DROP TABLE "STAGE_ERROR" cascade constraints purge                              
+DROP TABLE "STAGE_RESULT" cascade constraints purge                             
+
+Warning: Package Body created with compilation errors.
+
+old  11:     &3
+new  11:     select value into l_value from application_properties where name='application.version';
+old  23:   if nvl(database_version,100)<>&expected_version then
+new  23:   if nvl(database_version,100)<>to_char('1.0.0') then
+old  11:     &3
+new  11:     select value into l_value from application_properties where name='application.environment';
+old  23:   if nvl(database_environment,'dev')<>'&expected_environment' then
+new  23:   if nvl(database_environment,'dev')<>'dev' then
+
+Warning: Package Body created with compilation errors.
+
+STAGER                                                                          
+APP_UTL                                                                         
+APP_PROPS                                                                       
+UT_ASSERT                                                                       
+UT_RUN                                                                          
+LOGGER                                                                          
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/scm/drop_schemas.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/vw/drop_views.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/syn/drop_synonyms.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/trg/drop_triggers.sqlDROP TRIGGER "STAGE_ERROR_BIU"                                                  
+DROP TRIGGER "LOG_BIU"                                                          
+DROP TRIGGER "APPLICATION_PROPERTIES_BIU"                                       
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/typ/drop_types.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/tab/drop_tables.sqlDROP TABLE "APPLICATION_PROPERTIES" cascade constraints purge                   
+DROP TABLE "LOG" cascade constraints purge                                      
+DROP TABLE "STAGE_ERROR" cascade constraints purge                              
+DROP TABLE "STAGE_RESULT" cascade constraints purge                             
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/prc/drop_procedures.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/fct/drop_functions.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/pkg/drop_packages.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/jar/drop_jars.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/seq/drop_sequences.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/idx/drop_indexes.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/dbl/drop_database_links.sql/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/ddl/seq/stage_result_s.sql/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/ddl/tab/stage_result.sql/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/ddl/pkg/stager.pkb
+Warning: Package Body created with compilation errors.
+
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/ddl/pkg/stager.pkh/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/dat/version.sql/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/dat/dev/environment.sql/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/dat/dev/loglevel.sql/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/update/checkversion.sqlold  11:     &3
+new  11:     select value into l_value from application_properties where name='application.version';
+old  23:   if nvl(database_version,100)<>&expected_version then
+new  23:   if nvl(database_version,100)<>to_char('1.0.0') then
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/update/checkenvironment.sqlold  11:     &3
+new  11:     select value into l_value from application_properties where name='application.environment';
+old  23:   if nvl(database_environment,'dev')<>'&expected_environment' then
+new  23:   if nvl(database_environment,'dev')<>'dev' then
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/seq/stage_error_s.sql/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/tab/stage_error.sql/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/pkg/stager.pkb
+Warning: Package Body created with compilation errors.
+
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/pkg/stager.pkh/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/trg/stage_error_biu.sql/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/idx/stage_error.sql/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/dat/version.sql/home/jan/noora-sourceforge/noora-sourceforge/src/scripts/recompile.sqlSTAGER                                                                          
+APP_UTL                                                                         
+APP_PROPS                                                                       
+UT_ASSERT                                                                       
+UT_RUN                                                                          
+LOGGER                                                                          
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/scm/drop_schemas.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/vw/drop_views.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/syn/drop_synonyms.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/trg/drop_triggers.sql
+DROP TRIGGER "STAGE_ERROR_BIU"                                                  
+DROP TRIGGER "LOG_BIU"                                                          
+DROP TRIGGER "APPLICATION_PROPERTIES_BIU"                                       
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/typ/drop_types.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/tab/drop_tables.sql
+DROP TABLE "APPLICATION_PROPERTIES" cascade constraints purge                   
+DROP TABLE "LOG" cascade constraints purge                                      
+DROP TABLE "STAGE_ERROR" cascade constraints purge                              
+DROP TABLE "STAGE_RESULT" cascade constraints purge                             
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/prc/drop_procedures.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/fct/drop_functions.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/pkg/drop_packages.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/jar/drop_jars.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/seq/drop_sequences.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/idx/drop_indexes.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/drop/dbl/drop_database_links.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/ddl/seq/stage_result_s.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/ddl/tab/stage_result.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/ddl/pkg/stager.pkb
+
+Warning: Package Body created with compilation errors.
+
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/ddl/pkg/stager.pkh
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/dat/version.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/dat/dev/environment.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/create/apps/dat/dev/loglevel.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/update/checkversion.sql
+old  11:     &3
+new  11:     select value into l_value from application_properties where name='application.version';
+old  23:   if nvl(database_version,100)<>&expected_version then
+new  23:   if nvl(database_version,100)<>to_char('1.0.0') then
+/home/jan/noora-sourceforge/noora-sourceforge/src/plugins/static/update/checkenvironment.sql
+old  11:     &3
+new  11:     select value into l_value from application_properties where name='application.environment';
+old  23:   if nvl(database_environment,'dev')<>'&expected_environment' then
+new  23:   if nvl(database_environment,'dev')<>'dev' then
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/seq/stage_error_s.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/tab/stage_error.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/pkg/stager.pkb
+
+Warning: Package Body created with compilation errors.
+
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/pkg/stager.pkh
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/trg/stage_error_biu.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/ddl/idx/stage_error.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/examples/stager/alter/1.0.1/apps/dat/version.sql
+/home/jan/noora-sourceforge/noora-sourceforge/src/scripts/recompile.sql
+STAGER                                                                          
+APP_UTL                                                                         
+APP_PROPS                                                                       
+UT_ASSERT                                                                       
+UT_RUN                                                                          
+LOGGER                                                                          

@@ -24,16 +24,21 @@ class CreatePlugin(Plugin.Plugin):
   def getCreateDir(self):
     return self.getBaseDir()+os.sep+'create'
 
-  def recompile(self, oracleSid, oracleUser, oraclePasswd):
+  def recompile(self, oracleSid, oracleUser, oraclePasswd, ignoreErrors):
     connector=self.getConnector()
     oracleScript=self.getScriptDir()+os.sep+'recompile.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','', ignoreErrors)
 
 
   def execute(self, parameterHelper):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    
+
+    ignoreErrors=False  
+    if  parameterHelper.hasParameter('-ignore_errors')==True:
+      ignoreErrors=True      
+      
 
     configReader=self.getConfigReader()
     projectHelper=self.getProjectHelper()
@@ -62,7 +67,7 @@ class CreatePlugin(Plugin.Plugin):
 
       url=self.getCreateDir()+os.sep+scheme+os.sep+'install_scheme_'+environment+'.sql'
       projectHelper.failOnFileNotPresent(url,scheme+os.sep+'install_scheme_'+environment+'.sql not found, try to build this scheme.')
-      connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','')
+      connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','', ignoreErrors)
     
       print "scheme '"+scheme+"' created."
 
@@ -71,7 +76,7 @@ class CreatePlugin(Plugin.Plugin):
         print "compiling scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"
         oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
         oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
-        self.recompile(oracleSid,oracleUser,oraclePasswd)
+        self.recompile(oracleSid,oracleUser,oraclePasswd, ignoreErrors)
         print "scheme '"+scheme+"' compiled."
 
 

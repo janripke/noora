@@ -7,6 +7,7 @@ import core.PluginManager   as PluginManager
 import core.ParameterHelper as ParameterHelper
 import core.NooraException  as NooraException
 import core.ClassLoader     as ClassLoader
+import logging.handlers
 
 __revision__ = "$Revision$"
 
@@ -36,6 +37,16 @@ def failOnPluginNotFound(message):
 if __name__ == "__main__":
 
   try:
+    
+    logger = logging.getLogger('nooraLogger')
+    handler = logging.handlers.RotatingFileHandler('noora.log')
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)         
+    handler.doRollover()        
+    logger.setLevel(logging.INFO)
+    
+    
     parameterHelper=ParameterHelper.ParameterHelper()      
     if parameterHelper.hasParameter('-r'):
       getRevision()

@@ -4,7 +4,7 @@ import core.Connector as Connector
 import os
 import subprocess
 import core.NooraException as NooraException
-import traceback
+import logging
 
 class OracleConnector(Connector.Connector):
   
@@ -31,7 +31,7 @@ class OracleConnector(Connector.Connector):
     print stream
     
   
-  def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB):
+  def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB, ignoreErrors):
     try:
       startupInfo=self.getStartupInfo()
       projectHelper=self.getProjectHelper()
@@ -39,10 +39,19 @@ class OracleConnector(Connector.Connector):
       connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
       templateScript=projectHelper.cleanPath('@'+self.getScriptDir()+os.sep+'template.sql')
       result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB],shell=False,stdout=handle,stderr=handle,startupinfo=startupInfo)
+      stream=projectHelper.readFile('feedback.log')
+     
       
-      if result!=0:
-        stream=projectHelper.readFile('feedback.log')
-        raise NooraException.NooraException(stream)
+      logger = logging.getLogger('nooraLogger')
+      logger.info(oracleScript)
+      if result!=0:  
+        #stream = StreamHelper.StreamHelper().convert(stream)
+        #stream = stream.replace(chr(10),chr(32))     
+        logger.error(stream)
+        if ignoreErrors==False:
+          raise NooraException.NooraException(stream)
+      else:
+        logger.info(stream)
     except OSError:
       raise NooraException.NooraException("Could not execute sqlplus. Is it installed and in your path?")
 

@@ -42,7 +42,7 @@ class CreatePlugin(Plugin.Plugin):
       raise NooraException.NooraException(stream)
 
 
-  def installFiles(self, folder, oracleSid, oracleUser, oraclePasswd):
+  def installFiles(self, folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors):
     connector=self.getConnector()
     projectHelper=self.getProjectHelper()
     files=projectHelper.findFiles(folder)
@@ -57,19 +57,24 @@ class CreatePlugin(Plugin.Plugin):
       elif projectHelper.getFileExtension(file).lower()=='mdl':
         pass
       else:
-        connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','')  
+        connector.execute(oracleSid, oracleUser, oraclePasswd, url, '', '', ignoreErrors)  
 
 
-  def recompile(self, oracleSid, oracleUser, oraclePasswd):
+  def recompile(self, oracleSid, oracleUser, oraclePasswd, ignoreErrors):
     connector=self.getConnector()
     oracleScript=self.getScriptDir()+os.sep+'recompile.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript, '', '', ignoreErrors)
     
 
   def execute(self, parameterHelper):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    
+    
+    ignoreErrors=False  
+    if  parameterHelper.hasParameter('-ignore_errors')==True:
+      ignoreErrors=True
+    print ignoreErrors      
 
     configReader=self.getConfigReader()
     projectHelper=self.getProjectHelper()
@@ -104,22 +109,22 @@ class CreatePlugin(Plugin.Plugin):
         # global ddl objects
         folder=self.getCreateDir()+os.sep+scheme+os.sep+'ddl'+os.sep+object
         if projectHelper.folderPresent(folder):
-          self.installFiles(folder, oracleSid, oracleUser, oraclePasswd)
+          self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
 
         # environment specific ddl objects
         folder=self.getCreateDir()+os.sep+scheme+os.sep+'ddl'+os.sep+object+os.sep+environment
         if projectHelper.folderPresent(folder):
-          self.installFiles(folder, oracleSid, oracleUser, oraclePasswd)
+          self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
 
       # global dat objects
       folder=self.getCreateDir()+os.sep+scheme+os.sep+'dat'
       if projectHelper.folderPresent(folder):
-        self.installFiles(folder, oracleSid, oracleUser, oraclePasswd)
+        self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
 
       # environment specific dat objects
       folder=self.getCreateDir()+os.sep+scheme+os.sep+'dat'+os.sep+environment
       if projectHelper.folderPresent(folder):
-        self.installFiles(folder, oracleSid, oracleUser, oraclePasswd)
+        self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
     
       print "scheme '"+scheme+"' created."
 
@@ -128,7 +133,7 @@ class CreatePlugin(Plugin.Plugin):
         print "compiling scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"
         oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
         oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
-        self.recompile(oracleSid,oracleUser,oraclePasswd)
+        self.recompile(oracleSid,oracleUser,oraclePasswd, ignoreErrors)
         print "scheme '"+scheme+"' compiled."
 
 

@@ -29,6 +29,10 @@ class DropPlugin(Plugin.Plugin):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    
+      
+    ignoreErrors=False  
+    if  parameterHelper.hasParameter('-ignore_errors')==True:
+      ignoreErrors=True      
 
     configReader=self.getConfigReader()
     projectHelper=self.getProjectHelper()
@@ -63,7 +67,7 @@ class DropPlugin(Plugin.Plugin):
         for file in files:
           url=folder+os.sep+file
           print scheme+':'+url.split(self.getNooraDir())[1]
-          connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','')
+          connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','', ignoreErrors)
 
       print "scheme '"+scheme+"' dropped."
 
