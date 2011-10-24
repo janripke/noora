@@ -28,16 +28,21 @@ class UnitTestPlugin(Plugin.Plugin):
     print "               the unit tests to execute."
 
 
-  def unittest(self, oracleSid, oracleUser, oraclePasswd):
+  def unittest(self, oracleSid, oracleUser, oraclePasswd, ignoreErrors):
     connector=self.getConnector()
     oracleScript=self.getScriptDir()+os.sep+'unittest.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','',ignoreErrors)
 
 
   def execute(self, parameterHelper):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    
+
+    ignoreErrors=False  
+    if  parameterHelper.hasParameter('-ignore_errors')==True:
+      ignoreErrors=True      
+
 
     configReader=self.getConfigReader()
     projectHelper=self.getProjectHelper()
@@ -55,7 +60,7 @@ class UnitTestPlugin(Plugin.Plugin):
       print "executing unit tests for scheme '"+scheme+"' in database '"+oracleSid+"'"
       oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
       oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
-      self.unittest(oracleSid,oracleUser,oraclePasswd)
+      self.unittest(oracleSid,oracleUser,oraclePasswd,ignoreErrors)
       print "unit tests for scheme '"+scheme+"' executed."
 
 

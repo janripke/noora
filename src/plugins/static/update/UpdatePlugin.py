@@ -37,28 +37,33 @@ class UpdatePlugin(Plugin.Plugin):
     return None
 
 
-  def checkVersion(self, oracleSid,oracleUser,oraclePasswd,previousVersion, versionSelectStatement):
+  def checkVersion(self, oracleSid,oracleUser,oraclePasswd,previousVersion, versionSelectStatement,ignoreErrors):
     connector=self.getConnector()
     oracleScript=self.getPluginDir()+os.sep+'checkversion.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,previousVersion,versionSelectStatement)
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,previousVersion,versionSelectStatement,ignoreErrors)
 
 
-  def checkEnvironment(self, oracleSid,oracleUser,oraclePasswd, environment, environmentSelectStatement):
+  def checkEnvironment(self, oracleSid,oracleUser,oraclePasswd, environment, environmentSelectStatement,ignoreErrors):
     connector=self.getConnector()
     oracleScript=self.getPluginDir()+os.sep+'checkenvironment.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,environment,environmentSelectStatement)
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,environment,environmentSelectStatement,ignoreErrors)
  
 
-  def recompile(self, oracleSid, oracleUser, oraclePasswd):
+  def recompile(self, oracleSid, oracleUser, oraclePasswd,ignoreErrors):
     connector=self.getConnector()
     oracleScript=self.getPluginDir()+os.sep+'recompile.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'', '')
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'', '',ignoreErrors)
 
 
   def execute(self, parameterHelper):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    
+
+    ignoreErrors=False  
+    if  parameterHelper.hasParameter('-ignore_errors')==True:
+      ignoreErrors=True      
+
 
     configReader=self.getConfigReader()
     projectHelper=self.getProjectHelper()
@@ -97,8 +102,10 @@ class UpdatePlugin(Plugin.Plugin):
     projectHelper.failOnNone(versionSelectStatement,'the variable VERSION_SELECT_STATEMENT is not set.')
     environmentSelectStatement=configReader.getValue('ENVIRONMENT_SELECT_STATEMENT')
     projectHelper.failOnNone(versionSelectStatement,'the variable ENVIRONMENT_SELECT_STATEMENT is not set.')
-    self.checkVersion(oracleSid,oracleUser,oraclePasswd,previousVersion,versionSelectStatement)
-    self.checkEnvironment(oracleSid,oracleUser,oraclePasswd,environment,environmentSelectStatement)
+    self.checkVersion(oracleSid,oracleUser,oraclePasswd,previousVersion,versionSelectStatement,ignoreErrors)
+    self.checkEnvironment(oracleSid,oracleUser,oraclePasswd,environment,environmentSelectStatement,ignoreErrors)
+
+    connector=self.getConnector()
 
     for scheme in schemes:
 
@@ -108,7 +115,7 @@ class UpdatePlugin(Plugin.Plugin):
 
       url=self.getAlterDir()+os.sep+version+os.sep+scheme+os.sep+'install_scheme_'+environment+'.sql'
       projectHelper.failOnFileNotPresent(url,scheme+os.sep+'install_scheme_'+environment+'.sql not found, try to build this scheme.')
-      self.executeSqlplus(oracleSid, oracleUser, oraclePasswd, url,'','')
+      connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','',ignoreErrors)
    
       print "scheme '"+scheme+"' updated."
 
@@ -117,7 +124,7 @@ class UpdatePlugin(Plugin.Plugin):
         print "compiling scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"
         oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
         oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
-        self.recompile(oracleSid,oracleUser,oraclePasswd)
+        self.recompile(oracleSid,oracleUser,oraclePasswd, ignoreErrors)
         print "scheme '"+scheme+"' compiled."
 
 

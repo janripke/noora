@@ -143,15 +143,15 @@ class RecreatePlugin(Plugin.Plugin):
       exit(1)
       
 
-  def recompile(self, oracleSid, oracleUser, oraclePasswd):
+  def recompile(self, oracleSid, oracleUser, oraclePasswd, ignoreErrors):
     connector=self.getConnector()
     oracleScript=self.getScriptDir()+os.sep+'recompile.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','', ignoreErrors)
 
-  def unittest(self, oracleSid, oracleUser, oraclePasswd):
+  def unittest(self, oracleSid, oracleUser, oraclePasswd, ignoreErrors):
     connector=self.getConnector()
     oracleScript=self.getScriptDir()+os.sep+'unittest.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','', ignoreErrors)
 
 
 
@@ -159,6 +159,11 @@ class RecreatePlugin(Plugin.Plugin):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    
+
+    ignoreErrors=False  
+    if  parameterHelper.hasParameter('-ignore_errors')==True:
+      ignoreErrors=True
+    print ignoreErrors
 
     configReader=self.getConfigReader()
     projectHelper=self.getProjectHelper()
@@ -207,13 +212,13 @@ class RecreatePlugin(Plugin.Plugin):
         print "compiling scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"
         oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
         oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
-        self.recompile(oracleSid,oracleUser,oraclePasswd)
+        self.recompile(oracleSid,oracleUser,oraclePasswd, ignoreErrors)
         print "scheme '"+scheme+"' compiled."
 
     if parameterHelper.hasParameter('-test')==True:
       for scheme in schemes:
         oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
         oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
-        self.unittest(oracleSid, oracleUser, oraclePasswd)
+        self.unittest(oracleSid, oracleUser, oraclePasswd, ignoreErrors)
 
 

@@ -72,7 +72,7 @@ class UpdatePlugin(Plugin.Plugin):
       raise NooraException.NooraException(stream)
 
 
-  def installFiles(self, folder, oracleSid, oracleUser, oraclePasswd):
+  def installFiles(self, folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors):
     connector=self.getConnector()
     projectHelper=self.getProjectHelper()
     files=projectHelper.findFiles(folder)
@@ -85,23 +85,23 @@ class UpdatePlugin(Plugin.Plugin):
         self.installComponent(extractFolder,oracleSid,oracleUser,oraclePasswd)
         projectHelper.removeFolderRecursive(extractFolder)
       else:
-        connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','')        
+        connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','', ignoreErrors)        
 
 
-  def checkVersion(self, oracleSid,oracleUser,oraclePasswd,previousVersion, versionSelectStatement):
+  def checkVersion(self, oracleSid,oracleUser,oraclePasswd,previousVersion, versionSelectStatement, ignoreErrors):
     connector=self.getConnector()
     oracleScript=self.getPluginDir()+os.sep+'checkversion.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,previousVersion,versionSelectStatement)
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,previousVersion,versionSelectStatement,ignoreErrors)
 
-  def checkEnvironment(self, oracleSid,oracleUser,oraclePasswd, environment, environmentSelectStatement):
+  def checkEnvironment(self, oracleSid,oracleUser,oraclePasswd, environment, environmentSelectStatement, ignoreErrors):
     connector=self.getConnector()
     oracleScript=self.getPluginDir()+os.sep+'checkenvironment.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,environment,environmentSelectStatement)
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,environment,environmentSelectStatement, ignoreErrors)
 
-  def recompile(self, oracleSid, oracleUser, oraclePasswd):    
+  def recompile(self, oracleSid, oracleUser, oraclePasswd, ignoreErrors):    
     connector=self.getConnector()
     oracleScript=self.getScriptDir()+os.sep+'recompile.sql'
-    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','')
+    connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','', ignoreErrors)
 
     
 
@@ -109,6 +109,10 @@ class UpdatePlugin(Plugin.Plugin):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    
+
+    ignoreErrors=False  
+    if  parameterHelper.hasParameter('-ignore_errors')==True:
+      ignoreErrors=True      
 
     configReader=self.getConfigReader()
     projectHelper=self.getProjectHelper()
@@ -160,8 +164,8 @@ class UpdatePlugin(Plugin.Plugin):
     projectHelper.failOnNone(versionSelectStatement,'the variable VERSION_SELECT_STATEMENT is not set.')
     environmentSelectStatement=configReader.getValue('ENVIRONMENT_SELECT_STATEMENT')
     projectHelper.failOnNone(versionSelectStatement,'the variable ENVIRONMENT_SELECT_STATEMENT is not set.')
-    self.checkVersion(oracleSid,oracleUser,oraclePasswd,previousVersion,versionSelectStatement)
-    self.checkEnvironment(oracleSid,oracleUser,oraclePasswd,environment,environmentSelectStatement)
+    self.checkVersion(oracleSid,oracleUser,oraclePasswd,previousVersion,versionSelectStatement, ignoreErrors)
+    self.checkEnvironment(oracleSid,oracleUser,oraclePasswd,environment,environmentSelectStatement, ignoreErrors)
 
     for scheme in schemes:
 
@@ -174,22 +178,22 @@ class UpdatePlugin(Plugin.Plugin):
         # global ddl objects
         folder=self.getAlterDir()+os.sep+version+os.sep+scheme+os.sep+'ddl'+os.sep+object
         if projectHelper.folderPresent(folder):
-          self.installFiles(folder, oracleSid, oracleUser, oraclePasswd)
+          self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
       
         # environment specific ddl objects
         folder=self.getAlterDir()+os.sep+version+os.sep+scheme+os.sep+'ddl'+os.sep+object+os.sep+environment
         if projectHelper.folderPresent(folder):
-          self.installFiles(folder, oracleSid, oracleUser, oraclePasswd)
+          self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
 
       # global dat objects
       folder=self.getAlterDir()+os.sep+version+os.sep+scheme+os.sep+'dat'
       if projectHelper.folderPresent(folder):
-        self.installFiles(folder, oracleSid, oracleUser, oraclePasswd)
+        self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
 
       # environment specific dat objects
       folder=self.getAlterDir()+os.sep+version+os.sep+scheme+os.sep+'dat'+os.sep+environment
       if projectHelper.folderPresent(folder):
-        self.installFiles(folder, oracleSid, oracleUser, oraclePasswd)
+        self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
    
       print "scheme '"+scheme+"' updated."
 
@@ -198,7 +202,7 @@ class UpdatePlugin(Plugin.Plugin):
         print "compiling scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"
         oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
         oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
-        self.recompile(oracleSid,oracleUser,oraclePasswd)
+        self.recompile(oracleSid,oracleUser,oraclePasswd, ignoreErrors)
         print "scheme '"+scheme+"' compiled."
 
 

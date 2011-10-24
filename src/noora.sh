@@ -1,0 +1,2 @@
+#!/bin/sh
+noora.py $*
