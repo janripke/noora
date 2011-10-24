@@ -292,30 +292,31 @@ create or replace package body stager as
       logger.error(p_job_name, M_PACKAGE_NAME, l_prc_name, 'primary constraint not found for table ' || p_table_name);
       return null;       
   end get_primary_key;
-
-
-
+  
+  
   function get_error_table
     (p_job_name   in varchar2
     ,p_table_name in varchar2) return varchar2 is
-    
+
     l_result         varchar2(256);
     l_prc_name       varchar2(50):='get_error_table';
   begin
-    
-    select table_name
-      into l_result      
-      from user_tab_comments 
-     where comments like 'DML Error Logging table for%'
-       and replace(app_utl.get_column(comments,' ',6),'"','')=upper(p_table_name);    
 
-    logger.debug(p_job_name, M_PACKAGE_NAME, l_prc_name, p_table_name || ' has ' || l_result || ' as error table');       
+    select table_name
+      into l_result
+      from user_tab_comments
+     where comments like 'DML Error Logging table for%'
+       and replace(app_utl.get_column(comments,' ',6),'"','')=upper(p_table_name)
+       and table_name not like 'BIN%';
+
+    logger.debug(p_job_name, M_PACKAGE_NAME, l_prc_name, p_table_name || ' has ' || l_result || ' as error table');
     return l_result;
   exception
     when no_data_found then
       logger.error(p_job_name, M_PACKAGE_NAME, l_prc_name, 'error table not found for table ' || p_table_name);
       return null;
   end get_error_table;
+
   
 
 
@@ -412,13 +413,17 @@ create or replace package body stager as
       for r_constraint in c_constraints(l_primary_key) loop
         l_table_name:=get_constraint_info(p_job_name,r_constraint.constraint_name).table_name;
         l_error_table_name:=get_error_table(p_job_name,l_table_name);
-        l_column_name:=get_constraint_info(p_job_name, r_constraint.constraint_name).column_name;
         
-        l_count:=l_count + ins_stage_error
-        (p_job_name         => p_job_name
-        ,p_table_name       => p_table_name
-        ,p_error_table_name => l_error_table_name
-        ,p_column_name      => l_column_name);
+        -- the table has an error table
+        if l_error_table_name is not null then
+          l_column_name:=get_constraint_info(p_job_name, r_constraint.constraint_name).column_name;
+        
+          l_count:=l_count + ins_stage_error
+            (p_job_name         => p_job_name
+            ,p_table_name       => p_table_name
+            ,p_error_table_name => l_error_table_name
+            ,p_column_name      => l_column_name);
+        end if;
       end loop;
       
       logger.info(p_job_name, M_PACKAGE_NAME, l_prc_name, l_count || ' error record(s).');
