@@ -11,7 +11,7 @@ import core.NooraException as NooraException
 ON_CYGWIN=platform.system().lower().find("cygwin") == -1;
 
 class ProjectHelper:
-  
+
   def __init__(self, configReader):
     self.__configReader=configReader
     self.setBaseDir(os.path.abspath('.'))
@@ -19,27 +19,27 @@ class ProjectHelper:
 
   def setConfigReader(self,configReader):
     self.__configReader=configReader
-    
+
   def setBaseDir(self, path):
     self.__baseDir=path
 
   def getBaseDir(self):
     return self.__baseDir
-  
+
   def setNooraDir(self,path):
     self.__nooraDir=path
-    
+
   def getNooraDir(self):
     return self.__nooraDir
-  
+
   def getScriptDir(self):
     return self.getNooraDir()+os.sep+'scripts'
-  
+
 
   def fileNotPresent(self, url):
     if os.path.isfile(url):
       return False
-    return True      
+    return True
 
 
   def folderNotPresent(self, folder):
@@ -105,32 +105,32 @@ class ProjectHelper:
   def failOnNone(self, value, message):
     if value==None:
       raise NooraException.NooraException(message)
-  
+
   def failOnFileNotPresent(self, url, message):
     if self.fileNotPresent(url):
       raise NooraException.NooraException(message)
-  
+
   def hasValue(self, list, value):
     for item in list:
       if item==value:
         return True
     return False
-  
-  def failOnValueNotFound(self, list, value, message):  
+
+  def failOnValueNotFound(self, list, value, message):
     if self.hasValue(list, value)==False:
       raise NooraException.NooraException(message)
 
   def getOracleUser(self, oracleSid, scheme):
     users=self.__configReader.getValue('ORACLE_USERS')
     for user in users:
-      if user[0]==oracleSid and user[1]==scheme:
+      if user[0].lower()==oracleSid.lower() and user[1].lower()==scheme.lower():
         return user[2]
     return None
 
   def getOraclePasswd(self, oracleSid, scheme):
     users=self.__configReader.getValue('ORACLE_USERS')
     for user in users:
-      if user[0]==oracleSid and user[1]==scheme:
+      if user[0].lower()==oracleSid.lower() and user[1].lower()==scheme.lower():
         return user[3]
     return None
 
@@ -177,7 +177,7 @@ class ProjectHelper:
   def getFileRoot(self, url):
     root,ext=os.path.splitext(url)
     return root
-      
+
   def getFolder(self, url):
     folder,filename=os.path.split(url)
     return folder
@@ -220,7 +220,7 @@ class ProjectHelper:
         subFiles=self.findFilesRecursive(url)
         for subFile in subFiles:
           result.append(subFile)
-      else:        
+      else:
         result.append(url)
     return result
 
@@ -238,7 +238,7 @@ class ProjectHelper:
     items=os.listdir(folder)
     for item in items:
       if os.path.isdir(folder+os.sep+item):
-        if self.isFolderExcluded(item)==False: 
+        if self.isFolderExcluded(item)==False:
           result.append(item)
     result.sort()
     return result
@@ -267,7 +267,7 @@ class ProjectHelper:
 
     os.rmdir(path)
 
-  # if we're on cygwin: change cygwin path to windows path 
+  # if we're on cygwin: change cygwin path to windows path
   # so we can use it as a command line param for windows programs (e.g. sqlplus)
   # (exec.. so pretty expensive :-( )
   def cleanPath(self, path):
@@ -276,11 +276,11 @@ class ProjectHelper:
     else:
       proc = subprocess.Popen(["cygpath -wa "+ path], stdout=subprocess.PIPE, shell=True);
       (out, err) = proc.communicate();
-      result = out.rstrip();      
-      
+      result = out.rstrip();
+
     return result;
 
 
 
 
-     
+
