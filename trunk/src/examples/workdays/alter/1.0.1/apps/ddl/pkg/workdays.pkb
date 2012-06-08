@@ -62,3 +62,4 @@ create or replace package body workdays as
        gt_holidays(to_char(r_holiday.day,'yyyymmdd')) := 1;
      end loop;
 end workdays;
+/
