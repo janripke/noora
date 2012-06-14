@@ -35,6 +35,20 @@ create or replace package body workdays as
 
   end;
 
+
+  function is_workday(p_date in date) return boolean is
+    l_day_of_week  number;
+    l_saturday     varchar2(1):=to_char(to_date('06-11-2010','DD-MM-YYYY'),'D');
+    l_sunday       varchar2(1):=to_char(to_date('07-11-2010','DD-MM-YYYY'),'D');
+  begin
+      l_day_of_week:=to_char(p_date,'D');
+      if l_day_of_week not in (l_sunday,l_saturday) and not is_holiday(p_date) then
+        return true;
+      end if;
+    return false;
+  end;
+
+
   function is_holiday
     (p_date in date) return boolean is
 
