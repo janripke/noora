@@ -67,6 +67,7 @@ if __name__ == "__main__":
       pluginClass=classLoader.findByPattern(plugin)
       pluginManager.registerPlugin(pluginClass)
     
+    
         
     for plugin in pluginManager.getPlugins():
       
@@ -74,7 +75,8 @@ if __name__ == "__main__":
         if parameter.upper() == plugin.getType():
           plugin.execute(parameterHelper)
           exit(0)
-
+	
+	
     failOnPluginNotFound('no plugin found.')
     
   

@@ -38,6 +38,9 @@ class ComboBoxPanel(AbstractPanel.AbstractPanel):
     self.__staticText = wx.StaticText(self, id, label)  
     self.__staticText.SetMinSize((100,20))      
     self.__comboBoxControl=wx.ComboBox(self, id, choices=choices)
+    #width = self.__comboBoxControl.GetSize()[0]
+    
+    #self.__comboBoxControl.SetMinSize((width,30))
     sizer.Add(self.__staticText,0)  
     sizer.Add(self.__comboBoxControl,1)
     self.SetSizer(sizer)    

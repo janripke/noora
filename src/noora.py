@@ -38,13 +38,13 @@ if __name__ == "__main__":
 
   try:
     
-    logger = logging.getLogger('nooraLogger')
+    logger = logging.getLogger('NoOraLogger')
     handler = logging.handlers.RotatingFileHandler('noora.log')
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)         
     handler.doRollover()        
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.ERROR)
     
     
     parameterHelper=ParameterHelper.ParameterHelper()      

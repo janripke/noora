@@ -11,5 +11,5 @@ class ConfigReaderXML(ConfigReader):
         self.__tree = ElementTree()
         self.__tree.parse(self.__filename)
         if self.__tree == None:
-            self.__status = core.config.ConfigReader.CR_STATUS_ERROR
+            self.__status = ConfigReader.CR_STATUS_ERROR
             self.__message = "Invalid xml file"

@@ -58,7 +58,6 @@ class DropPlugin(Plugin.Plugin):
     for scheme in schemes:
       print "dropping scheme '"+scheme+"' in database '"+oracleSid+"'"
       oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
-      print "found oracleUser",oracleUser
       oraclePasswd=projectHelper.getOraclePasswd(oracleSid, scheme)
       for object in objects:
 

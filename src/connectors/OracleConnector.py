@@ -42,7 +42,7 @@ class OracleConnector(Connector.Connector):
       stream=projectHelper.readFile('feedback.log')
      
       
-      logger = logging.getLogger('nooraLogger')
+      logger = logging.getLogger('NoOraLogger')
       logger.info(oracleScript)
       if result!=0:  
         #stream = StreamHelper.StreamHelper().convert(stream)
