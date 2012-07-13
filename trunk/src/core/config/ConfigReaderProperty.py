@@ -3,6 +3,8 @@ import core.config.ConfigReader
 import core.NooraException as NooraException
 import core.StreamHelper as StreamHelper
 
+M_LF = chr(10)
+
 class ConfigReaderProperty(core.config.ConfigReader):
     '''
     The original config (property based) reader
@@ -37,7 +39,7 @@ class ConfigReaderProperty(core.config.ConfigReader):
     def saveToFile(self, filename):
         stream = M_LF.join(self.__lines)
         handle = open(filename, 'w')
-        andle.write(stream)
+        handle.write(stream)
         handle.close()
 
     def getValue(self, keyword):

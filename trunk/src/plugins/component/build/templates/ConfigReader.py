@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import StreamHelper as StreamHelper
 import NooraException as NooraException
-
 M_LF = chr(10)
 
 class ConfigReader:

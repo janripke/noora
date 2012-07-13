@@ -1,6 +1,9 @@
-class NooraException(Exception):
+#!/usr/bin/env python
+
+class IOException(Exception):
     
   def __init__(self, message):
+    Exception.__init__(self)
     self.__message=message
 
   def __str__(self):

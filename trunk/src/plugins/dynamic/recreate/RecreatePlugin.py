@@ -163,7 +163,7 @@ class RecreatePlugin(Plugin.Plugin):
     ignoreErrors=False  
     if  parameterHelper.hasParameter('-ignore_errors')==True:
       ignoreErrors=True
-    print ignoreErrors
+    
 
     configReader=self.getConfigReader()
     projectHelper=self.getProjectHelper()
