@@ -13,6 +13,7 @@ from org.noora.io.Properties import Properties
 from org.noora.io.Property import Property
 from org.noora.io.File import File
 from org.noora.io.FileReader import FileReader
+from org.noora.io.XmlFileReader import XmlFileReader
 from org.noora.io.PropertyLoader import PropertyLoader
 
 
@@ -43,6 +44,13 @@ class TestProperties(unittest.TestCase):
         fileReader = self.getFileReader("test.txt")
         characterBuffer= fileReader.read()
         fileReader.close()
+        
+    def testXmlFileReader(self):
+      file = File("project.xml")
+      fileReader = XmlFileReader(file)
+      stream = fileReader.read()
+      fileReader.close()
+ 
         
     def testPropertyLoader(self):
         properties = Properties()        
