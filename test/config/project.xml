@@ -1,78 +1,75 @@
 <ProjectConfiguration>
 	<Schemes>
-		<Scheme name="apps"></Scheme>
+		<Scheme>apps</Scheme>
 	</Schemes>
+	<OraclsUsers>
+    <OracleUser sid="orcl" scheme="apps" user="apps" password="apps"
+  </OraclsUsers>
 	<OracleSids>
-		<OracleSid name="orcl"></OracleSid>
+		<OracleSid>orcl</OracleSid>
 	</OracleSids>
 	<BlockedOracleSids></BlockedOracleSids>
-	<DefaultEnvironment name="dev"></DefaultEnvironment>
-	<DefaultVersion name="1.0.0"></DefaultVersion>
+	<DefaultEnvironment>dev</DefaultEnvironment>
+	<DefaultVersion>1.0.0</DefaultVersion>
 	<Environments>
-	<Environment name="dev"></Environment>
-	<Environment name="test"></Environment>
-	<Environment name="uat"></Environment>
-	<Environment name="prod"></Environment>
+	  <Environmen>dev</Environment>
+	  <Environment>test</Environment>
+	  <Environment>uat</Environment>
+	  <Environment>prod</Environment>
 	</Environments>
 	<BlockedEnvironments>
-		<BlockedEnvironment name="uat"></BlockedEnvironment>
-		<BlockedEnvironment name="prod"></BlockedEnvironment>
+		<BlockedEnvironment>uat</BlockedEnvironment>
+		<BlockedEnvironment>prod</BlockedEnvironment>
 	</BlockedEnvironments>
-	<VersionScheme name="apps"></VersionScheme>
+	<VersionScheme>apps</VersionScheme>
 	<ExcludedExtensions>
-		<ExcludedExtension name="bak"></ExcludedExtension>
-		<ExcludedExtension name="~"></ExcludedExtension>
-		<ExcludedExtension name="pyc"></ExcludedExtension>
-		<ExcludedExtension name="log"></ExcludedExtension>
+		<ExcludedExtension>bak</ExcludedExtension>
+		<ExcludedExtension>~</ExcludedExtension>
+		<ExcludedExtension>pyc</ExcludedExtension>
+		<ExcludedExtension>log</ExcludedExtension>
 	</ExcludedExtensions>
 	<ExcludedFolders>
-		<ExcludedFolder name=".svn"></ExcludedFolder>
-		<ExcludedFolder name="hotfix"></ExcludedFolder>
+		<ExcludedFolder>.svn</ExcludedFolder>
+		<ExcludedFolder>hotfix</ExcludedFolder>
 	</ExcludedFolders>
 	<ExcludedFiles>
-	<ExcludedFile name="install.sql"></ExcludedFile>
+	<ExcludedFile>install.sql</ExcludedFile>
 	</ExcludedFiles>
 	<DropObjects>
-		<DropObject name="scm"></DropObject>
-		<DropObject name="usr"></DropObject>
-		<DropObject name="vw"></DropObject>
-		<DropObject name="syn"></DropObject>
-		<DropObject name="trg"></DropObject>
-		<DropObject name="typ"></DropObject>
-		<DropObject name="tab"></DropObject>
-		<DropObject name="prc"></DropObject>
-		<DropObject name="fct"></DropObject>
-		<DropObject name="pkg"></DropObject>
-		<DropObject name="jar"></DropObject>
-		<DropObject name="seq"></DropObject>
-		<DropObject name="idx"></DropObject>
-		<DropObject name="dbl"></DropObject>
+		<DropObject>scm</DropObject>
+		<DropObject>usr</DropObject>
+		<DropObject>vw</DropObject>
+		<DropObject>syn</DropObject>
+		<DropObject>trg</DropObject>
+		<DropObject>typ</DropObject>
+		<DropObject>tab</DropObject>
+		<DropObject>prc</DropObject>
+		<DropObject>fct</DropObject>
+		<DropObject>pkg</DropObject>
+		<DropObject>jar</DropObject>
+		<DropObject>seq</DropObject>
+		<DropObject>idx</DropObject>
+		<DropObject>dbl</DropObject>
 	</DropObjects>
 	<CreateObjects>
-		<CreateObject name="usr"></CreateObject>
-		<CreateObject name="dbl"></CreateObject>
-		<CreateObject name="lib"></CreateObject>
-		<CreateObject name="dir"></CreateObject>
-		<CreateObject name="scm"></CreateObject>
-		<CreateObject name="seq"></CreateObject>
-
-		<CreateObject name="syn"></CreateObject>
-		<CreateObject name="tab"></CreateObject>
-		<CreateObject name="cst"></CreateObject>
-		<CreateObject name="fct"></CreateObject>
-		<CreateObject name="prc"></CreateObject>
-		<CreateObject name="pkg"></CreateObject>
-		<CreateObject name="jar"></CreateObject>
-		<CreateObject name="vw"></CreateObject>
-		<CreateObject name="trg"></CreateObject>
-		<CreateObject name="idx"></CreateObject>
-		<CreateObject name="gra"></CreateObject>
-
-	</CreateObjects>
-	<OraclsUsers>
-		<OracleUser sid="orcl" scheme="apps" user="apps" password="apps"
-	</OraclsUsers>
-	
+		<CreateObject name="usr">usr</CreateObject>
+		<CreateObject name="dbl">dbl</CreateObject>
+		<CreateObject name="lib">lib</CreateObject>
+		<CreateObject name="dir">dir</CreateObject>
+		<CreateObject name="scm">scm</CreateObject>
+		<CreateObject name="seq">seq</CreateObject>
+		<CreateObject name="syn">syn</CreateObject>
+		<CreateObject name="tab">tab</CreateObject>
+		<CreateObject name="cst">cst</CreateObject>
+		<CreateObject name="fct">fct</CreateObject>
+		<CreateObject name="prc">prc</CreateObject>
+		<CreateObject name="pkg">pkg</CreateObject>
+		<CreateObject name="jar">jar</CreateObject>
+		<CreateObject name="vw">vw</CreateObject>
+		<CreateObject name="trg">trg</CreateObject>
+		<CreateObject name="idx">idx</CreateObject>
+		<CreateObject name="gra">gra</CreateObject>
+	</CreateObjects>	
 	<Plugins>
 	<Plugin name="dynamic.generate.GeneratePlugin.GeneratePlugin"></Plugin>
 	<Plugin name="static.drop.DropPlugin.DropPlugin"></Plugin>
