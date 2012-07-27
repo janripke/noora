@@ -7,15 +7,12 @@ class XmlFileReader(Readable):
     Readable.__init__(self)
     self.__file = file
     pathName = file.getPath() + file.getName()
-    self.__handle = open(pathName,'rb')
+    self.__handle = ElementTree()
     
   def read(self):
     handle = self.__handle
-    stream = ElementTree()
-    stream.
-    stream = handle.read()
-    stream = stream.replace(chr(13)+chr(10),chr(10))
-    stream = stream.replace(chr(13),chr(10)) 
+    file = self.__file
+    stream = handle.parse(file.getPath()+file.getName())
     return stream
   
   def getFile(self):
