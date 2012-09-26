@@ -75,7 +75,7 @@ class DropPlugin(Plugin):
       for object in objects:      
         folder=File(self.getDropDir(properties)+os.sep+object)
         
-        ConnectionExecutor.execute(connector, folder, host, database, ignoreErrors, user, passwd)
+        ConnectionExecutor.execute(connector, properties, folder, host, database, ignoreErrors, user, passwd)
 #        if folder.isDirectory():
 #          files = Files.list(folder)     
 #          for file in files:

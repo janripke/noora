@@ -15,7 +15,7 @@ class DropPlugin(Plugin):
     return "drops database objects in oracle databases."
 
   def getDropDir(self, properties):
-    return properties.getPropertyValue('noora.dir')+os.sep+'org'+os.sep+'noora'+os.sep+'plugin'+os.sep+'mysql'+os.sep+'drop'
+    return properties.getPropertyValue('noora.dir')+os.sep+'org'+os.sep+'noora'+os.sep+'plugin'+os.sep+'oracle'+os.sep+'drop'
 
   def getOptions(self, properties):
     options = Plugin.getOptions(self)
@@ -63,7 +63,7 @@ class DropPlugin(Plugin):
       for object in objects:
         
         folder=File(self.getDropDir(properties)+os.sep+object)        
-        ConnectionExecutor.execute(connector, folder, host, scheme, ignoreErrors, user, passwd)
+        ConnectionExecutor.execute(connector, properties, folder, host, scheme, ignoreErrors, user, passwd)
 
       print "scheme '"+scheme+"' dropped."
 

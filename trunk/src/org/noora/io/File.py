@@ -36,6 +36,12 @@ class File(Fileable):
     folder,filename=os.path.split(pathName)
     return filename
   
+  def getAbsolutePath(self):
+    path = self.getPath()
+    if path == None:
+      return os.path.abspath('.')
+    return path
+  
   def getPath(self):
     pathName = self.__pathName
     folder,filename=os.path.split(pathName)
