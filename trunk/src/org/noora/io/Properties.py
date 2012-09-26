@@ -8,8 +8,6 @@ class Properties:
 
   def clear(self):
     self.__properties = []
-    
-
 
   def containsProperty(self, key):
     result = True
@@ -18,7 +16,6 @@ class Properties:
       result = False
     return result
     
-
   def setProperty(self, key, value):
     properties = self.__properties
     if self.containsProperty(key):
@@ -43,5 +40,15 @@ class Properties:
         result = property
     return result
        
+  def getPropertyValue(self, key, defaultValue=None):
+    result = defaultValue
+    properties = self.__properties
+    for property in properties:
+      if property.getKey() == key:
+        result = property.getValue()
+    return result
+  
+  def getPropertyValues(self, key):
+    return eval(self.getPropertyValue(key))
 
 

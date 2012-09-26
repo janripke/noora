@@ -1,12 +1,20 @@
 #!/usr/bin/env python
 from org.noora.io.Readable import Readable
+import os
 
 class FileReader(Readable):
   def __init__(self, file=None):
     Readable.__init__(self)
     self.__file = file
-    pathName = file.getPath() + file.getName()
+    if file.getPath()!='':
+      pathName = file.getPath() + os.sep + file.getName()
+    else:
+      pathName = file.getPath() + file.getName()
     self.__handle = open(pathName,'rb')
+
+  def fileno(self):
+    handle = self.__handle
+    return handle.fileno()    
     
   def read(self):
     handle = self.__handle

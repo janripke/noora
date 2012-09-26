@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 class ClassLoader:
     
     def __init__(self):
@@ -5,6 +7,7 @@ class ClassLoader:
     
     def find(self, moduleName,className):
         mod = __import__(moduleName ,globals(), locals(), [''])
+        
         clazz=getattr(mod,className)
         
         clazzInstance=clazz()

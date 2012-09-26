@@ -23,12 +23,13 @@ class Files:
     file = fileReader.getFile()
     file.delete()
   
-  def list(self, file=None,recursive=False, exclude=None):
+  @staticmethod
+  def list(file=None,recursive=False, exclude=None):
     result=[]
+    
     if file.exists():
-      folder = file.getPath()
+      folder = file.getPath()+os.sep+file.getName()
       fileList=os.listdir(folder)
-
       for fileItem in fileList:
         pathName = folder + os.sep + fileItem
         candidateFile = File(pathName)
@@ -37,10 +38,10 @@ class Files:
         if candidateFile.isDirectory() and exclude!="directory":
           result.append(candidateFile)
         if candidateFile.isDirectory() and recursive==True:
-          recursiveFiles = self.list(file, recursive, exclude)
+          recursiveFiles = Files.list(candidateFile, recursive, exclude)
           for recursiveFile in recursiveFiles:
             result.append(recursiveFile)
-      result.sort()
+      #result.sort()
     return result
 
   

@@ -3,8 +3,8 @@
 		<Scheme>apps</Scheme>
 	</Schemes>
 	<OraclsUsers>
-    <OracleUser sid="orcl" scheme="apps" user="apps" password="apps"
-  </OraclsUsers>
+		<OracleUser sid="orcl" scheme="apps" user="apps" password="apps"></OracleUser>
+	</OraclsUsers>
 	<OracleSids>
 		<OracleSid>orcl</OracleSid>
 	</OracleSids>
@@ -12,10 +12,10 @@
 	<DefaultEnvironment>dev</DefaultEnvironment>
 	<DefaultVersion>1.0.0</DefaultVersion>
 	<Environments>
-	  <Environmen>dev</Environment>
-	  <Environment>test</Environment>
-	  <Environment>uat</Environment>
-	  <Environment>prod</Environment>
+		<Environment>dev</Environment>
+		<Environment>test</Environment>
+		<Environment>uat</Environment>
+		<Environment>prod</Environment>
 	</Environments>
 	<BlockedEnvironments>
 		<BlockedEnvironment>uat</BlockedEnvironment>
@@ -33,7 +33,7 @@
 		<ExcludedFolder>hotfix</ExcludedFolder>
 	</ExcludedFolders>
 	<ExcludedFiles>
-	<ExcludedFile>install.sql</ExcludedFile>
+		<ExcludedFile>install.sql</ExcludedFile>
 	</ExcludedFiles>
 	<DropObjects>
 		<DropObject>scm</DropObject>
@@ -69,18 +69,18 @@
 		<CreateObject name="trg">trg</CreateObject>
 		<CreateObject name="idx">idx</CreateObject>
 		<CreateObject name="gra">gra</CreateObject>
-	</CreateObjects>	
+	</CreateObjects>
 	<Plugins>
-	<Plugin name="dynamic.generate.GeneratePlugin.GeneratePlugin"></Plugin>
-	<Plugin name="static.drop.DropPlugin.DropPlugin"></Plugin>
-	<Plugin name="component.build.BuildPlugin.BuildPlugin"></Plugin>
-	<Plugin name="dynamic.create.CreatePlugin.CreatePlugin"></Plugin>
-	<Plugin name="static.unittest.UnitTestPlugin.UnitTestPlugin"></Plugin>
-	<Plugin name="dynamic.update.UpdatePlugin.UpdatePlugin"></Plugin>
-	<Plugin name="dynamic.recreate.RecreatePlugin.RecreatePlugin"></Plugin>
+		<Plugin name="">dynamic.generate.GeneratePlugin.GeneratePlugin</Plugin>
+		<Plugin name="">static.drop.DropPlugin.DropPlugin</Plugin>
+		<Plugin name="">component.build.BuildPlugin.BuildPlugin</Plugin>
+		<Plugin name="">dynamic.create.CreatePlugin.CreatePlugin</Plugin>
+		<Plugin name="">static.unittest.UnitTestPlugin.UnitTestPlugin</Plugin>
+		<Plugin name="">dynamic.update.UpdatePlugin.UpdatePlugin</Plugin>
+		<Plugin name="">dynamic.recreate.RecreatePlugin.RecreatePlugin</Plugin>
 	</Plugins>
-	
-	
+
+
 </ProjectConfiguration>
 
 
