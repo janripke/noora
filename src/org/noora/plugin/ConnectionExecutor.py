@@ -9,7 +9,7 @@ class ConnectionExecutor:
     pass
   
   @staticmethod
-  def execute(connector, folder, host, database, ignoreErrors, user, passwd):
+  def execute(connector, properties, folder, host, database, ignoreErrors, user, passwd):
     if folder.isDirectory():
       files = Files.list(folder)     
       for file in files:
@@ -24,4 +24,4 @@ class ConnectionExecutor:
         executor.setPassword(passwd)
         executor.setScript(file)
         
-        connector.execute(executor)
+        connector.execute(executor, properties)

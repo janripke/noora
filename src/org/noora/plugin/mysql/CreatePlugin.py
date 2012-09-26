@@ -9,8 +9,6 @@ from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
 __revision__ = "$Revision: $"
 
 
-
-
 class CreatePlugin(Plugin):
   def __init__(self, connectable):
     Plugin.__init__(self, "CREATE", connectable)
@@ -64,19 +62,19 @@ class CreatePlugin(Plugin):
 #
         # global ddl objects
         folder=File(self.getCreateDir()+os.sep+database+os.sep+'ddl'+os.sep+object)
-        ConnectionExecutor.execute(connector, folder, host, database, ignoreErrors, user, passwd)
+        ConnectionExecutor.execute(connector, properties, folder, host, database, ignoreErrors, user, passwd)
 
         # environment specific ddl objects
         folder=File(self.getCreateDir()+os.sep+database+os.sep+'ddl'+os.sep+object+os.sep+environment)
-        ConnectionExecutor.execute(connector, folder, host, database, ignoreErrors, user, passwd)
+        ConnectionExecutor.execute(connector, properties, folder, host, database, ignoreErrors, user, passwd)
 
       # global dat objects
       folder=File(self.getCreateDir()+os.sep+database+os.sep+'dat')
-      ConnectionExecutor.execute(connector, folder, host, database, ignoreErrors, user, passwd)
+      ConnectionExecutor.execute(connector, properties, folder, host, database, ignoreErrors, user, passwd)
 
       # environment specific dat objects
       folder=File(self.getCreateDir()+os.sep+database+os.sep+'dat'+os.sep+environment)
-      ConnectionExecutor.execute(connector, folder, host, database, ignoreErrors, user, passwd)
+      ConnectionExecutor.execute(connector, properties, folder, host, database, ignoreErrors, user, passwd)
 
       print "database '"+database+"' created."
 

@@ -22,8 +22,6 @@ class OracleConnector(Connector):
     
     script = executable.getScript()
     
-    scriptReader = FileReader(script) 
-    
     feedback = File('feedback.log')
     feedbackWriter = FileWriter(feedback) 
     
@@ -35,8 +33,8 @@ class OracleConnector(Connector):
     cp.setProperty(Processor.STDIN,None)
     cp.setProperty(Processor.STDOUT, feedbackWriter)
     cp.setProperty(Processor.STARTUPINFO, startupInfo)
-    print "sqlplus","-l","-s",executable.getUsername()+"/"+executable.getPassword()+'@'+executable.getHost(),"@ "+script.getName()
-    cp.setProperty(Processor.ARGUMENT, ["sqlplus","-l","-s",executable.getUsername()+"/"+executable.getPassword()+'@'+executable.getHost(),"@ "+template,script.getName()])
+    
+    cp.setProperty(Processor.ARGUMENT, ["sqlplus","-l","-s",executable.getUsername()+"/"+executable.getPassword()+'@'+executable.getHost(),"@ "+template,script.getAbsolutePath() + os.sep + script.getName()])
     cp.setProperty(Processor.SHELL, False)
     oracleCall= Call(cp)
           

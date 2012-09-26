@@ -17,14 +17,14 @@ class MysqlConnector(Connector):
   def __init__(self):
     Connector.__init__(self)
   
-  def execute(self, executable):
+  def execute(self, executable, properties):
     
     script = executable.getScript()
     scriptReader = FileReader(script) 
       
-    properties = Properties()
-    properties.setProperty('database', executable.getDatabase())     
-    parser = Parser(scriptReader,properties)      
+    cp = Properties()
+    cp.setProperty('database', executable.getDatabase())     
+    parser = Parser(scriptReader,cp)      
     preProcessor = PreProcessor()
     stream = preProcessor.parse(parser)
     
@@ -40,14 +40,14 @@ class MysqlConnector(Connector):
     
     startupInfo = StartupInfoFactory.newStartupInfo()      
     
-    properties = Properties()
-    properties.setProperty(Processor.STDERR, feedbackWriter)
-    properties.setProperty(Processor.STDIN,scriptReader)
-    properties.setProperty(Processor.STDOUT, feedbackWriter)
-    properties.setProperty(Processor.STARTUPINFO, startupInfo)
-    properties.setProperty(Processor.ARGUMENT, ["mysql","--host="+executable.getHost(),"--user="+executable.getUsername(),"--password="+executable.getPassword(),executable.getDatabase()])
-    properties.setProperty(Processor.SHELL, False)
-    mysqlCall= Call(properties)
+    cp = Properties()
+    cp.setProperty(Processor.STDERR, feedbackWriter)
+    cp.setProperty(Processor.STDIN,scriptReader)
+    cp.setProperty(Processor.STDOUT, feedbackWriter)
+    cp.setProperty(Processor.STARTUPINFO, startupInfo)
+    cp.setProperty(Processor.ARGUMENT, ["mysql","--host="+executable.getHost(),"--user="+executable.getUsername(),"--password="+executable.getPassword(),executable.getDatabase()])
+    cp.setProperty(Processor.SHELL, False)
+    mysqlCall= Call(cp)
           
     processor = Processor()
     processor.call(mysqlCall)

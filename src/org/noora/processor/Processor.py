@@ -3,7 +3,6 @@ from org.noora.processor.Processable import Processable
 from org.noora.processor.ProcessorException import ProcessorException
 from org.noora.io.FileReader import FileReader
 import subprocess
-import os
 
 
 class Processor(Processable):
@@ -28,6 +27,7 @@ class Processor(Processable):
       stderr = callable.getProperty(Processor.STDERR)
       startupinfo = callable.getProperty(Processor.STARTUPINFO)
       argument = callable.getProperty(Processor.ARGUMENT)
+    
       result=subprocess.call(argument,shell=shell,stdout=stdout,stderr=stderr,stdin=stdin,startupinfo=startupinfo)
       if result!=0:
         file = stderr.getFile()
