@@ -1,60 +1,71 @@
 #!/usr/bin/env python
 
 import core.Connector as Connector
-import os
-import subprocess
-import core.NooraException as NooraException
 import logging
+
+
+from org.noora.io.File import File
+from org.noora.io.FileReader import FileReader
+from org.noora.io.Properties import Properties
+from org.noora.parser.Parser import Parser
+from org.noora.parser.PreProcessor import PreProcessor
+from org.noora.io.FileWriter import FileWriter
+from org.noora.processor.StartupInfoFactory import StartupInfoFactory
+from org.noora.processor.Processor import Processor
+from org.noora.processor.Call import Call
+
 
 class MysqlConnector(Connector.Connector):
   
   def __init__(self):
     Connector.Connector.__init__(self)
   
-  def getScriptDir(self):
-    return self.getNooraDir()+os.sep+'scripts'
-
-  def getStartupInfo(self):
-    startupInfo=None
-    if os.name=='nt':    
-      startupInfo=subprocess.STARTUPINFO()
-      #USESHOWWINDOW
-      startupInfo.dwFlags |=1
-      #SW_HIDE
-      startupInfo.wShowWindow=0
-    return startupInfo
-
-  def getDatabases(self):
-    projectHelper=self.getProjectHelper()
-    url=os.getenv('TNS_ADMIN')+os.sep+"tnsnames.ora"
-    stream=projectHelper.readFile(url)
-    print stream
-    
-  
-  def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB, ignoreErrors):
-    try:
-      startupInfo=self.getStartupInfo()
-      projectHelper=self.getProjectHelper()
-      handle=open('feedback.log','wb')
-      connectString='--user='+oracleUser+' --password='+oraclePasswd+' '+oracleSid
-      #templateScript=projectHelper.cleanPath('@'+self.getScriptDir()+os.sep+'template.sql')
-      result=subprocess.call(['mysql',connectString ,'<',oracleScript, paramA, paramB],shell=False,stdout=handle,stderr=handle,startupinfo=startupInfo)
-      stream=projectHelper.readFile('feedback.log')
-     
+  def execute(self, mysqlHost, mysqlDatabase, mysqlUser, mysqlPasswd, mysqlScript, paramA, paramB, ignoreErrors):
+    #try:
       
+      script = File(mysqlScript)
+      scriptReader = FileReader(script) 
+      
+      properties = Properties()
+      properties.setProperty('database', mysqlDatabase)     
+      parser = Parser(scriptReader,properties)      
+      preProcessor = PreProcessor()
+      stream = preProcessor.parse(parser)
+      
+      tmp = File("tmp.sql")
+      tmpWriter = FileWriter(tmp)
+      tmpWriter.write(stream)
+      tmpWriter.close()
+      
+      scriptReader = FileReader(tmp)
+      
+      feedback = File('feedback.log')
+      feedbackWriter = FileWriter(feedback) 
+      
+      startupInfo = StartupInfoFactory.newStartupInfo()      
+      
+      properties = Properties()
+      properties.setProperty(Processor.STDERR, feedbackWriter)
+      properties.setProperty(Processor.STDIN,scriptReader)
+      properties.setProperty(Processor.STDOUT, feedbackWriter)
+      properties.setProperty(Processor.STARTUPINFO, startupInfo)
+      properties.setProperty(Processor.ARGUMENT, ["mysql","--host="+str(mysqlHost),"--user="+str(mysqlUser),"--password="+str(mysqlPasswd),str(mysqlDatabase)])
+      properties.setProperty(Processor.SHELL, False)
+      mysqlCall= Call(properties)
+            
+      processor = Processor()
+      processor.call(mysqlCall)
+           
       logger = logging.getLogger('NoOraLogger')
-      logger.info(oracleScript)
-      if result!=0:  
-        #stream = StreamHelper.StreamHelper().convert(stream)
-        #stream = stream.replace(chr(10),chr(32))     
-        logger.error(stream)
-        if ignoreErrors==False:
-          raise NooraException.NooraException(stream)
-      else:
-        logger.info(stream)
-    except OSError:
-      raise NooraException.NooraException("Could not execute mysql. Is it installed and in your path?")
+      logger.info(mysqlScript)
+    #except:
+    #  logger = logging.getLogger('NoOraLogger')      
+    #  if ignoreErrors==False:
+    #    message = ""
+    #    for info in sys.exc_info():
+    #      message = message + str(info)
 
-
-
-
+    #    logger.error(message)
+    #    raise NooraException.NooraException(message)
+    #  logger.info(stream)
+      

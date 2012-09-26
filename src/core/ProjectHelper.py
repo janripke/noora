@@ -120,12 +120,30 @@ class ProjectHelper:
     if self.hasValue(list, value)==False:
       raise NooraException.NooraException(message)
 
+  def getMysqlUser(self, mysqlHost, database):
+    users=self.__configReader.getValue('MYSQL_USERS')
+    for user in users:
+      if user[0].lower()==mysqlHost.lower() and user[1].lower()==database.lower():
+        return user[2]
+    return None
+  
+  def getMysqlPasswd(self, mysqlHost, database):
+    users=self.__configReader.getValue('MYSQL_USERS')
+    for user in users:
+      if user[0].lower()==mysqlHost.lower() and user[1].lower()==database.lower():
+        return user[3]
+    return None
+
+
   def getOracleUser(self, oracleSid, scheme):
     users=self.__configReader.getValue('ORACLE_USERS')
     for user in users:
       if user[0].lower()==oracleSid.lower() and user[1].lower()==scheme.lower():
         return user[2]
     return None
+
+
+
 
   def getOraclePasswd(self, oracleSid, scheme):
     users=self.__configReader.getValue('ORACLE_USERS')

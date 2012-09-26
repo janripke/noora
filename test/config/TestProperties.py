@@ -36,28 +36,17 @@ class TestProperties(unittest.TestCase):
         properties.setProperty("application.version", "1.0.0")
         self.assertEqual(properties.size(), 1, "invalid size")
         properties.clear()
-        self.assertEqual(properties.size(), 0, "invalid size")
-        
-        
-        
-    def testFileReader(self):
-        fileReader = self.getFileReader("test.txt")
-        characterBuffer= fileReader.read()
-        fileReader.close()
-        
-    def testXmlFileReader(self):
-      file = File("project.xml")
-      fileReader = XmlFileReader(file)
-      stream = fileReader.read()
-      fileReader.close()
- 
+        self.assertEqual(properties.size(), 0, "invalid size")  
+         
         
     def testPropertyLoader(self):
         properties = Properties()        
-        propertyLoader = PropertyLoader(properties)
-        fileReader = self.getFileReader("test.txt")
+        propertyLoader = PropertyLoader(properties)        
+        file = File("test.conf")
+        fileReader = FileReader(file) 
         propertyLoader.load(fileReader)
-        self.assertEqual(properties.size(), 3, "invalid size")
+        
+        self.assertEqual(properties.size(), 4, "invalid size")
         property = properties.getProperty("ORACLE_USERS")
         self.assertEqual(len(eval(property.getValue())), 2, "invalid size")
         

@@ -17,9 +17,6 @@ import core.ConfigReader    as ConfigReader
 
 class TestConfigReader(unittest.TestCase):
     
-   
-        
-    
   def setUp(self):
     pass
   
