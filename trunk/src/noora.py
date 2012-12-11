@@ -10,6 +10,7 @@ import core.ClassLoader     as ClassLoader
 import logging.handlers
 
 __revision__ = "$Revision$"
+__version__  = "0.0.9"
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
 BASE_DIR     = os.path.abspath('.')
@@ -19,7 +20,9 @@ sys.path.append(PLUGIN_DIR)
 
 
 def getRevision():  
-  print "NoOra revision :" + __revision__.split(":")[1].rstrip("$")
+  print "noora version " + __version__  + "_" + __revision__.split(":")[1].rstrip("$")
+  
+  
 
 def findTemplateFile(filename):
   url=BASE_DIR+os.sep+filename
