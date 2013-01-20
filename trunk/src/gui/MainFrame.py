@@ -5,7 +5,6 @@ import AbstractFrame           as AbstractFrame
 import panels.ActionPanel      as ActionPanel
 import panels.HeaderPanel      as HeaderPanel
 import core.ConfigReader       as ConfigReader
-import core.ClassLoader        as ClassLoader
 import core.ParameterHelper    as ParameterHelper
 import core.Redirect           as Redirect
 import core.NooraException     as NooraException
@@ -235,10 +234,9 @@ class MainFrame(AbstractFrame.AbstractFrame):
 
   def onOpenProject(self, evt): 
     openDialog = wx.FileDialog(self, "Choose a NoOra project file", "", "", "NoOra project files (project.conf)|project.conf", wx.OPEN)  
-    if openDialog.ShowModal() == wx.ID_OK:
-      filename=openDialog.GetFilenames()[0]
-      directory=openDialog.GetDirectory()
-  
+    if openDialog.ShowModal() == wx.ID_OK:          
+      directory,filename=os.path.split(openDialog.GetPath())  
+      print filename, directory, openDialog.GetFilenames(),openDialog.GetPath()
       wx.PostEvent(self, PluginFinishedEvent.PluginFinishedEvent(Settings.ID_OPEN_PROJECT,directory, filename))   
     openDialog.Destroy()
 
@@ -285,11 +283,11 @@ class MainFrame(AbstractFrame.AbstractFrame):
   def onAbout(self, evt):
     info = wx.AboutDialogInfo()
     info.Name = "NoOra Gui"
-    info.Version = "0.0.7"
+    info.Version = "0.0.8"
     info.Description ="NoOra is an attempt to apply a pattern to installing/updating Oracle database projects\r\nin order to promote portability and productivity. "
-    info.Copyright = "(L) 2010, 2011 NoOra"
+    info.Copyright = "(L) 2010, 2011, 2012, 2013 NoOra"
     info.WebSite = ("https://sourceforge.net/apps/trac/noora/", "NoOra home page")
-    info.Developers = [ "Jan Ripke","Peter Kist","Gerry Duinkerken" ]
+    info.Developers = [ "Jan Ripke","Peter Kist" ]
     wx.AboutBox(info)
     
   def onExit(self, evt):
