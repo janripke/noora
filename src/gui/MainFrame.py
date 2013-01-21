@@ -235,8 +235,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
   def onOpenProject(self, evt): 
     openDialog = wx.FileDialog(self, "Choose a NoOra project file", "", "", "NoOra project files (project.conf)|project.conf", wx.OPEN)  
     if openDialog.ShowModal() == wx.ID_OK:          
-      directory,filename=os.path.split(openDialog.GetPath())  
-      print filename, directory, openDialog.GetFilenames(),openDialog.GetPath()
+      directory,filename=os.path.split(openDialog.GetPath())        
       wx.PostEvent(self, PluginFinishedEvent.PluginFinishedEvent(Settings.ID_OPEN_PROJECT,directory, filename))   
     openDialog.Destroy()
 
