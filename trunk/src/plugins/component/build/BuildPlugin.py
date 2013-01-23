@@ -139,10 +139,7 @@ class BuildPlugin(Plugin.Plugin):
       
       if projectHelper.folderPresent(folder):
         files=projectHelper.findFiles(folder)
-        print folder
-        print files  
-        for file in files:
-          print file, self.isFileExcluded(file)
+        for file in files:        
           if self.isFileExcluded(file)==False:
             sourceFile=folder+os.sep+file
             targetFile=zipFolder+file
