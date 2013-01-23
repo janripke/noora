@@ -51,7 +51,8 @@ class BuildPlugin(Plugin.Plugin):
     for excludedFile in excludedFiles:
       if filename.lower()==excludedFile.lower():
         return True
-
+    return False
+  
   def getSqlVersionStatement(self, versions, version, componentName):
     configReader=self.getConfigReader()
     createVersion=versions[0]
@@ -138,7 +139,10 @@ class BuildPlugin(Plugin.Plugin):
       
       if projectHelper.folderPresent(folder):
         files=projectHelper.findFiles(folder)
+        print folder
+        print files  
         for file in files:
+          print file, self.isFileExcluded(file)
           if self.isFileExcluded(file)==False:
             sourceFile=folder+os.sep+file
             targetFile=zipFolder+file
