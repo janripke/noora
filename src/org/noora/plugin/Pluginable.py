@@ -16,6 +16,13 @@ class Pluginable:
   def getConnector(self):
     raise PluginException("method not implemented")
 
+  def setExecutor(self, executor):
+    raise PluginException("method not implemented")
+
+  def getExecutor(self):
+    raise PluginException("method not implemented")
+
+
   def getUsage(self):
     raise PluginException("method not implemented")
   

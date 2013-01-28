@@ -15,15 +15,19 @@ class Plugin(Pluginable):
     Pluginable.__init__(self, type, connectable)
     self.__options = Options()
     self.setType(type)
-    self.setConnector(connectable)
-  
-    
+    self.setConnector(connectable)    
 
   def setConnector(self, connectable):
     self.__connectable=connectable
 
   def getConnector(self):
     return self.__connectable
+  
+  def setExecutor(self, executable):
+    self.__executable=executable
+
+  def getExecutor(self):
+    return self.__executable
 
   def setType(self, type):
     self.__type = type

@@ -5,6 +5,7 @@ from org.noora.helper.PropertyHelper import PropertyHelper
 from org.noora.io.File import File
 from org.noora.cl.OptionFactory import OptionFactory
 from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
+from org.noora.connector.ExecuteFactory import ExecuteFactory
 import os
 
 class DropPlugin(Plugin):
@@ -71,11 +72,19 @@ class DropPlugin(Plugin):
       passwd = PropertyHelper.getPasswd(users, host, database)
       
       connector = self.getConnector()
+           
+      executor = ExecuteFactory.newMysqlExecute()
+      executor.setHost(host)
+      executor.setDatabase(database)
+      executor.setIgnoreErrors(ignoreErrors)
+      executor.setPassword(passwd)
+      executor.setUsername(user)      
+
 
       for object in objects:      
         folder=File(self.getDropDir(properties)+os.sep+object)
         
-        ConnectionExecutor.execute(connector, properties, folder, host, database, ignoreErrors, user, passwd)
+        ConnectionExecutor.execute(connector, executor, properties, folder)
 #        if folder.isDirectory():
 #          files = Files.list(folder)     
 #          for file in files:

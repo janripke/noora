@@ -104,7 +104,7 @@ class TestFile(unittest.TestCase):
     propertyLoader.load(fileReader)
 
     
-    excludedFolders=properties.getPropertyValues('EXCLUDED_FOLDERS')
+    excludedFolders=properties.getPropertyValues('EXCLUDED_FOLDERS')    
     self.assertEquals(excludedFolders, ['.svn', 'hotfix'], "'.svn', 'hotfix' expected")
 
     filters = Filters()
@@ -112,8 +112,8 @@ class TestFile(unittest.TestCase):
       ef = File(excludedFolder)
       ff = FileFolderFilter(ef)
       filters.add(ff)
-    #file = File(NOORA_DIR+os.sep+'org/noora/plugin/mysql/drop/.svn')
-    #self.assertEquals(filters.accept(file), True, ".svn is in filter.")    
+    file = File(NOORA_DIR+os.sep+'org/noora/plugin/mysql/drop/.svn')
+    self.assertEquals(filters.accept(file), True, ".svn is in filter.")    
     file = File('.svn')
     self.assertEquals(filters.accept(file), True, ".svn is in filter.")  
     
