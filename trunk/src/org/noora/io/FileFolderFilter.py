@@ -12,7 +12,6 @@ class FileFolderFilter(Filterable):
     
   def accept(self, fileable):
     file = self.getFile()
-    print fileable.isDirectory(),file.getName(),fileable.getName()
     if fileable.isDirectory() and fileable.getName()==file.getName():
       return True
     return False

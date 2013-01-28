@@ -5,17 +5,26 @@ import core.VersionHelper as VersionHelper
 import core.NooraException as NooraException
 import os
 import subprocess
+from connectors.SqlLoaderConnector import SqlLoaderConnector
 
 
 class UpdatePlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
+    self.setSqlLoaderConnector(SqlLoaderConnector())
     self.setType("UPDATE")
     
     self.addParameterDefinition('database',['-s','-si','--sid'])
     self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
     self.addParameterDefinition('environment',['-e','--env'])
     self.addParameterDefinition('version',['-v','--version'])
+
+  def setSqlLoaderConnector(self, connector):
+    self.__sqlLoaderConnector = connector
+  
+  def getSqlLoaderConnector(self):
+    return self.__sqlLoaderConnector
+
 
   def getDescription(self):
     return "executes the defined update scripts in the alter folders."
@@ -86,6 +95,26 @@ class UpdatePlugin(Plugin.Plugin):
         projectHelper.removeFolderRecursive(extractFolder)
       else:
         connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','', ignoreErrors)        
+
+  def loadFiles(self, folder, oracleSid, oracleUser, oraclePasswd, ctlFile, ignoreErrors):   
+    connector=self.getSqlLoaderConnector()
+    projectHelper=self.getProjectHelper() 
+    
+    files=projectHelper.findFiles(folder)
+    for file in files:
+      url=folder+os.sep+file
+      print url.split(self.getBaseDir())[1]
+      if projectHelper.getFileExtension(file).lower()=='zip':
+        projectHelper.extractFile(url,projectHelper.getFileRoot(file))
+        
+        for extractedFile in projectHelper.findFiles(folder+os.sep+projectHelper.getFileRoot(file)):
+          connector.execute(oracleSid, oracleUser, oraclePasswd, ctlFile, extractedFile, ignoreErrors)
+        projectHelper.removeFolderRecursive(folder+os.sep+projectHelper.getFileRoot(file))
+      elif projectHelper.getFileExtension(file).lower()=='mdl':
+        pass
+      else:
+        connector.execute(oracleSid, oracleUser, oraclePasswd, ctlFile, file, ignoreErrors)  
+
 
 
   def checkVersion(self, oracleSid,oracleUser,oraclePasswd,previousVersion, versionSelectStatement, ignoreErrors):
@@ -194,6 +223,27 @@ class UpdatePlugin(Plugin.Plugin):
       folder=self.getAlterDir()+os.sep+version+os.sep+scheme+os.sep+'dat'+os.sep+environment
       if projectHelper.folderPresent(folder):
         self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
+   
+      # global sqlldr files
+      folder=self.getAlterDir()+os.sep+version+os.sep+scheme+os.sep+'sqlldr'
+      if projectHelper.folderPresent(folder):
+        ctlFolders = projectHelper.findFolders(folder)
+        for ctlFolder in ctlFolders:
+          ctlFile = folder+os.sep+ctlFolder + ".ctl"
+          self.loadFiles(folder+os.sep+ctlFolder, oracleSid, oracleUser, oraclePasswd, ctlFile, ignoreErrors)
+
+
+      # environment sqlldr files
+      folder=self.getAlterDir()+os.sep+version+os.sep+scheme+os.sep+'sqlldr'
+      if projectHelper.folderPresent(folder):
+        ctlFolders = projectHelper.findFolders(folder)
+        for ctlFolder in ctlFolders:
+          ctlFile = folder+os.sep+ctlFolder + ".ctl"
+          envFolder=folder + os.sep + ctlFolder + os.sep + environment
+          if projectHelper.folderPresent(envFolder):          
+            self.loadFiles(envFolder, oracleSid, oracleUser, oraclePasswd, ctlFile, ignoreErrors)
+   
+   
    
       print "scheme '"+scheme+"' updated."
 
