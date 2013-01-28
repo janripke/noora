@@ -16,6 +16,7 @@ class ConnectionExecutor:
         url = file.getPath()+os.sep+file.getName()        
         print url
         
+        
         executor = ExecuteFactory.newMysqlExecute()
         executor.setHost(host)
         executor.setDatabase(database)

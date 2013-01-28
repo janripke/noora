@@ -171,12 +171,14 @@ class ProjectHelper:
     self.writeFile(toUrl,stream)
 
 
-  def extractFile(self, url):
+  def extractFile(self, url, subFolder=None):
     folder=self.getFolder(url)
     file=zipfile.ZipFile(url,'r')
     for info in file.infolist():
       stream=file.read(info.filename)
       extractUrl=folder+os.sep+info.filename
+      if subFolder:
+        extractUrl=folder+os.sep+subFolder+os.sep+info.filename
       extractFolder=self.getFolder(extractUrl)
       if self.folderNotPresent(extractFolder):
         os.makedirs(extractFolder)
@@ -244,11 +246,11 @@ class ProjectHelper:
 
 
   def isFolderExcluded(self, folder):
-   excludedFolders=self.__configReader.getValue('EXCLUDED_FOLDERS')
-   for excludedFolder in excludedFolders:
-     if folder.lower()==excludedFolder.lower():
-       return True
-   return False
+    excludedFolders=self.__configReader.getValue('EXCLUDED_FOLDERS')
+    for excludedFolder in excludedFolders:
+      if folder.lower()==excludedFolder.lower():
+        return True
+    return False
 
 
   def findFolders(self, folder):

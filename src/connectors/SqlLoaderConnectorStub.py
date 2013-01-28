@@ -5,7 +5,7 @@ import os
 import subprocess
 
 
-class OracleConnectorStub(Connector.Connector):
+class SqlLoaderConnectorStub(Connector.Connector):
   
   def __init__(self):
     Connector.Connector.__init__(self)
@@ -21,7 +21,7 @@ class OracleConnectorStub(Connector.Connector):
     except:
       exit(1)
 
-  def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB, ignoreErrors):
+  def execute(self, oracleSid, oracleUser, oraclePasswd, ctlFile, dataFile, ignoreErrors):
     pass
 
 
