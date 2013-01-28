@@ -5,7 +5,7 @@ from org.noora.helper.PropertyHelper import PropertyHelper
 from org.noora.io.File import File
 from org.noora.cl.OptionFactory import OptionFactory
 from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
-
+from org.noora.connector.ExecuteFactory import ExecuteFactory
 __revision__ = "$Revision: $"
 
 
@@ -56,25 +56,31 @@ class CreatePlugin(Plugin):
       users= properties.getPropertyValues('MYSQL_USERS')
       user = PropertyHelper.getMysqlUser(users, host, database)
       passwd = PropertyHelper.getMysqlPasswd(users, host, database)
-      
+
+      executor = ExecuteFactory.newMysqlExecute()
+      executor.setHost(host)
+      executor.setDatabase(database)
+      executor.setIgnoreErrors(ignoreErrors)
+      executor.setPassword(passwd)
+      executor.setUsername(user)        
       
       for object in objects:  
-#
+
         # global ddl objects
         folder=File(self.getCreateDir()+os.sep+database+os.sep+'ddl'+os.sep+object)
-        ConnectionExecutor.execute(connector, properties, folder, host, database, ignoreErrors, user, passwd)
+        ConnectionExecutor.execute(connector, executor, properties, folder)
 
         # environment specific ddl objects
         folder=File(self.getCreateDir()+os.sep+database+os.sep+'ddl'+os.sep+object+os.sep+environment)
-        ConnectionExecutor.execute(connector, properties, folder, host, database, ignoreErrors, user, passwd)
+        ConnectionExecutor.execute(connector, executor, properties, folder)
 
       # global dat objects
       folder=File(self.getCreateDir()+os.sep+database+os.sep+'dat')
-      ConnectionExecutor.execute(connector, properties, folder, host, database, ignoreErrors, user, passwd)
+      ConnectionExecutor.execute(connector, executor, properties, folder)
 
       # environment specific dat objects
       folder=File(self.getCreateDir()+os.sep+database+os.sep+'dat'+os.sep+environment)
-      ConnectionExecutor.execute(connector, properties, folder, host, database, ignoreErrors, user, passwd)
+      ConnectionExecutor.execute(connector, executor, properties, folder)
 
       print "database '"+database+"' created."
 

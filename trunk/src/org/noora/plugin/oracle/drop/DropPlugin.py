@@ -5,6 +5,7 @@ from org.noora.helper.PropertyHelper import PropertyHelper
 from org.noora.io.File import File
 from org.noora.cl.OptionFactory import OptionFactory
 from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
+from org.noora.connector.ExecuteFactory import ExecuteFactory
 import os
 
 class DropPlugin(Plugin):
@@ -53,17 +54,24 @@ class DropPlugin(Plugin):
     objects = properties.getPropertyValues('DROP_OBJECTS')
 
     connector=self.getConnector()
-
+    
+    
     for scheme in schemes:
       print "dropping scheme '"+scheme+"' in database '" + host +"' using environment '"+environment+"'"      
       users= properties.getPropertyValues('ORACLE_USERS')
       user = PropertyHelper.getUser(users, host, scheme)
       passwd = PropertyHelper.getPasswd(users, host, scheme)      
       
+      executor = ExecuteFactory.newOracleExecute()
+      executor.setHost(host)
+      executor.setIgnoreErrors(ignoreErrors)
+      executor.setPassword(passwd)
+      executor.setUsername(user)      
+      
       for object in objects:
         
         folder=File(self.getDropDir(properties)+os.sep+object)        
-        ConnectionExecutor.execute(connector, properties, folder, host, scheme, ignoreErrors, user, passwd)
+        ConnectionExecutor.execute(connector, executor, properties, folder)
 
       print "scheme '"+scheme+"' dropped."
 
