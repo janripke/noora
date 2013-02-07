@@ -1,0 +1,20 @@
+create or replace package register as
+
+  G_STATUS_ERROR                 CONSTANT VARCHAR2(50) := 'ERROR';
+  G_STATUS_IMPORTED              CONSTANT VARCHAR2(50) := 'IMPORTED';
+  G_STATUS_EXPORTED              CONSTANT VARCHAR2(50) := 'EXPORTED';
+  G_STATUS_PROCESSING            CONSTANT VARCHAR2(50) := 'PROCESSING';  
+
+  function register_file
+    (p_file     in files%rowtype) return files%rowtype;
+
+  function get_file_details
+    (p_filename  in varchar2) return files%rowtype;
+
+  function get_file_details
+    (p_id  in number) return files%rowtype; 
+          
+    
+
+end register;
+/
