@@ -85,24 +85,6 @@ class DropPlugin(Plugin):
         folder=File(self.getDropDir(properties)+os.sep+object)
         
         ConnectionExecutor.execute(connector, executor, properties, folder)
-#        if folder.isDirectory():
-#          files = Files.list(folder)     
-#          for file in files:
-#          #  print file.getPath()+os.sep+file.getName()
-#            url = file.getPath()+os.sep+file.getName()
-#            print url
-#            
-#            #print url.split(os.path.abspath('.'))[1]
-#            executor = ExecuteFactory.newMysqlExecute()
-#            executor.setHost(host)
-#            executor.setDatabase(database)
-#            executor.setIgnoreErrors(ignoreErrors)
-#            executor.setUsername(user)
-#            executor.setPassword(passwd)
-#            executor.setScript(file)
-#            
-#            
-#            connector.execute(executor)    
       
       print "database '"+database+"' dropped."    
 
