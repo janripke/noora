@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<project>
+
+  <!-- name of the project -->
+  <name>ExampleProject</name>
+
+  <!-- these can be found in the 'config' directory -->
+  <config name="plugins.xml" />
+  <config name="connectors.xml" />
+  <config name="environments.xml" />
+
+</project>

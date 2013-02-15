@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<environments default="dev">
+
+  <environment name="dev">
+    <connector>store-dev</connector>
+  </environment>
+
+  <environment name="test">
+    <connector>store-test</connector>
+  </environment>
+
+  <environment name="uat">
+    <connector>store-uat</connector>
+    <blocked>
+      <plugin>recreate</plugin>
+      <plugin>drop</plugin>
+    </blocked>
+  </environment>
+
+  <environment name="prod">
+    <connector>store</connector>
+    <blocked>
+      <plugin>recreate</plugin>
+      <plugin>drop</plugin>
+    </blocked>
+  </environment>
+
+</environments>
