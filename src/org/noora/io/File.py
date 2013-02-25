@@ -31,6 +31,9 @@ class File(Fileable):
     pathName = self.__pathName
     return os.path.isdir(pathName)
   
+  def getPathName(self):
+    return self.__pathName
+  
   def getName(self):
     pathName = self.__pathName
     folder,filename=os.path.split(pathName)
