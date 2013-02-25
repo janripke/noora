@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+
+  <folders>
+    <folder name="build" directory="create">
+      <create-order>
+        <item>usr</item>
+        <item>dbl</item>
+        <item>lib</item>
+        <item>dir</item>
+        <item>scm</item>
+        <item>seq</item>
+        <item>syn</item>
+        <item>tab</item>
+        <item>cst</item>
+        <item>fct</item>
+        <item>prc</item>
+        <item>pkg</item>
+        <item>jar</item>
+        <item>vw</item>
+        <item>trg</item>
+        <item>idx</item>
+        <item>gra</item>
+      </create-order>
+      <drop-order>
+        <item>scm</item>
+        <item>usr</item>
+        <item>vw</item>
+        <item>syn</item>
+        <item>trg</item>
+        <item>typ</item>
+        <item>tab</item>
+        <item>prc</item>
+        <item>fct</item>
+        <item>pkg</item>
+        <item>jar</item>
+        <item>seq</item>
+        <item>idx</item>
+        <item>dbl</item>
+      </drop-order>
+    </folder>
+    
+    <folder name="update" directory="alter" />
+    <folder name="config" directory="config" />
+  </folders>
+
+</project>
