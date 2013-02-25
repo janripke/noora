@@ -27,7 +27,4 @@ class XmlConfig(Configurable):
   def setProperty(self, name, value):
     raise IOException("method not implemented")
   
-  def __loadConfigPart(self,name):
-    pass
-
         
