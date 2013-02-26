@@ -61,5 +61,30 @@
       <plugin>drop</plugin>
     </blocked>
   </connector>
+  
+  <connect-options>
+  
+    <connect-options database="oracle" version="11.0.2.0.3">
+      <command>sqlplus.exe</command>
+      <options>
+        <option type="command"  name="sqlplus.exe" />
+        <option type="option"   name="-l"/>
+        <option type="argument" name="-s"          value="${user}/${password}@{host}" />
+        <option type="value"                       value="@${file}" />
+      </options>     
+    </connect-options>
+    
+    <connect-options database="mysql" version="5.6">
+      <options>
+        <option type="command" name="mysql.exe" />
+        <option type="assign"  name="--host"    value="${host}" />
+        <option type="assign"  name="--user"    value="${user}" />
+        <option type="assign"  name="--password value="${password}" />
+        <option type="value"                    value="${database}" />
+        <option type="stdin"                    value="${file}" />
+      </options>
+    </connect-options>
+    
+  </connect-options>
 
 </connectors>
