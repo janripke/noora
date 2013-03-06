@@ -5,6 +5,7 @@ from org.noora.io.XmlFileReader import XmlFileReader
 
 class XmlConfig(Configurable):
   
+#---------------------------------------------------------
   def __init__(self, _file):
     Configurable.__init__(self)
     
@@ -12,10 +13,11 @@ class XmlConfig(Configurable):
       raise IOException("invalid argument 'file' (None)")
     self.__reader = XmlFileReader(_file)
 
+#---------------------------------------------------------
   def load(self):
     self.__reader.read()
-    
 
+#---------------------------------------------------------
   def getProperty(self, name):
     """ note that name actually is an xpath expression """
     root = self.__reader.getHandle()
@@ -24,6 +26,7 @@ class XmlConfig(Configurable):
     # assume that the first element contains the data we're interested in
     return elements[0].text
 
+#---------------------------------------------------------
   def setProperty(self, name, value):
     raise IOException("method not implemented")
   
