@@ -43,6 +43,8 @@ class TestXmlConfig(unittest.TestCase):
     
     self.assertEqual(xmlConfig.getProperty("name"),"ExampleProject", "'name' property not found or invalid")
     self.assertEqual(xmlConfig.getProperty("plugins/plugin[@name='generate']/class"),"dynamic.generate.GeneratePlugin.GeneratePlugin", "'plugin-class' property not found or invalid")
+    
+    #self.assertEqual(xmlConfig.getProperty("connectors/connect-options[@database='mysql']/options/option[6][@value]"),"<${file}","'<' not parsed properly")
 
 
 if __name__ == '__main__':
