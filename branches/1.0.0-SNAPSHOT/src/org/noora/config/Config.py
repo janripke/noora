@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
-import org.noora.io.File as File
 from org.noora.config.XmlConfig import XmlConfig
+from org.noora.io.File import File
 
 class Config(object):
   def __init__(self):
     self.__configs = [];
   
-  def pushConfig(self,_file):
-    config = Config.createConfig(_file)
+  def pushConfig(self, filepath):
+    config = Config.createConfig(filepath)
     self.__configs.append(config)
   
   def popConfig(self):
@@ -28,10 +28,11 @@ class Config(object):
       c.setProperty(name,value)
   
   @staticmethod
-  def __createConfig(cls,_file):
-    ext = _file.getExtension();
+  def __createConfig(cls, filepath):
+    configfile = File(filepath)
+    ext = configfile.getExtension();
     if (ext == "xml"):
-      return XmlConfig(_file);
+      return XmlConfig(configfile);
     else:
       # this should return a PropertyConfig object
       return None;
