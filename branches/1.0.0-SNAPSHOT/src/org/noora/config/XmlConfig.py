@@ -23,8 +23,11 @@ class XmlConfig(Configurable):
     root = self.__reader.getHandle()
     elements = root.findall(name)
     
-    # assume that the first element contains the data we're interested in
-    return elements[0].text
+    if (elements):
+      # assume that the first element contains the data we're interested in
+      return elements[0].text
+    else:
+      return None
 
 #---------------------------------------------------------
   def setProperty(self, name, value):

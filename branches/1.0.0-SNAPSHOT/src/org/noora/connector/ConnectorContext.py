@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
+__revision__ = "$Revision: $"
+
 class ConnectorContext:
 
-    def __init__(self, params = None, args = None):
+    def __init__(self, params=None, options=None):
         self.params = params if params is not None else {}
-        self.args = args if args is not None else []
-        
+        self.options = options if options is not None else []
+
     def isValid(self):
         if not "hostname" in self.params:
             return False
@@ -15,6 +17,6 @@ class ConnectorContext:
             return False;
         else:
             return True;
-        
+
     def paramNames(self):
         return [ "hostname", "user", "password" ];

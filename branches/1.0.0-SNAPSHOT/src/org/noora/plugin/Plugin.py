@@ -1,21 +1,32 @@
 #!/usr/bin/env python
 
+from org.noora.io.NoOraError import NoOraError
 from org.noora.plugin.Pluginable import Pluginable
-from org.noora.cl.Options import Options
 import logging
 
 __revision__ = "$Revision: $"
 
 class Plugin(Pluginable):
   
+  def initialize(self):
+    pass
+  
+  def terminate(self):
+    pass
+
+  def execute(self):
+    raise NoOraError('detail', "method not implemented")
+  
+  # pre 1.0.0 stuff
+  
   CREATE = "CREATE"
   logger = logging.getLogger("NoOraLogger")
   
-  def __init__(self, type, connectable):
-    Pluginable.__init__(self, type, connectable)
-    self.__options = Options()
-    self.setType(type)
-    self.setConnector(connectable)    
+  #def __init__(self, type, connectable):
+  #  Pluginable.__init__(self, type, connectable)
+  #  self.__options = Options()
+  #  self.setType(type)
+  #  self.setConnector(connectable)    
 
   def setConnector(self, connectable):
     self.__connectable=connectable
