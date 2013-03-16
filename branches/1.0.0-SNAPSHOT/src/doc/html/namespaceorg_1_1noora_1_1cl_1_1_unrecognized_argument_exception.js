@@ -1,0 +1,4 @@
+var namespaceorg_1_1noora_1_1cl_1_1_unrecognized_argument_exception =
+[
+    [ "UnrecognizedArgumentException", "classorg_1_1noora_1_1cl_1_1_unrecognized_argument_exception_1_1_unrecognized_argument_exception.html", "classorg_1_1noora_1_1cl_1_1_unrecognized_argument_exception_1_1_unrecognized_argument_exception" ]
+];
