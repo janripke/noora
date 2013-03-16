@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<!-- list of plugins that are supported/required for this project -->
+<plugins>
+
+  <plugin name="help">
+    <class>org.noora.plugin.HelpPlugin.HelpPlugin</class>
+  </plugin>
+
+  <plugin name="version">
+    <class>org.noora.plugin.VersionPlugin.VersionPlugin</class>
+  </plugin>
+
+  <plugin name="revision">
+    <class>org.noora.plugin.RevisionPlugin.RevisionPlugin</class>
+  </plugin>
+
+</plugins>

@@ -13,10 +13,10 @@ from org.noora.processor.Processor import Processor
 from org.noora.processor.Call import Call
 import os
 
-class OracleConnector(Connector):
+class OracleCommandConnector(Connector):
   
-  def __init__(self):
-    Connector.__init__(self)
+  def __init__(self, connectorContext):
+    Connector.__init__(self, connectorContext)
   
   def execute(self, executable, properties):
     

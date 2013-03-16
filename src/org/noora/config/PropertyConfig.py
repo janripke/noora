@@ -3,6 +3,7 @@ from org.noora.config.Configurable import Configurable
 from org.noora.io.IOException import IOException
 from org.noora.io.PropertyFileReader import PropertyFileReader
 import re
+from org.noora.io.NoOraError import NoOraError
 
 class PropertyConfig(Configurable):
   
@@ -10,8 +11,6 @@ class PropertyConfig(Configurable):
   def __init__(self, _file):
     Configurable.__init__(self)
     
-    if _file == None:
-      raise IOException("invalid argument 'file' (None)")
     self.__reader = PropertyFileReader(_file)
     self.__values = {}
 

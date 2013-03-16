@@ -1,14 +1,29 @@
-#!/usr/bin/env python
+
 from org.noora.plugin.PluginException import PluginException
-__revision__ = "$Revision: $"
+from org.noora.io.NoOraError import NoOraError
 
 class Pluginable:
+  
+  def __init__(self):
+    pass
 
-  def __init__(self, type, connectable):
+  #def __init__(self, type, connectable):
+  #  pass
+  
+  def initialize(self):
     pass
   
-  def execute(self, parameters, properties):
-    raise PluginException("method not implemented") 
+  def terminate(self):
+    raise NoOraError('detail', "method not implemented")
+
+  def execute(self):
+    pass
+    
+
+  # pre 1.0.0 stuff
+  
+  #def execute(self, parameters, properties):
+  #  raise PluginException("method not implemented") 
     
   def setConnector(self, connector):
     raise PluginException("method not implemented")

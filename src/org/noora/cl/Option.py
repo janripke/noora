@@ -2,6 +2,10 @@
 
 class Option:
   
+  OPTION_TYPE_ARGUMENT = 1
+  OPTION_TYPE_OPTIONARG = 2
+  OPTION_TYPE_OPTION = 3
+  
   def __init__(self, type=None, longType=None, hasArguments=False, required=False, description=None):
     self.__type = type
     self.__longType = longType

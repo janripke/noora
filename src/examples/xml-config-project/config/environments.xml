@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <environments default="dev">
 
@@ -12,18 +12,10 @@
 
   <environment name="uat">
     <connector>store-uat</connector>
-    <blocked>
-      <plugin>recreate</plugin>
-      <plugin>drop</plugin>
-    </blocked>
   </environment>
 
   <environment name="prod">
     <connector>store</connector>
-    <blocked>
-      <plugin>recreate</plugin>
-      <plugin>drop</plugin>
-    </blocked>
   </environment>
 
 </environments>
