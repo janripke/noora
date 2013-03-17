@@ -1,0 +1,15 @@
+create or replace package logger_adm as  
+
+  function purge
+    (p_threshold_date  in date) return number;
+                 
+  procedure purge
+    (p_job_name       in varchar2
+    ,p_threshold_date in date);
+
+  procedure purge
+    (p_job_name       in varchar2
+    ,p_threshold_days in number);
+
+ end logger_adm;
+/

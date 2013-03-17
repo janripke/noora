@@ -1,0 +1,1 @@
+drop trigger log_bd;
