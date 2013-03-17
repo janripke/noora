@@ -9,9 +9,10 @@ import ConfigReader      as ConfigReader
 import ParameterHelper   as ParameterHelper
 import NooraException    as NooraException
 
-OBJECTS        = ['usr','dbl','dir','scm','seq','syn','tab','cst','fct','prc','pkg','jar','vw','trg','idx','gra']
+OBJECTS        = ['usr','dbl','dir','syn','lib','typ','scm','aq','seq','tab','cst','fct','prc','pkg','jar','mvw','vw','trg','idx','gra']
 BASE_DIR       = os.path.abspath(os.path.dirname(sys.argv[0]))
 SILENTMODE     = False
+
 
 def getUsage():
   print "NoOra database installer, setup.py"
