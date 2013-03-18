@@ -7,21 +7,20 @@ class Pluginable:
   def __init__(self):
     pass
 
-  #def __init__(self, type, connectable):
-  #  pass
-  
-  def initialize(self):
-    pass
+  def initialize(self, inputObject, outputObject):
+    raise NoOraError('detail', "method not implemented")
   
   def terminate(self):
     raise NoOraError('detail', "method not implemented")
 
   def execute(self):
-    pass
+    raise NoOraError('detail', "method not implemented")
     
 
   # pre 1.0.0 stuff
   
+  #def __init__(self, type, connectable):
+  #  pass
   #def execute(self, parameters, properties):
   #  raise PluginException("method not implemented") 
     

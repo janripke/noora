@@ -1,7 +1,7 @@
 from org.noora.plugin.Plugin import Plugin
 from org.noora.output.ConsoleOutput import ConsoleOutput
 
-class HelpPlugin(Plugin):
+class VersionPlugin(Plugin):
 
   def __init__(self, inputObject, outputObject):
     Plugin.__init__(self, inputObject, outputObject)
@@ -11,5 +11,5 @@ class HelpPlugin(Plugin):
     self.setOutput(ConsoleOutput())
   
   def execute(self):
-    msg = "here comes some help"
+    msg = "version 1.0.0"
     self.getOutput().processOutput(msg)

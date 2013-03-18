@@ -3,10 +3,12 @@ import os
 
 from org.noora.config.Config import Config
 from org.noora.io.File import File
+from org.noora.io.Directory import Directory
 from org.noora.io.NoOraError import NoOraError
 from org.noora.app.Params import Params
 from org.noora.classloader.ClassLoader import ClassLoader
 from org.noora.classloader.ClassLoaderException import ClassLoaderException
+
 
 class NoOraApp(object):
 
@@ -25,14 +27,19 @@ class NoOraApp(object):
     self.__readConfig()
     self.__loadPlugins()
     self.__parseParameters()
+    
+    for plugin in self.__plugins:
+      plugin.initialize()
 
 #---------------------------------------------------------  
   def terminate(self):
-    pass
+    for plugin in self.__plugins:
+      plugin.terminate()
 
 #--------------------------------------------------------- 
   def run(self):
-    pass
+    for plugin in self.__plugins:
+      plugin.execute()
   
 #---------------------------------------------------------
   def getDirectory(self,name):
@@ -56,13 +63,17 @@ class NoOraApp(object):
     """
     
     # first read noora 'system config'
-    curdir = os.getcwd()
-    os.chdir(self.__directories['NOORA_DIR'] + "/data")
+    directory = Directory()
+    directory.pushDir(self.__directories['NOORA_DIR'] + "/data")
+
     sysconfig = "{0}/data/noora-config.xml".format(self.__directories['NOORA_DIR'])
     xmlconfig = File(sysconfig)
     if xmlconfig.exists():
       self.__config.pushConfig(sysconfig)
-    os.chdir(curdir)
+    
+    directory.popDir()
+    
+    # now read project config
     
     xmlconfig = File("project-config.xml")
     if xmlconfig.exists():
@@ -77,7 +88,6 @@ class NoOraApp(object):
     raise NoOraError('usermsg', 'no configuration file found in project dir (project-config.xml or project.conf)')
 
 #---------------------------------------------------------
-
   def __loadPlugins(self):
     loader = ClassLoader()
     
@@ -87,8 +97,22 @@ class NoOraApp(object):
         className = self.__config.getProperty("plugins/plugin[@name='{0}']/class".format(plugin.getName()))
         if not className:
           raise NoOraError('usermsg', "unknown command {0}".format(plugin.getName()))
-        self.__plugins.append(loader.findByPattern(className))
+        
+        inp = self.__getDefaultInput()
+        outp = self.__getDefaultOutput()
+        plugin = loader.findByPattern(className, [ inp, outp] )
+        
+        self.__plugins.append(plugin)
         
     except ClassLoaderException as e:
       raise NoOraError('detail', e.getMessage())
       
+#---------------------------------------------------------
+# private methods
+#---------------------------------------------------------
+
+  def __getDefaultInput(self):
+    return None
+  
+  def __getDefaultOutput(self):
+    return None
