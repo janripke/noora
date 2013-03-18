@@ -19,8 +19,16 @@ class NoOraError(Exception):
   def getReasons(self):
     return self.__errors;
   
+  def getMessage(self):
+    if 'detail' in self.__errors:
+      return self.__errors['detail']
+    else:
+      return type(self)
+    
   def getUserReason(self):
-    return self.__errors['usermsg']
+    if 'usermsg' in self.__errors:
+      return self.__errors['usermsg']
+    return ""
   
   def getDiagnostics(self):
     diag = [];
