@@ -14,5 +14,9 @@
   <plugin name="revision">
     <class>org.noora.plugin.RevisionPlugin.RevisionPlugin</class>
   </plugin>
+  
+  <plugin name="generate">
+    <class>org.noora.plugin.GeneratePlugin.GeneratePlugin</class>
+  </plugin>
 
 </plugins>

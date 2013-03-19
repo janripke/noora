@@ -32,5 +32,11 @@ class XmlConfig(Configurable):
 #---------------------------------------------------------
   def setProperty(self, name, value):
     raise IOException("method not implemented")
-  
-        
+
+#---------------------------------------------------------
+  def getElement(self, name):
+    """ note that name actually is an xpath expression """
+    root = self.__reader.getHandle()
+    elements = root.findall(name)
+    
+    return elements

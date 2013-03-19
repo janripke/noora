@@ -1,6 +1,6 @@
 from org.noora.output.Outputable import Outputable
 
-class ConsoleOutput(Outputable):
+class FileSystemOutput(Outputable):
 
   def __init__(self):
     Outputable.__init__(self)

@@ -1,13 +1,16 @@
 
-import os
-
-from org.noora.config.Config import Config
-from org.noora.io.File import File
-from org.noora.io.Directory import Directory
-from org.noora.io.NoOraError import NoOraError
 from org.noora.app.Params import Params
 from org.noora.classloader.ClassLoader import ClassLoader
 from org.noora.classloader.ClassLoaderException import ClassLoaderException
+from org.noora.config.Config import Config
+from org.noora.input.FileSystemInput import FileSystemInput
+from org.noora.io.Directory import Directory
+from org.noora.io.File import File
+from org.noora.io.NoOraError import NoOraError
+from org.noora.output.ConsoleOutput import ConsoleOutput
+
+import os
+
 
 
 class NoOraApp(object):
@@ -44,7 +47,17 @@ class NoOraApp(object):
 #---------------------------------------------------------
   def getDirectory(self,name):
     return self.__directories[name]
+  
+#---------------------------------------------------------
+  def getPlugins(self):
+    return self.__plugins
+  
+#---------------------------------------------------------
+  def getConfig(self):
+    return self.__config
 
+#---------------------------------------------------------
+# Private methods
 #---------------------------------------------------------
   def __initLog(self):
     pass
@@ -62,6 +75,8 @@ class NoOraApp(object):
       @throws NoOraError('usermsg')
     """
     
+    hasNoOraConfig = False
+    
     # first read noora 'system config'
     directory = Directory()
     directory.pushDir(self.__directories['NOORA_DIR'] + "/data")
@@ -70,6 +85,7 @@ class NoOraApp(object):
     xmlconfig = File(sysconfig)
     if xmlconfig.exists():
       self.__config.pushConfig(sysconfig)
+      hasNoOraConfig = True
     
     directory.popDir()
     
@@ -85,7 +101,8 @@ class NoOraApp(object):
       self.__config.pushConfig("project.conf")
       return
     
-    raise NoOraError('usermsg', 'no configuration file found in project dir (project-config.xml or project.conf)')
+    if not hasNoOraConfig:
+      raise NoOraError('usermsg', 'no configuration file found in project dir (project-config.xml or project.conf)')
 
 #---------------------------------------------------------
   def __loadPlugins(self):
@@ -100,7 +117,7 @@ class NoOraApp(object):
         
         inp = self.__getDefaultInput()
         outp = self.__getDefaultOutput()
-        plugin = loader.findByPattern(className, [ inp, outp] )
+        plugin = loader.findByPattern(className, [ plugin.getName(), self, inp, outp] )
         
         self.__plugins.append(plugin)
         
@@ -108,11 +125,9 @@ class NoOraApp(object):
       raise NoOraError('detail', e.getMessage())
       
 #---------------------------------------------------------
-# private methods
-#---------------------------------------------------------
-
   def __getDefaultInput(self):
-    return None
+    return FileSystemInput()
   
+#---------------------------------------------------------
   def __getDefaultOutput(self):
-    return None
+    return ConsoleOutput()

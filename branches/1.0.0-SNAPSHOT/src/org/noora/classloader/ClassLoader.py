@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 from org.noora.classloader.ClassLoadable import ClassLoadable
-from org.noora.classloader.ClassLoaderException import ClassLoaderException
-import sys
 from org.noora.io.NoOraError import NoOraError
+
+import sys
+
 
 class ClassLoader(ClassLoadable):
     
@@ -19,7 +20,10 @@ class ClassLoader(ClassLoadable):
       message = ""
       for info in sys.exc_info():
         message = message + str(info)
-      raise NoOraError('detail', "cannot load class").addReason('class', moduleName + "." + className)
+      e = NoOraError('detail', "cannot load class {0}.{1}".format(moduleName, className))
+      e.addReason('class', moduleName + "." + className)
+      e.addReason('exc_info', message)
+      raise e
     
   def find(self, moduleName, className, args):
     l = 0
