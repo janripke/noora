@@ -59,7 +59,31 @@ class Config(object):
     c = self.__configs[-1]
     if c:
       c.setProperty(name,value)
-  
+
+#---------------------------------------------------------
+  def getElement(self, name, mode = GET_MODE_FIRST):
+    """ get element(s) from config stack.
+      When mode = GET_MODE_FIRST then the first value found is returned.
+      When mode = GET_MODE_MERGE and the found result is a list then the full config stack is travered 
+      and all found values will be merged into the resulting string
+      @param name the name of the property
+      @param mode either GET_MODE_FIRST (default) or GET_MODE_MERGE
+      @return a string or list when the property was found or None when not found
+    """
+    result = None
+    for c in reversed(self.__configs):
+      value = c.getElement(name)
+      if value:
+        if mode == Config.GET_MODE_FIRST:
+          return value
+
+        if result:
+          result.extend(value)
+        else:
+          result = value
+ 
+    return result
+    
 #---------------------------------------------------------
   @classmethod
   def __createConfig(cls, filepath):

@@ -3,10 +3,6 @@
 <!-- list of plugins that are supported/required for this project -->
 <plugins>
 
-	<plugin name="generate">
-		<class>dynamic.generate.GeneratePlugin.GeneratePlugin</class>
-	</plugin>
-
 	<plugin name="drop">
 		<class>static.drop.DropPlugin.DropPlugin</class>
 	</plugin>

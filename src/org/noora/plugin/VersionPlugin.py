@@ -3,8 +3,8 @@ from org.noora.output.ConsoleOutput import ConsoleOutput
 
 class VersionPlugin(Plugin):
 
-  def __init__(self, inputObject, outputObject):
-    Plugin.__init__(self, inputObject, outputObject)
+  def __init__(self, name, application, inputObject, outputObject):
+    Plugin.__init__(self, name, application, inputObject, outputObject)
     
   def initialize(self):
     # overrule current output with console output
@@ -12,4 +12,4 @@ class VersionPlugin(Plugin):
   
   def execute(self):
     msg = "version 1.0.0"
-    self.getOutput().processOutput(msg)
+    self.getOutput().processOutput(None, msg)

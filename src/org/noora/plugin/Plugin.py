@@ -8,37 +8,55 @@ __revision__ = "$Revision: $"
 
 class Plugin(Pluginable):
   
-  def __init__(self, inputObject, outputObject):
+#---------------------------------------------------------
+  def __init__(self, name, application, inputObject, outputObject):
+    self.__name = name
+    self.__application = application
     self.__input = inputObject
     self.__output = outputObject
 
-  def initialize(self, inputObject, outputObject):
-    if inputObject:
+#---------------------------------------------------------
+  def initialize(self):
+    if self.__input:
       self.__input.initialize()
     if self.__output:
       self.__output.initialize()
   
+#---------------------------------------------------------
   def terminate(self):
     if self.__input:
       self.__input.terminate()
     if self.__output:
       self.__output.terminate()
 
+#---------------------------------------------------------
   def execute(self):
     raise NoOraError('detail', "method not implemented")
   
+#---------------------------------------------------------
+  def getName(self):
+    return self.__name
+  
   # accessors
+#---------------------------------------------------------
   def getInput(self):
     return self.__input
   
+#---------------------------------------------------------
   def setInput(self, inputObject):
     self.__input = inputObject
   
+#---------------------------------------------------------
   def getOutput(self):
     return self.__output
   
+#---------------------------------------------------------
   def setOutput(self, outputObject):
     self.__output = outputObject
+    
+#---------------------------------------------------------
+  def getApplication(self):
+    return self.__application
   
   # pre 1.0.0 stuff
   

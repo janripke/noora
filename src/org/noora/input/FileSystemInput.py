@@ -1,9 +1,10 @@
+from org.noora.input.Inputable import Inputable
 from org.noora.output.Outputable import Outputable
 
-class ConsoleOutput(Outputable):
+class FileSystemInput(Inputable):
 
   def __init__(self):
-    Outputable.__init__(self)
+    Inputable.__init__(self)
   
   def initialize(self):
     pass
@@ -11,5 +12,5 @@ class ConsoleOutput(Outputable):
   def terminate(self):
     pass
   
-  def processOutput(self, what, content):
-    print content
+  def fetchInput(self, what):
+    return ""

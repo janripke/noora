@@ -1,25 +1,36 @@
-import core.VersionHelper as VersionHelper
-from core.ConfigReader import ConfigReader
-import core.Plugin as Plugin
-import os.path
 
-class GeneratePlugin(object):
-  '''
-  This will eventually replace src/plugins/dynamic/GeneratePlugin.py
-  '''
+from org.noora.output.FileSystemOutput import FileSystemOutput
+from org.noora.plugin.Plugin import Plugin
+import os
 
 
-  def __init__(self):
-    Plugin.Plugin.__init__(self)
-    self.setType("GENERATE")
-    self.setBaseDir(os.path.abspath('.'))
+class GeneratePlugin(Plugin):
+  
+  def __init__(self, name, application, inputObject, outputObject):
+    Plugin.__init__(self, name, application, inputObject, outputObject)
+  
+  def initialize(self):
+    # overrule current output with filesystem output
+    self.setOutput(FileSystemOutput())
+  
+  def execute(self):
+    content = "<?xml?>\n<project-config><name>test-name</name></project-config>"
+    self.getOutput().processOutput("project-config.xml", content)
     
-    self.addParameterDefinition('project',['-pr','--project'])
-    self.addParameterDefinition('database',['-si','--sid'])
-    self.addParameterDefinition('scheme',['-sc','--scheme'])
-    self.addParameterDefinition('username',['-u','--username'])
-    self.addParameterDefinition('password',['-p','--password'])
-    self.addParameterDefinition('version',['-v','--version'])
+  # pre 1.0.0 stuff
+
+
+  #def __init__(self):
+  #  Plugin.Plugin.__init__(self)
+  #  self.setType("GENERATE")
+  #  self.setBaseDir(os.path.abspath('.'))
+    
+  #  self.addParameterDefinition('project',['-pr','--project'])
+  #  self.addParameterDefinition('database',['-si','--sid'])
+  #  self.addParameterDefinition('scheme',['-sc','--scheme'])
+  #  self.addParameterDefinition('username',['-u','--username'])
+  #  self.addParameterDefinition('password',['-p','--password'])
+  #  self.addParameterDefinition('version',['-v','--version'])
   
   def getPluginDir(self):
     return self.getNooraDir()+os.sep+'plugins'+os.sep+'dynamic'+os.sep+'generate'
@@ -52,7 +63,8 @@ class GeneratePlugin(object):
     createFolder=projectHelper.getCreateFolder()
     if projectHelper.folderPresent(createFolder):
       versions.append(defaultVersion)
-    versionHelper=VersionHelper.VersionHelper(versions)
+    #versionHelper=VersionHelper.VersionHelper(versions)
+    versionHelper = None
     versions=versionHelper.sort()
     return versions
 
@@ -75,7 +87,7 @@ class GeneratePlugin(object):
     return stream
 
 
-  def execute(self, parameterHelper):
+  def execute_old(self, parameterHelper):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    
@@ -134,7 +146,8 @@ class GeneratePlugin(object):
       print "project "+projectFolder+" created."
       
       
-    configReader=ConfigReader.ConfigReader('project.conf')
+    #configReader=ConfigReader.ConfigReader('project.conf')
+    configReader=None
     self.setConfigReader(configReader)
     projectHelper.setConfigReader(configReader)
     #configReader=self.getConfigReader()
@@ -163,7 +176,8 @@ class GeneratePlugin(object):
     versions=self.getVersions(defaultVersion)
         
     if len(version)==0:
-      versionHelper=VersionHelper.VersionHelper(versions)
+      #versionHelper=VersionHelper.VersionHelper(versions)
+      versionHelper = None
       version.append(versionHelper.getNextRevision(defaultVersion))    
    
     version=version[0]
