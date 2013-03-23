@@ -1,0 +1,1 @@
+select concat('drop procedure ', routine_name,';') from information_schema.routines where routine_type='PROCEDURE' and routine_schema='{database}';
