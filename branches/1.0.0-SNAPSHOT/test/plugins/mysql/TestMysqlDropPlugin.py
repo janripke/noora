@@ -18,6 +18,7 @@ from org.noora.plugin.mysql.drop.DropPlugin import DropPlugin
 from org.noora.cl.Parser import Parser
 from org.noora.connector.MysqlConnectorStub import MysqlConnectorStub
 from org.noora.connector.ExecuteFactory import ExecuteFactory
+from org.noora.connector.ConnectorContext import ConnectorContext
 from org.noora.io.Files import Files
 
 class TestBase(unittest.TestCase): 
@@ -41,11 +42,12 @@ class TestBase(unittest.TestCase):
     
     properties.setProperty("noora.dir", NOORA_DIR)
 
-    connectable=MysqlConnectorStub()
+    connectorContext = ConnectorContext()
+    connectable=MysqlConnectorStub(connectorContext)
     dropPlugin = DropPlugin(connectable)
     options = dropPlugin.getOptions(properties)
     
-    arguments = ['-h=192.168.0.190','-d=orcl','-e=dev']
+    arguments = ['-h=192.168.1.13','-d=orcl','-e=dev']
     parser = Parser()
     commandLine = parser.parse(options,arguments)
     

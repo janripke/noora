@@ -4,5 +4,5 @@ delete
    (select routine_name 
       from information_schema.routines 
      where routine_schema = {database}
-       and routine_type   = 'FUNCTION'
+       and routine_type   = 'PROCEDURE'
      );
