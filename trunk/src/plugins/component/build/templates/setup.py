@@ -41,8 +41,8 @@ def getPreviousVersion(versions, version):
 
 def executeSqlplus(componentHelper, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB):
   connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
-  templateScript=componentHelper.cleanPath('@'+BASE_DIR+os.sep+'setup.sql')
-  result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB])
+  templateScript='@'+componentHelper.cleanPath(BASE_DIR+os.sep+'setup.sql')
+  result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, componentHelper.cleanPath(oracleScript), paramA, paramB])
   if result!=0:
     showErrors(componentHelper)
     exit(1)
