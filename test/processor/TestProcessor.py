@@ -68,7 +68,7 @@ class TestProcessor(unittest.TestCase):
       
     def testProcessorStub(self):
       
-      script = File("show_routines.sql")
+      script = File("show_procedures.sql")
       scriptReader = FileReader(script) 
       
       properties = Properties()
@@ -97,34 +97,15 @@ class TestProcessor(unittest.TestCase):
       properties.setProperty(Processor.STDIN,scriptReader)
       properties.setProperty(Processor.STDOUT, feedbackWriter)
       properties.setProperty(Processor.STARTUPINFO, startupInfo)
-      properties.setProperty(Processor.ARGUMENT, ["mysql","--host=192.168.1.13","--user=apps","--password=apps","-s","-r","orcl"])
+      #properties.setProperty(Processor.ARGUMENT, ["mysql","--host=192.168.1.13","--user=apps","--password=apps","-s","-r","orcl"])
+      properties.setProperty(Processor.ARGUMENT, ["mysql","--host=192.168.1.13","--user=apps","--password=apps","orcl"])
       properties.setProperty(Processor.SHELL, False)
       mysqlCall= Call(properties)
             
       processor = Processor()
       processor.call(mysqlCall) 
  
-      feedback = File('feedback1.log')
-      feedbackWriter = FileWriter(feedback) 
 
-      tmp = File("feedback.log")
-      scriptReader = FileReader(tmp)
-            
-      startupInfo = StartupInfoFactory.newStartupInfo()      
-      
-      properties = Properties()
-      properties.setProperty(Processor.STDERR, feedbackWriter)
-      properties.setProperty(Processor.STDIN,scriptReader)
-      properties.setProperty(Processor.STDOUT, feedbackWriter)
-      properties.setProperty(Processor.STARTUPINFO, startupInfo)
-      properties.setProperty(Processor.ARGUMENT, ["mysql","--host=192.168.1.13","--user=apps","--password=apps","-s","-r","orcl"])
-      properties.setProperty(Processor.SHELL, False)
-      mysqlCall= Call(properties)
-            
-      processor = Processor()
-      processor.call(mysqlCall) 
-     
-           
        
       
       
