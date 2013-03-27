@@ -37,8 +37,8 @@ class OracleConnector(Connector.Connector):
       projectHelper=self.getProjectHelper()
       handle=open('feedback.log','wb')
       connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
-      templateScript=projectHelper.cleanPath('@'+self.getScriptDir()+os.sep+'template.sql')
-      result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, oracleScript, paramA, paramB],shell=False,stdout=handle,stderr=handle,startupinfo=startupInfo)
+      templateScript='@'+projectHelper.cleanPath(self.getScriptDir()+os.sep+'template.sql')
+      result=subprocess.call(['sqlplus','-l','-s',connectString , templateScript, projectHelper.cleanPath(oracleScript), paramA, paramB],shell=False,stdout=handle,stderr=handle,startupinfo=startupInfo)
       stream=projectHelper.readFile('feedback.log')
      
       
