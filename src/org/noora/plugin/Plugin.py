@@ -4,12 +4,13 @@ from org.noora.plugin.Pluginable import Pluginable
 from org.noora.cl.Options import Options
 import logging
 
-__revision__ = "$Revision$"
+
 
 class Plugin(Pluginable):
   
   CREATE = "CREATE"
   logger = logging.getLogger("NoOraLogger")
+  __revision = "$Revision$"
   
   def __init__(self, type, connectable):
     Pluginable.__init__(self, type, connectable)
@@ -36,7 +37,7 @@ class Plugin(Pluginable):
     return self.__type
 
   def getRevision(self):
-    return self.__revision__
+    return self.__revision
 
   def getOptions(self):
     return self.__options
