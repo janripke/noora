@@ -4,7 +4,7 @@ from org.noora.plugin.Pluginable import Pluginable
 from org.noora.cl.Options import Options
 import logging
 
-__revision__ = "$Revision: $"
+__revision__ = "$Revision$"
 
 class Plugin(Pluginable):
   
