@@ -6,6 +6,7 @@ from org.noora.io.File import File
 from org.noora.cl.OptionFactory import OptionFactory
 from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
 from org.noora.connector.ExecuteFactory import ExecuteFactory
+
 __revision__ = "$Revision: $"
 
 
@@ -39,7 +40,7 @@ class CreatePlugin(Plugin):
     return options
 
   def execute(self, commandLine, properties):
-    ignoreErrors = commandLine.getOptionValue('--igoore-errors', False)
+    ignoreErrors = commandLine.getOptionValue('--ignore-errors', False)
    
     host = commandLine.getOptionValue('-h')  
     defaultDatabases = properties.getPropertyValues('DATABASES')
