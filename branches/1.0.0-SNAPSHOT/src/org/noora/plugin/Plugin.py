@@ -14,6 +14,7 @@ class Plugin(Pluginable):
     self.__application = application
     self.__input = inputObject
     self.__output = outputObject
+    self.__executionPriority = 10000
 
 #---------------------------------------------------------
   def initialize(self):
@@ -58,6 +59,18 @@ class Plugin(Pluginable):
   def getApplication(self):
     return self.__application
   
+#---------------------------------------------------------
+  def getExecutionPriority(self):
+    return self.__executionPriority
+  
+#---------------------------------------------------------
+  def setExecutionPriority(self, prio):
+    self.__executionPriority = prio
+
+#---------------------------------------------------------
+#---------------------------------------------------------
+#---------------------------------------------------------
+  
   # pre 1.0.0 stuff
   
   CREATE = "CREATE"
@@ -90,8 +103,8 @@ class Plugin(Pluginable):
   def getRevision(self):
     return self.__revision__
 
-  def getOptions(self):
-    return self.__options
+#  def getOptions(self):
+#    return self.__options
   
 
     

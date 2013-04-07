@@ -10,6 +10,7 @@ from org.noora.io.NoOraError import NoOraError
 from org.noora.output.ConsoleOutput import ConsoleOutput
 
 import os
+from org.noora.plugin.Pluginable import PER_EXIT
 
 
 
@@ -42,7 +43,8 @@ class NoOraApp(object):
 #--------------------------------------------------------- 
   def run(self):
     for plugin in self.__plugins:
-      plugin.execute()
+      if plugin.execute() == PER_EXIT:
+        break
   
 #---------------------------------------------------------
   def getDirectory(self,name):
@@ -64,8 +66,17 @@ class NoOraApp(object):
 
 #--------------------------------------------------------- 
   def __parseParameters(self):
-    pass
-
+    # 1. get generic + plugin options
+    # 2. get options from params
+    # 3. check required options
+    # 4. check options that will not be used (not define in 1.)
+    # 5. store param-options for later use (self.__options)
+    
+    for plugin in self.__plugins:
+      options = plugin.getOptions()
+      options.setOptionValues(self.__parameters)
+      options.checkRequiredOptions()
+      
 #---------------------------------------------------------  
   def __readConfig(self):
     """
@@ -105,26 +116,46 @@ class NoOraApp(object):
       raise NoOraError('usermsg', 'no configuration file found in project dir (project-config.xml or project.conf)')
 
 #---------------------------------------------------------
+ 
   def __loadPlugins(self):
     loader = ClassLoader()
     
     try:
       plugins = self.__parameters.getPluginParams()
       for plugin in plugins:
-        className = self.__config.getProperty("plugins/plugin[@name='{0}']/class".format(plugin.getName()))
-        if not className:
+        pluginConfig = self.__config.getElement("plugins/plugin[@name='{0}']".format(plugin.getName()))
+        if not pluginConfig or len(pluginConfig) < 1:
           raise NoOraError('usermsg', "unknown command {0}".format(plugin.getName()))
+        
+        className = pluginConfig[0].findtext('class')       
+        if not className:
+          raise NoOraError('detail', "invalid plugin config for {0}, no 'class' tag present".format(plugin.getName()))
         
         inp = self.__getDefaultInput()
         outp = self.__getDefaultOutput()
         plugin = loader.findByPattern(className, [ plugin.getName(), self, inp, outp] )
         
+        execPrio = pluginConfig[0].findtext("priority")
+        if execPrio:
+          plugin.setExecutionPriority(execPrio)
+        
         self.__plugins.append(plugin)
+        
+      # now sort them by priority
+      self.__plugins.sort(key=lambda x: x.getExecutionPriority(), reverse=False)
         
     except ClassLoaderException as e:
       raise NoOraError('detail', e.getMessage())
       
 #---------------------------------------------------------
+  def getOptionsInContext(self):
+
+    plugins = self.__parameters.getPluginParams()
+    for plugin in plugins:
+      options = plugin.getOptions();
+
+#---------------------------------------------------------
+
   def __getDefaultInput(self):
     return FileSystemInput()
   

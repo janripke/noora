@@ -29,4 +29,6 @@ if __name__ == "__main__":
   except Exception as e:
     print "internal error: {0}".format(e)
     exit(1)
+    
+  exit(0)
   
