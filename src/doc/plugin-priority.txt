@@ -1,0 +1,12 @@
+
+plugin priority (low to high where low has highest priority)
+
+ 10 - HelpPlugin
+ 20 - VersionPlugin
+ 21 - RevisionPlugin
+100 - GeneratePlugin
+200 - DropPlugin
+300 - CreatePlugin
+310 - RecreatePlugin
+320 - UpdatePlugin
+500 - BuildPlugin

@@ -1,5 +1,6 @@
 from org.noora.plugin.Plugin import Plugin
 from org.noora.output.ConsoleOutput import ConsoleOutput
+from org.noora.plugin.Pluginable import PER_CONTINUE
 
 class VersionPlugin(Plugin):
 
@@ -13,3 +14,5 @@ class VersionPlugin(Plugin):
   def execute(self):
     msg = "version 1.0.0"
     self.getOutput().processOutput(None, msg)
+    
+    return PER_CONTINUE

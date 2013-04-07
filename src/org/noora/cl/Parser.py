@@ -7,6 +7,7 @@ from org.noora.cl.UnrecognizedOptionException import UnrecognizedOptionException
 from org.noora.cl.UnrecognizedArgumentException import UnrecognizedArgumentException
 
 class Parser(Parseable):
+  
   def __init__(self):
     Parseable.__init__(self)
     self.__options = None

@@ -1,9 +1,8 @@
-from org.noora.app.NoOraApp import NoOraApp
+from org.noora.cl.Builder import Builder
 from org.noora.config.Config import Config
-from org.noora.io.NoOraError import NoOraError
 from org.noora.output.ConsoleOutput import ConsoleOutput
 from org.noora.plugin.Plugin import Plugin
-from xml.etree.ElementTree import Element
+from org.noora.plugin.Pluginable import PER_EXIT
 
 class HelpPlugin(Plugin):
   
@@ -29,10 +28,12 @@ class HelpPlugin(Plugin):
       output.processOutput(None, self.__showAvailablePlugins())
     else:
       output.processOutput(None, self.__showPluginHelp(plugins))
-
+      
+    return PER_EXIT
+  
 #---------------------------------------------------------
   def __showCmdUsage(self):
-    usage = "Usage: noora.py <plugin> <plugin-options> <generic-options>"
+    usage = "NoOra v1.0.0 (c) 2013\nUsage: noora.py <generic-options> <plugin> <plugin-options>"
     return usage
 
 #---------------------------------------------------------
@@ -47,10 +48,30 @@ class HelpPlugin(Plugin):
     
 #---------------------------------------------------------
   def __showPluginHelp(self, plugins):
-    # remove first occurence of 'help'
-    try:
-      plugins.remove('help')
-    except ValueError:
-      raise NoOraError('detail', "plugin 'help' not found in pluginlist (by commandline arguments)")
+    result = []
     
-    return ""
+    # remove first occurence of 'help'
+    for i in range(len(plugins)):
+      if plugins[i].getName() == self.__PLUGIN_NAME:
+        del plugins[i]
+        break
+    
+    config = self.getApplication().getConfig()
+    for i in range(len(plugins)):
+      pluginName = plugins[i].getName()
+      options = plugins[i].getOptions()
+      
+      result.append("  plugin {0}:".format(pluginName))
+      
+      description = config.getProperty("plugins/plugin[@name='{0}']/description".format(pluginName))
+      if description:
+        result.append("    {0}\n    plugin-options:".format(description))
+        
+      # add command line options that are defined for this plugin
+      if options.getOptions():
+        descriptions = Builder.getHelpDescriptions(options.getOptions())
+        for desc in descriptions:
+          result.append("    {0}".format(desc))
+       
+    return "\n".join(result)
+    

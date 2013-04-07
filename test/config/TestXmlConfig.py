@@ -44,6 +44,10 @@ class TestXmlConfig(unittest.TestCase):
     self.assertEqual(xmlConfig.getProperty("name"),"ExampleProject", "'name' property not found or invalid")
     self.assertEqual(xmlConfig.getProperty("plugins/plugin[@name='generate']/class"),"dynamic.generate.GeneratePlugin.GeneratePlugin", "'plugin-class' property not found or invalid")
     
+    elem = xmlConfig.getElement("plugins/plugin[@name='generate']")
+    self.assertNotEqual(elem[0], None, "element 'plugins/plugin[@name='generate'] not found")
+    self.assertEqual(elem[0].findtext('class'), "dynamic.generate.GeneratePlugin.GeneratePlugin", "'class' property not found")
+    
     #self.assertEqual(xmlConfig.getProperty("connectors/connect-options[@database='mysql']/options/option[6][@value]"),"<${file}","'<' not parsed properly")
 
 

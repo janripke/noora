@@ -1,11 +1,12 @@
 from org.noora.io.NoOraError import NoOraError
 
 #=========================================================
+
 class Parameter(object):
 
 #---------------------------------------------------------
   def __init__(self):
-    pass
+    self.__used = False
 
 #---------------------------------------------------------
   def getName(self):
@@ -14,11 +15,19 @@ class Parameter(object):
 #---------------------------------------------------------
   def getValue(self):
     pass
+  
+  def isUsed(self):
+    return self.__used
+  
+  def setUsed(self, used):
+    self.__used = used
 
 #=========================================================
+
 class PluginParameter(Parameter):
 
   def __init__(self, pluginName):
+    Parameter.__init__(self);
     self.__pluginName = pluginName      
   
 #---------------------------------------------------------
@@ -30,9 +39,11 @@ class PluginParameter(Parameter):
     return None
 
 #=========================================================
+
 class OptionParameter(Parameter):
 
   def __init__(self, optionName):
+    Parameter.__init__(self)
     self.__option = optionName   
   
 #---------------------------------------------------------
@@ -44,9 +55,11 @@ class OptionParameter(Parameter):
     return None
 
 #=========================================================
+
 class ArgParameter(Parameter):
 
   def __init__(self, switch, argument):
+    Parameter.__init__(self)
     self.__switch = switch
     self.__argument = argument
     
@@ -59,19 +72,26 @@ class ArgParameter(Parameter):
     return self.__argument
 
 #=========================================================
+
 class Params(object):
+  
   def __init__(self, params):
     """
       Initialize and preprocess a list of arguments.
       Single arguments are stored as PluginParameter (help, recreate, etc).
       arguments in the form of '-v' are stored as OptionParameter.
-      arguments in the form '-e' 'dev' or '-e=dev' are stored as ArgParameter
+      arguments in the form '-e dev' or '-e=dev' are stored as ArgParameter
       @param params a list of parameters (as strings, such as sys.argv)
       @throws NoOraError Thrown when a parameter like -option=arg is malformed
     """
     self.__params = []
     self.__preprocess(params)
     
+#---------------------------------------------------------
+  def getParams(self):
+    return self.__params
+  
+#---------------------------------------------------------
   def __preprocess(self, params):
     size = len(params)
     i = 0;
@@ -103,15 +123,19 @@ class Params(object):
         self.__params.append(PluginParameter(param))   
       i += 1
       
+#---------------------------------------------------------
   def getPluginParams(self):
     return self.__getTypedParam(PluginParameter)
         
+#---------------------------------------------------------
   def getOptionParams(self):
     return self.__getTypedParam(OptionParameter)
   
+#---------------------------------------------------------
   def getArgParams(self):
     return self.__getTypedParam(ArgParameter)
  
+#---------------------------------------------------------
   def __getTypedParam(self, cls):
     result = []
     for param in self.__params:
