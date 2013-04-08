@@ -80,7 +80,6 @@ class DropPlugin(Plugin):
       executor.setPassword(passwd)
       executor.setUsername(user)      
 
-
       for object in objects:      
         folder=File(self.getDropDir(properties)+os.sep+object)
         

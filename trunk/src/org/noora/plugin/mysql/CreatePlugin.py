@@ -7,10 +7,13 @@ from org.noora.cl.OptionFactory import OptionFactory
 from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
 from org.noora.connector.ExecuteFactory import ExecuteFactory
 
-__revision__ = "$Revision$"
+
 
 
 class CreatePlugin(Plugin):
+  
+  __revision__ = "$Revision$"
+  
   def __init__(self, connectable):
     Plugin.__init__(self, "CREATE", connectable)
     

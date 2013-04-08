@@ -10,7 +10,7 @@ class Plugin(Pluginable):
   
   CREATE = "CREATE"
   logger = logging.getLogger("NoOraLogger")
-  __revision = "$Revision$"
+  __revision__ = "$Revision$"
   
   def __init__(self, type, connectable):
     Pluginable.__init__(self, type, connectable)
@@ -37,7 +37,7 @@ class Plugin(Pluginable):
     return self.__type
 
   def getRevision(self):
-    return self.__revision
+    return self.__revision__
 
   def getOptions(self):
     return self.__options
