@@ -1,45 +1,16 @@
 
-from org.noora.cl.Option import Option, OF_OPTIONARG, OF_REQUIRED, OF_SINGLE_ARG, OF_OPTION
+from org.noora.cl.Option import Option, OF_OPTIONARG, OF_REQUIRED, OF_SINGLE_ARG, \
+  OF_OPTION
 from org.noora.cl.Options import Options
-from org.noora.output.FileSystemOutput import FileSystemOutput
+from org.noora.output.ProjectOutput import ProjectOutput
 from org.noora.plugin.Plugin import Plugin
 from org.noora.plugin.Pluginable import PER_CONTINUE
-
 import os
+
 
 class GeneratePlugin(Plugin):
 
   def __init__(self, name, application, inputObject, outputObject):
-    Plugin.__init__(self, name, application, inputObject, outputObject)
-
-  def initialize(self):
-    # overrule current output with filesystem output
-    self.setOutput(FileSystemOutput())
-
-  def execute(self):
-    
-    content = "<?xml?>\n<project-config><name>test-name</name></project-config>"
-    self.getOutput().processOutput("project-config.xml", content)
-    
-    # cases:
-    # 1. project does not exist
-    #    - create project dir and fill with 'create' and 'config' folders. Also create project-config.xml
-    # 2. project exists and no --version is specified
-    #    - generate an error
-    # 3. project exists and --version is specified
-    #    - check version number (must be larger than highest version)
-    #    - if ok, then create 'update' folder structure and update project-config.xml
-    
-    # note that --project always implies a chdir into the specified project, so
-    # --project=abc will first chdir into 'abc' and then create either the 'create' or 'update' folder structure
-    # generate an 'update' from within the project implies that --project is not specified.
-    # specifying --project _and_ --version will result in an error when either project-config.xml or project.conf is present
-    # in the current directory.
-    
-    return PER_CONTINUE
-
-#---------------------------------------------------------
-  def getOptions(self):
     options = Options()
     options.add(Option("-pr", "--project",
                        OF_OPTIONARG | OF_REQUIRED | OF_SINGLE_ARG,
@@ -56,7 +27,47 @@ class GeneratePlugin(Plugin):
     options.add(Option("-v", "--version",
                        OF_OPTION | OF_SINGLE_ARG,
                        "specify the default version of the database (x.y.z)", "version"))
-    return options
+
+    Plugin.__init__(self, name, application, inputObject, outputObject, options)
+
+  def initialize(self):
+    # overrule current output with filesystem output
+    self.setOutput(ProjectOutput())
+
+  def execute(self):
+    
+    # cases:
+    # 1. project does not exist 
+    #    - create project dir and fill with 'create' and 'config' folders. Also create project-config.xml
+    #      when --version is specified, then also create the update folder with that version
+    # 2. project exists and no --version is specified
+    #    - generate an error
+    # 3. project exists and --version is specified
+    #    - check version number (must be larger than highest version)
+    #    - if ok, then create 'update' folder structure and update project-config.xml
+    
+    # note that --project always implies a chdir into the specified project, so
+    # --project=abc will first chdir into 'abc' and then create either the 'create' or 'update' folder structure
+    
+    # generate an 'update' from within the project implies that --project cannot be specified.
+    # specifying --project _and_ --version will result in an error when either project-config.xml or project.conf is present
+    # in the current directory (prevents creating a project-dir within a project-dir).
+    
+    options = self.getOptions()
+    project = options.getValue("--project", True)
+    version = options.getValue("--version", True)
+    
+    if options.getValue("--project"):
+      pass
+    
+    
+    
+    return PER_CONTINUE
+
+#---------------------------------------------------------
+#---------------------------------------------------------
+#---------------------------------------------------------
+
 
   # pre 1.0.0 stuff
 

@@ -73,9 +73,13 @@ class NoOraApp(object):
     # 5. store param-options for later use (self.__options)
     
     for plugin in self.__plugins:
-      options = plugin.getOptions()
-      options.setOptionValues(self.__parameters)
-      options.checkRequiredOptions()
+      try:
+        options = plugin.getOptions()
+        options.setOptionValues(self.__parameters)
+        options.checkRequiredOptions()
+      except NoOraError as e:
+        raise e.addReason('plugin', plugin.getName())
+        
       
 #---------------------------------------------------------  
   def __readConfig(self):

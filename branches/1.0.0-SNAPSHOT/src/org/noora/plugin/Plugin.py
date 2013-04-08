@@ -9,12 +9,13 @@ __revision__ = "$Revision: $"
 class Plugin(Pluginable):
   
 #---------------------------------------------------------
-  def __init__(self, name, application, inputObject, outputObject):
+  def __init__(self, name, application, inputObject, outputObject, options):
     self.__name = name
     self.__application = application
     self.__input = inputObject
     self.__output = outputObject
     self.__executionPriority = 10000
+    self.__options = options
 
 #---------------------------------------------------------
   def initialize(self):
@@ -66,6 +67,10 @@ class Plugin(Pluginable):
 #---------------------------------------------------------
   def setExecutionPriority(self, prio):
     self.__executionPriority = prio
+    
+#---------------------------------------------------------
+  def getOptions(self):
+    return self.__options
 
 #---------------------------------------------------------
 #---------------------------------------------------------
