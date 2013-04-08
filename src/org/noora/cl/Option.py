@@ -3,6 +3,7 @@ from org.noora.io.NoOraError import NoOraError
 
 OF_OPTION = 0x01
 OF_ARGUMENT = 0x02
+
 OF_OPTIONARG = 0x04
 
 OF_TYPE_MASK = 0x07

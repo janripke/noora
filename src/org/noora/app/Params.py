@@ -44,7 +44,7 @@ class OptionParameter(Parameter):
 
   def __init__(self, optionName):
     Parameter.__init__(self)
-    self.__option = optionName   
+    self.__option = optionName
   
 #---------------------------------------------------------
   def getName(self):
