@@ -1,19 +1,28 @@
 
-from org.noora.cl.Option import Option, OF_OPTIONARG, OF_REQUIRED, OF_SINGLE_ARG, \
-  OF_OPTION
+from org.noora.cl.Option import Option, OF_OPTIONARG, OF_SINGLE_ARG, OF_OPTION
 from org.noora.cl.Options import Options
-from org.noora.output.ProjectOutput import ProjectOutput
+from org.noora.helper.ProjectHelper import ProjectHelper
+from org.noora.io.Directory import Directory
+from org.noora.io.File import File
+from org.noora.io.NoOraError import NoOraError
+from org.noora.output.FileSystemOutput import FileSystemOutput
 from org.noora.plugin.Plugin import Plugin
 from org.noora.plugin.Pluginable import PER_CONTINUE
 import os
+from xml.etree import ElementTree
 
 
 class GeneratePlugin(Plugin):
+  
+  CREATE_PROJECT_DIR = 0x01     # create the project dir and the project config
+  CREATE_VERSION_DIR = 0x02     # create a revision tree in the update directory
+  CREATE_CREATE_DIR  = 0x04     # create a revision tree in the create directory
+  USE_PROJECT_DIR    = 0x08     # use the project dir (always in combination with CREATE_VERSION_DIR)
 
   def __init__(self, name, application, inputObject, outputObject):
     options = Options()
     options.add(Option("-pr", "--project",
-                       OF_OPTIONARG | OF_REQUIRED | OF_SINGLE_ARG,
+                       OF_OPTIONARG | OF_SINGLE_ARG,
                        "specify name of project to create", "project"))
     options.add(Option("-c", "--connector",
                        OF_OPTIONARG | OF_SINGLE_ARG,
@@ -32,7 +41,7 @@ class GeneratePlugin(Plugin):
 
   def initialize(self):
     # overrule current output with filesystem output
-    self.setOutput(ProjectOutput())
+    self.setOutput(FileSystemOutput())
 
   def execute(self):
     
@@ -52,17 +61,142 @@ class GeneratePlugin(Plugin):
     # generate an 'update' from within the project implies that --project cannot be specified.
     # specifying --project _and_ --version will result in an error when either project-config.xml or project.conf is present
     # in the current directory (prevents creating a project-dir within a project-dir).
-    
+
     options = self.getOptions()
-    project = options.getValue("--project", True)
-    version = options.getValue("--version", True)
+    project = options.getOption("--project", True)
+    version = options.getOption("--version", True)
     
-    if options.getValue("--project"):
-      pass
+    try:
+      workdir = Directory()   # initializes with current working directory
+
+      action = self.__validateOptions(project, version)
+      
+      # at this point we're about to really do something (no exception was raised.
+      # read the generate configuration
+      self.__readGenerateConfig(workdir)
+        
+      if action & GeneratePlugin.CREATE_PROJECT_DIR:
+        self.__createProject(project, workdir)
+
+      if action & (GeneratePlugin.CREATE_PROJECT_DIR | GeneratePlugin.USE_PROJECT_DIR):
+        workdir.pushDir(project)
+      
+      if action & GeneratePlugin.CREATE_CREATE_DIR:
+        pass
+      
+      if action & GeneratePlugin.CREATE_VERSION_DIR:
+        pass
+      
+      self.__dropGenerateConfig()
     
-    
-    
+    except NoOraError as e:
+      raise e.addReason('plugin', "GeneratePlugin")
+    finally:
+      # pop without push has no effect (e.g. when generate was invoked within the project directory)
+      workdir.popDir()
+          
     return PER_CONTINUE
+
+#---------------------------------------------------------
+  def __validateOptions(self, project, version):
+    currentDirIsProject = ProjectHelper().isProjectDir(".")
+    projectDirIsProject = ProjectHelper().isProjectDir(project)
+    
+    action = 0  # bitmap so do not initialize to None!
+    
+    if not project:
+      # no project definition so current dir must be a project. version is optional here
+      if not currentDirIsProject:
+        raise NoOraError('usermsg', "current directory is not a project directory. Please specify a project using --project=<project>")
+      else:
+        action |= (GeneratePlugin.CREATE_PROJECT_DIR | GeneratePlugin.CREATE_CREATE_DIR)
+        if version:
+          action |= GeneratePlugin.CREATE_VERSION
+    else:
+      if currentDirIsProject:
+        raise NoOraError('usermsg', "current directory is a project, cannot create a project within a project")
+      
+      if projectDirIsProject:
+        action |= GeneratePlugin.USE_PROJECT_DIR
+      else:
+        action |= (GeneratePlugin.CREATE_PROJECT_DIR | GeneratePlugin.CREATE_CREATE_DIR)
+        
+      if version:
+        action |= GeneratePlugin.CREATE_VERSION
+     
+    return action 
+  
+#---------------------------------------------------------
+  def __readGenerateConfig(self, workdir):
+    app = self.getApplication()
+    configFile = os.sep.join( [ "config", "generate.xml" ] )
+    
+    workdir.pushDir(app.getDirectory('RESOURCE_DIR'))
+
+    try:
+
+      config = app.getConfig()
+      if File(configFile).exists():
+        config.pushConfig(configFile)
+      else:
+        raise NoOraError('usermsg', "corrupt NoOra installation, config/generate.xml is missing").addReason('detail', "generate.xml not found")
+        
+    except NoOraError as e:
+      raise e.addReason('filename', configFile)
+    finally:
+      workdir.popDir()
+
+#---------------------------------------------------------
+  def __dropGenerateConfig(self):
+    config = self.getApplication().getConfig()
+    config.popConfig()
+    
+#---------------------------------------------------------
+  def __createProject(self, project, workdir):
+    """ Create a project with a master config file and a populated config directory.
+      The project is created as ./<project>
+      It does not create the 'create' or 'update' directoryies.
+    
+      @param project the name of the project to create
+    """
+
+    curdir = workdir.getCurrentDir()
+    
+    config = self.getApplication().getConfig()
+    definition = config.getFirstElement("config")
+    
+    for elem in definition.findall("./*"):
+      self.__processFileSystemConfigItem(elem, os.sep.join( [ curdir, project ] ))
+    
+#---------------------------------------------------------
+  def __processFileSystemConfigItem(self,elem, outputLocation):
+    
+    name = elem.get('name')
+    if not name:
+      raise NoOraError('usermsg', "error in generate.xml, cannot create project").addReason('detail', "found folder/file element without name attribute")
+    
+    if elem.tag == 'file':
+      
+      # read input
+      content = elem.get('content')
+      if not content:
+        template = elem.get('template')
+        if template:
+          templatedir = self.getApplication.getDirectory('TEMPLATE_DIR')
+          content = self.getInput().fetchInput(os.sep.join( [ templatedir, template ] ))
+      
+      if not content:
+        raise NoOraError('usermsg', "corrupted generate.xml, cannot find content for element {0}".format(name))
+          
+      # write output
+      name = elem.get('name')
+      if name:
+        self.getOptions().processOutput(os.sep.join( [ outputLocation, name ] ))
+        
+    elif elem.tag == 'folder':
+      pass
+    else:
+      raise NoOraError('tag', elem.tag).addReason('detail', "invalid tag found in generate.xml")
 
 #---------------------------------------------------------
 #---------------------------------------------------------

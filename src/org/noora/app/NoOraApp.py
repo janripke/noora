@@ -19,9 +19,16 @@ class NoOraApp(object):
 #---------------------------------------------------------
   def __init__(self, params):
     self.__parameters = Params(params[1:])
-    self.__directories = { 'NOORA_DIR': os.path.abspath(os.path.dirname(params[0])),
-                           'PROJECT_DIR': os.path.abspath(".")
+    
+    noora_dir = os.path.abspath(os.path.dirname(params[0]))
+    project_dir = os.path.abspath(".")
+    
+    self.__directories = { 'NOORA_DIR'     : noora_dir,
+                           'INVOKATION_DIR': project_dir,
+                           'RESOURCE_DIR'  : os.sep.join([ noora_dir, 'resources']),
+                           'TEMPLATE_DIR'  : os.sep.join([ noora_dir, 'resources', 'templates' ])
                          }
+    
     self.__config = Config()
     self.__plugins = []
 
@@ -94,9 +101,9 @@ class NoOraApp(object):
     
     # first read noora 'system config'
     directory = Directory()
-    directory.pushDir(self.__directories['NOORA_DIR'] + "/data")
+    directory.pushDir(self.__directories['RESOURCE_DIR'])
 
-    sysconfig = "{0}/data/noora-config.xml".format(self.__directories['NOORA_DIR'])
+    sysconfig = os.sep.join( [ self.__directories['RESOURCE_DIR'], "noora-config.xml" ] )
     xmlconfig = File(sysconfig)
     if xmlconfig.exists():
       self.__config.pushConfig(sysconfig)
@@ -137,7 +144,7 @@ class NoOraApp(object):
         
         inp = self.__getDefaultInput()
         outp = self.__getDefaultOutput()
-        plugin = loader.findByPattern(className, [ plugin.getName(), self, inp, outp] )
+        plugin = loader.findByPattern(className, [ plugin.getName(), self, inp, outp ] )
         
         execPrio = pluginConfig[0].findtext("priority")
         if execPrio:
@@ -152,14 +159,6 @@ class NoOraApp(object):
       raise NoOraError('detail', e.getMessage())
       
 #---------------------------------------------------------
-  def getOptionsInContext(self):
-
-    plugins = self.__parameters.getPluginParams()
-    for plugin in plugins:
-      options = plugin.getOptions();
-
-#---------------------------------------------------------
-
   def __getDefaultInput(self):
     return FileSystemInput()
   

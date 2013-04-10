@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<!-- list of plugins that are supported/required for this project -->
+<plugins>
+
+	<plugin name="drop">
+		<class>static.drop.DropPlugin.DropPlugin</class>
+	</plugin>
+
+	<plugin name="create">
+		<class>dynamic.create.CreatePlugin.CreatePlugin</class>
+	</plugin>
+
+	<plugin name="update">
+		<class>dynamic.update.UpdatePlugin.UpdatePlugin</class>
+	</plugin>
+
+	<plugin name="recreate">
+		<class>dynamic.recreate.RecreatePlugin.RecreatePlugin</class>
+	</plugin>
+
+</plugins>

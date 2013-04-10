@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-config xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <!-- name of the project -->
+  <name>XmlConfigProject</name>
+  
+  <xi:include href="config/plugins.xml" parse="xml" />
+  <xi:include href="config/connectors.xml" parse="xml" />
+  <xi:include href="config/project.xml" parse="xml" />
+  <xi:include href="config/environments.xml" parse="xml" />
+
+</project-config>
