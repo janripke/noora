@@ -22,4 +22,10 @@ class Configurable:
 #---------------------------------------------------------
   def getElement(self, name):
     raise NoOraError('detail', "message not implemented")
+  
+#---------------------------------------------------------
+  def getFirstElement(self, name):
+    raise NoOraError('detail', "message not implemented")
+
+  
 

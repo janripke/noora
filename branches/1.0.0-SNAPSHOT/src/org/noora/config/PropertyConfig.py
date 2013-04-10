@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+
 from org.noora.config.Configurable import Configurable
-from org.noora.io.IOException import IOException
 from org.noora.io.PropertyFileReader import PropertyFileReader
-import re
 from org.noora.io.NoOraError import NoOraError
+
+import re
 
 class PropertyConfig(Configurable):
   
@@ -43,6 +43,6 @@ class PropertyConfig(Configurable):
 
 #---------------------------------------------------------
   def setProperty(self, name, value):
-    raise IOException("method not implemented")
+    raise NoOraError('detail', "method not implemented")
   
         

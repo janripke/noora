@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project-def>
+	
+	<!-- a project definitions contains four parts:
+	     1. config data
+	     2. revision directory structure
+	     3. create tree definition
+	     4. update tree definition
+	 -->
+	 
+	<config>
+		<file name="project-config.xml" template="config/project-config.xml" />
+		<folder name="config">
+			<file name="connectors.xml" template="config/connectors.xml" />
+			<file name="environments.xml" template="config/environments.xml" />
+			<file name="plugin.xml" template="config/plugin.xml" />
+			<file name="project.xml" template="config/project.xml" />
+		</folder>
+	</config>
+	
+	<revision-tree>
+		
+	</revision-tree>
+	
+	<create-tree>
+	</create-tree>
+	
+	<update-tree>
+	</update-tree>	
+	
+</project-def>

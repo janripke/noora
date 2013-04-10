@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+
 from org.noora.config.Configurable import Configurable
-from org.noora.io.IOException import IOException
+from org.noora.io.NoOraError import NoOraError
 from org.noora.io.XmlFileReader import XmlFileReader
 
 class XmlConfig(Configurable):
@@ -10,7 +10,7 @@ class XmlConfig(Configurable):
     Configurable.__init__(self)
     
     if _file == None:
-      raise IOException("invalid argument 'file' (None)")
+      raise NoOraError('detail', "invalid argument 'file' (None)")
     self.__reader = XmlFileReader(_file)
 
 #---------------------------------------------------------
@@ -31,7 +31,7 @@ class XmlConfig(Configurable):
 
 #---------------------------------------------------------
   def setProperty(self, name, value):
-    raise IOException("method not implemented")
+    raise NoOraError('detail', "method not implemented")
 
 #---------------------------------------------------------
   def getElement(self, name):

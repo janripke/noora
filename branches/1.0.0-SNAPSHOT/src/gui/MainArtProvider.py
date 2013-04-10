@@ -15,17 +15,17 @@ class MainArtProvider(wx.ArtProvider):
   def CreateBitmap(self, artid, client, size):
     bmp = wx.NullBitmap
     if artid == wx.ART_FILE_OPEN:
-      bmp=wx.Image(self.getResourceDir()+os.sep+'importdir_wiz.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
+      bmp=wx.Image(self.getResourceImageDir()+os.sep+'importdir_wiz.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
     if artid == wx.ART_NEW:
-      bmp=wx.Image(self.getResourceDir()+os.sep+'new_project.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
+      bmp=wx.Image(self.getResourceImageDir()+os.sep+'new_project.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
     if artid == wx.ART_GO_FORWARD:
-      bmp=wx.Image(self.getResourceDir()+os.sep+'run.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
+      bmp=wx.Image(self.getResourceImageDir()+os.sep+'run.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
     if artid == wx.ART_UNDO:
-      bmp=wx.Image(self.getResourceDir()+os.sep+'clear_console.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
+      bmp=wx.Image(self.getResourceImageDir()+os.sep+'clear_console.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
     if artid == Settings.ART_CONSOLE:
-      bmp=wx.Image(self.getResourceDir()+os.sep+'console_view.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
+      bmp=wx.Image(self.getResourceImageDir()+os.sep+'console_view.gif', wx.BITMAP_TYPE_GIF).ConvertToBitmap()
     if artid == Settings.ART_ACTION:
-      bmp=wx.Image(self.getResourceDir()+os.sep+'throbber.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+      bmp=wx.Image(self.getResourceImageDir()+os.sep+'throbber.png', wx.BITMAP_TYPE_PNG).ConvertToBitmap()
     return bmp
   
   def setNooraDir(self, path):
@@ -36,4 +36,7 @@ class MainArtProvider(wx.ArtProvider):
 
   def getResourceDir(self):
     return self.getNooraDir()+os.sep+'resources'
+  
+  def getResourceImageDir(self):
+    return "{0}{1}images".format(self.getResourceDir(), os.sep)
         

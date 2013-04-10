@@ -83,6 +83,14 @@ class Config(object):
           result = value
  
     return result
+  
+#---------------------------------------------------------
+  def getFirstElement(self, name, mode = GET_MODE_FIRST):
+    elem = self.getElement(name, mode)
+    if elem and len(elem) > 0:
+      return elem[0]
+    
+    return None
     
 #---------------------------------------------------------
   @classmethod
