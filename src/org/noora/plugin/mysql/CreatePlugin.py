@@ -6,7 +6,7 @@ from org.noora.io.File import File
 from org.noora.cl.OptionFactory import OptionFactory
 from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
 from org.noora.connector.ExecuteFactory import ExecuteFactory
-
+from org.noora.connector.ConnectorFactory import ConnectorFactory
 
 
 
@@ -14,8 +14,8 @@ class CreatePlugin(Plugin):
   
   __revision__ = "$Revision$"
   
-  def __init__(self, connectable):
-    Plugin.__init__(self, "CREATE", connectable)
+  def __init__(self):
+    Plugin.__init__(self, "CREATE", ConnectorFactory.newMysqlConnector())
     
   def getDescription(self):
     return "executes the defined baseline scripts in the create folder."
