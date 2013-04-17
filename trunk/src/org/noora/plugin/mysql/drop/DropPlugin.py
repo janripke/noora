@@ -6,12 +6,16 @@ from org.noora.io.File import File
 from org.noora.cl.OptionFactory import OptionFactory
 from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
 from org.noora.connector.ExecuteFactory import ExecuteFactory
+from org.noora.connector.ConnectorFactory import ConnectorFactory
 import os
 
 class DropPlugin(Plugin):
-  def __init__(self, connectable):    
-    Plugin.__init__(self, "DROP", connectable)
-
+  
+  __revision__ = "$Revision$"
+  
+  def __init__(self):    
+    Plugin.__init__(self, "DROP", ConnectorFactory.newMysqlConnector())
+    
     #self.addParameterDefinition('database',['-s','-si','--sid'])
     #self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
 
