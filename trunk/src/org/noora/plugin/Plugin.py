@@ -2,13 +2,13 @@
 
 from org.noora.plugin.Pluginable import Pluginable
 from org.noora.cl.Options import Options
+from org.noora.connector.ConnectorFactory import ConnectorFactory
 import logging
 
 
 
 class Plugin(Pluginable):
   
-  CREATE = "CREATE"
   logger = logging.getLogger("NoOraLogger")
   __revision__ = "$Revision$"
   
@@ -23,7 +23,7 @@ class Plugin(Pluginable):
 
   def getConnector(self):
     return self.__connectable
-  
+    
   def setExecutor(self, executable):
     self.__executable=executable
 
