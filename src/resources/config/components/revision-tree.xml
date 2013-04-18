@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<folder name="@param:--user">
+  <folder name="ddl">
+    <folder map="@list:create-objects" />
+  </folder>
+  <folder name="dat">
+    <file name="version.sql" template="config/version.sql">
+      <subst var="version" value="@param:--version" />
+    </file>
+    <folder map="@list:environments">
+      <file name="environment.sql" template="config/set_environment.sql">
+        <subst var="statement" value="@connector:insert_statement" />
+        <subst var="environment" value="list:environments.current" />
+      </file>
+    </folder>
+  </folder>
+</folder>

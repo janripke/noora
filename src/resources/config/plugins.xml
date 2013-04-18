@@ -25,6 +25,7 @@
     <class>org.noora.plugin.GeneratePlugin.GeneratePlugin</class>
     <description>intiates a new NoOra database project, or a new release of an existing database project.</description>
     <priority>100</priority>
+    <config>config/plugins/generate.xml</config>
   </plugin>
 
 </plugins>

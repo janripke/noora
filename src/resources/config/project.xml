@@ -2,6 +2,10 @@
 
 <project>
 
+  <defaults>
+    <initial-version>0.0.1</initial-version>
+  </defaults>
+
   <folders>
     <folder name="config" directory="config" />
 

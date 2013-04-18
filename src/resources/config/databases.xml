@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databases>
+
+	<database name="oracle">
+		<insert-version>
+		  insert into application_properties(id,name,value) values (application_properties_s.nextval,'application.version','1.0.0');
+		</insert-version>
+	</database>
+	
+	<database name="mysql">
+	</database>
+	
+	<database name="sqlite">
+	</database>
+
+</databases>
