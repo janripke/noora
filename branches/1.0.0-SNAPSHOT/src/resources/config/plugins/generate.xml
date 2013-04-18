@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project-def xmlns:xi="http://www.w3.org/2001/XInclude">
+	
+	<!-- a project definitions contains four parts:
+	     1. config data
+	     2. revision directory structure
+	     3. create tree definition
+	     4. update tree definition
+	 -->
+	 
+	 <!-- Note about generators and variables
+	     A generator constructs ouput that replaces the value of an xml attribute. The syntax is:
+	     @<generator>:<name>
+	     Generators:
+	         @list:<name> 					- reads xpath '/lists/list[@name=<name>]' from the config
+	         @connector:<name>.<xpath>		- reads element 'xpath' from the connector named 'name'
+	         @param:<name>					- reads command-line param <name> (either long or short form)
+	  -->
+
+
+  <lists>
+    <list name="create-objects">
+      <item>usr</item>
+      <item>dbl</item>
+      <item>lib</item>
+      <item>dir</item>
+      <item>scm</item>
+      <item>seq</item>
+      <item>syn</item>
+      <item>tab</item>
+      <item>cst</item>
+      <item>fct</item>
+      <item>prc</item>
+      <item>pkg</item>
+      <item>jar</item>
+      <item>vw</item>
+      <item>trg</item>
+      <item>idx</item>
+      <item>gra</item>
+    </list>
+    <list name="drop-objects">
+      <item>scm</item>
+      <item>usr</item>
+      <item>vw</item>
+      <item>syn</item>
+      <item>trg</item>
+      <item>typ</item>
+      <item>tab</item>
+      <item>prc</item>
+      <item>fct</item>
+      <item>pkg</item>
+      <item>jar</item>
+      <item>seq</item>
+      <item>idx</item>
+      <item>dbl</item>
+    </list>
+    <list name="environments">
+      <item>dev</item>
+      <item>test</item>
+      <item>acc</item>
+      <item>prod</item>
+    </list>
+  </lists>
+
+  <keyvals>
+    <keyval key="update-dir" value="update" />
+    <keyval key="create-dir" value="create" />
+  </keyvals>
+
+  <config>
+    <file name="project-config.xml" template="project-config.xml" />
+    <folder name="config">
+      <file name="connectors.xml" template="config/connectors.xml" />
+      <file name="environments.xml" template="config/environments.xml" />
+      <file name="plugins.xml" template="config/plugins.xml" />
+      <file name="project.xml" template="config/project.xml" />
+    </folder>
+  </config>
+
+  <create-tree>
+    <folder name="@keyval:create-dir">
+      <xi:include href="config/components/revision-tree.xml" parse="xml" />
+    </folder>
+  </create-tree>
+
+  <update-tree>
+    <folder name="@keyval:update-dir">
+      <folder name="@param:--version">
+        <xi:include href="config/components/revision-tree.xml"
+          parse="xml" />
+      </folder>
+    </folder>
+  </update-tree>
+
+</project-def>
