@@ -2,60 +2,18 @@
 
 <connectors>
 
-  <connector name="store-dev" type="command">
-    <oracle version="11.0.2.0.3">
-      <host>dev.domain.com</host>
-      <port>1521</port>
-      <user>theUser</user>
-      <password>ItsPassword</password>
-    </oracle>
-  </connector>
-  <connector name="store-test" type="command">
-    <oracle version="11.0.2.0.3">
-      <host>test.domain.com</host>
-      <port>1521</port>
-      <user>theUser</user>
-      <password>ItsPassword</password>
-    </oracle>
-  </connector>
-  <connector name="store-uat" type="command">
-    <oracle version="11.0.2.0.3">
-      <host>uat.domain.com</host>
-      <port>1521</port>
-      <user>theUser</user>
-      <password>ItsPassword</password>
-    </oracle>
-  </connector>
-  <connector name="store" type="socket">
-    <oracle version="11.0.2.0.3">
-      <host>store.domain.com</host>
-      <port>1521</port>
-      <user>theUser</user>
-      <password>ItsPassword</password>
-    </oracle>
-    <blocked>
-      <plugin>recreate</plugin>
-      <plugin>drop</plugin>
-    </blocked>
-  </connector>
+  <!-- This file contains connector definitions for your project.
+    
+    It contains definitions for oracle, mysql and sqlite databases.
+    The first child defines the type of database, its version and the connection data.
+    
+    A connector can have type:
+    - command: use the commandline interface to push scripts to the database (e.g. sqlplus for oracle)
+    - socket: use a socket connection to push scripts to the database.
+   -->
 
-  <connector name="store-mysql-dev" type="command">
-    <mysql version="5.6">
-      <host>dev.domain.com</host>
-      <port>3306</port>
-      <user>theUser</user>
-      <password>ItsPassword</password>
-      <database>devstore</database>
-    </mysql>
-  </connector>
-  <connector name="store-mysql-prod" type="socket">
-    <mysql version="5.6">
-      <host>store.domain.com</host>
-      <port>3306</port>
-      <user>theUser</user>
-      <password>ItsPassword</password>
-      <database>store</database>
-    </mysql>
+  <connector name="@{param:user}" type="command">
+    @{database:connector-template}
     <blocked>
       <plugin>recreate</plugin>
       <plugin>drop</plugin>

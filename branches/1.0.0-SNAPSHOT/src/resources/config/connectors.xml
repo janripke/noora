@@ -2,7 +2,13 @@
 
 <connectors>
 
-  <connector name="console" type="console">
+  <connector name="store-dev" type="command">
+    <oracle version="11.0.2.0.3">
+      <host>dev.domain.com</host>
+      <port>1521</port>
+      <user>theUser</user>
+      <password>ItsPassword</password>
+    </oracle>
   </connector>
 
 </connectors>

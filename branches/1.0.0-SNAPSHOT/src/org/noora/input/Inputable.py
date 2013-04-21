@@ -11,6 +11,6 @@ class Inputable(object):
   def terminate(self):
     pass
   
-  def fetchInput(self, what):
+  def fetchInput(self, where, what):
     raise NoOraError('detail', "method not implemented")
   

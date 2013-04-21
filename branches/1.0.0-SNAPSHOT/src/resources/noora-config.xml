@@ -2,6 +2,8 @@
 
 <project-config xmlns:xi="http://www.w3.org/2001/XInclude">
 
+  <xi:include href="config/defaults.xml" parse="xml" />
+  
   <xi:include href="config/plugins.xml" parse="xml" />
   <xi:include href="config/connectors.xml" parse="xml" />
   <xi:include href="config/project.xml" parse="xml" />

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<defaults>
+  <!--  -->
+  <version>1.0.1</version>
+
+  <lists>
+    <list name="create-objects">
+      <item>usr</item>
+      <item>dbl</item>
+      <item>lib</item>
+      <item>dir</item>
+      <item>scm</item>
+      <item>seq</item>
+      <item>syn</item>
+      <item>tab</item>
+      <item>cst</item>
+      <item>fct</item>
+      <item>prc</item>
+      <item>pkg</item>
+      <item>jar</item>
+      <item>vw</item>
+      <item>trg</item>
+      <item>idx</item>
+      <item>gra</item>
+    </list>
+  </lists>
+</defaults>
+

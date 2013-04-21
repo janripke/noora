@@ -1,6 +1,8 @@
 
-from org.noora.cl.Option import Option, OF_OPTIONARG, OF_SINGLE_ARG, OF_OPTION
+from org.noora.cl.Option import Option, OF_OPTIONARG, OF_SINGLE_ARG, OF_REQUIRED, \
+  OF_OPTION
 from org.noora.cl.Options import Options
+from org.noora.config.Generator import Generator
 from org.noora.helper.ProjectHelper import ProjectHelper
 from org.noora.io.Directory import Directory
 from org.noora.io.File import File
@@ -8,8 +10,8 @@ from org.noora.io.NoOraError import NoOraError
 from org.noora.output.FileSystemOutput import FileSystemOutput
 from org.noora.plugin.Plugin import Plugin
 from org.noora.plugin.Pluginable import PER_CONTINUE
-import os
 from xml.etree import ElementTree
+import os
 
 
 class GeneratePlugin(Plugin):
@@ -19,18 +21,28 @@ class GeneratePlugin(Plugin):
   CREATE_CREATE_DIR  = 0x04     # create a revision tree in the create directory
   USE_PROJECT_DIR    = 0x08     # use the project dir (always in combination with CREATE_VERSION_DIR)
 
+#---------------------------------------------------------
   def __init__(self, name, application, inputObject, outputObject):
     options = Options()
     options.add(Option("-pr", "--project",
                        OF_OPTIONARG | OF_SINGLE_ARG,
                        "specify name of project to create", "project"))
+    options.add(Option("-d", "--database",
+                       OF_OPTIONARG | OF_REQUIRED | OF_SINGLE_ARG,
+                       "specify the database (oracle,mysql or sqlite", "database"))
     options.add(Option("-c", "--connector",
                        OF_OPTIONARG | OF_SINGLE_ARG,
                        "specify name of connector (e.g. for oracle this would be the SID)", "connector"))
+    options.add(Option("-h", "--host",
+                       OF_OPTIONARG | OF_SINGLE_ARG,
+                       "specify database host (or ip-address)", "host"))
+    options.add(Option(None, "--port",
+                       OF_OPTIONARG | OF_SINGLE_ARG,
+                       "specify TNS-listener port", "portnumber"))
     options.add(Option("-u", "--user",
                        OF_OPTIONARG | OF_SINGLE_ARG,
                        "specify name of user to connect to the database", "username"))
-    options.add(Option("-p", "--password",
+    options.add(Option(None, "--password",
                        OF_OPTIONARG | OF_SINGLE_ARG,
                        "specify the password to connect to the database", "password"))
     options.add(Option("-v", "--version",
@@ -38,11 +50,15 @@ class GeneratePlugin(Plugin):
                        "specify the default version of the database (x.y.z)", "version"))
 
     Plugin.__init__(self, name, application, inputObject, outputObject, options)
+    
+    self.__generator = Generator(self)
 
+#---------------------------------------------------------
   def initialize(self):
     # overrule current output with filesystem output
-    self.setOutput(FileSystemOutput())
+    self.setOutput(FileSystemOutput(self))
 
+#---------------------------------------------------------
   def execute(self):
     
     # cases:
@@ -71,21 +87,21 @@ class GeneratePlugin(Plugin):
 
       action = self.__validateOptions(project, version)
       
-      # at this point we're about to really do something (no exception was raised.
+      # at this point we're about to really do something (no exception was raised).
       # read the generate configuration
-      self.__readGenerateConfig(workdir)
+      # self.__readGenerateConfig(workdir)
         
       if action & GeneratePlugin.CREATE_PROJECT_DIR:
         self.__createProject(project, workdir)
 
       if action & (GeneratePlugin.CREATE_PROJECT_DIR | GeneratePlugin.USE_PROJECT_DIR):
-        workdir.pushDir(project)
+        workdir.pushDir(os.sep.join( [ workdir.getCurrentDir(), project ] ))
       
       if action & GeneratePlugin.CREATE_CREATE_DIR:
-        pass
+        self.__createCreateDir(workdir)
       
       if action & GeneratePlugin.CREATE_VERSION_DIR:
-        pass
+        self.__createUpdateDir(workdir)
       
       self.__dropGenerateConfig()
     
@@ -98,6 +114,10 @@ class GeneratePlugin(Plugin):
     return PER_CONTINUE
 
 #---------------------------------------------------------
+  def getGenerator(self):
+    return self.__generator
+  
+#---------------------------------------------------------
   def __validateOptions(self, project, version):
     currentDirIsProject = ProjectHelper().isProjectDir(".")
     projectDirIsProject = ProjectHelper().isProjectDir(project)
@@ -105,31 +125,31 @@ class GeneratePlugin(Plugin):
     action = 0  # bitmap so do not initialize to None!
     
     if not project:
-      # no project definition so current dir must be a project. version is optional here
+      # no --project specified so current dir must be a project. version is optional here
       if not currentDirIsProject:
         raise NoOraError('usermsg', "current directory is not a project directory. Please specify a project using --project=<project>")
       else:
         action |= (GeneratePlugin.CREATE_PROJECT_DIR | GeneratePlugin.CREATE_CREATE_DIR)
         if version:
-          action |= GeneratePlugin.CREATE_VERSION
+          action |= GeneratePlugin.CREATE_VERSION_DIR
     else:
       if currentDirIsProject:
         raise NoOraError('usermsg', "current directory is a project, cannot create a project within a project")
       
       if projectDirIsProject:
-        action |= GeneratePlugin.USE_PROJECT_DIR
+        action |= (GeneratePlugin.USE_PROJECT_DIR | GeneratePlugin.CREATE_VERSION_DIR)
       else:
         action |= (GeneratePlugin.CREATE_PROJECT_DIR | GeneratePlugin.CREATE_CREATE_DIR)
         
       if version:
-        action |= GeneratePlugin.CREATE_VERSION
+        action |= GeneratePlugin.CREATE_VERSION_DIR
      
     return action 
   
 #---------------------------------------------------------
   def __readGenerateConfig(self, workdir):
     app = self.getApplication()
-    configFile = os.sep.join( [ "config", "generate.xml" ] )
+    configFile = os.sep.join( [ "config", "plugins", "generate.xml" ] )
     
     workdir.pushDir(app.getDirectory('RESOURCE_DIR'))
 
@@ -163,18 +183,67 @@ class GeneratePlugin(Plugin):
     curdir = workdir.getCurrentDir()
     
     config = self.getApplication().getConfig()
-    definition = config.getFirstElement("config")
+    configDefinition = config.getFirstElement("config")
     
-    for elem in definition.findall("./*"):
-      self.__processFileSystemConfigItem(elem, os.sep.join( [ curdir, project ] ))
+    # create project dir and go there...
+    projdir = os.sep.join( [ curdir, project ])
+    if not File(projdir).exists():
+      os.makedirs(projdir)
+    workdir.pushDir(projdir)
+    
+    try:
+      for elem in configDefinition.findall("./*"):
+        self.__processFileSystemConfigItem(elem, os.sep.join( [ curdir, project ] ))
+    except NoOraError as e:
+      raise e.addReason('action', "create project")
+    finally:
+      workdir.popDir()
+
+#---------------------------------------------------------
+  def __createCreateDir(self, workdir):
+    """ Generate the 'create' directory structure (revision-tree) inside the project directory.
+      Note: It assumed that the current working directory already is the project directory.
+    """
+    
+    config = self.getApplication().getConfig()
+    definition = config.getFirstElement("create-tree")
+    
+    try:
+      for elem in definition.findall("./*"):
+        self.__processFileSystemConfigItem(elem, workdir.getCurrentDir())
+    except NoOraError as e:
+      raise e.addReason('action', "create 'create' revision tree")
+      
+#---------------------------------------------------------
+  def __createUpdateDir(self, workdir):
+    """ Generate the 'update' directory structure (revision-tree) inside the project directory.
+      Note: It assumed that the current working directory already is the project directory.
+    """
+    
+    config = self.getApplication().getConfig()
+    definition = config.getFirstElement("update-tree")
+    
+    try:
+      for elem in definition.findall("./*"):
+        self.__processFileSystemConfigItem(elem, workdir.getCurrentDir())
+    except NoOraError as e:
+      raise e.addReason('action', "create 'create' revision tree")
     
 #---------------------------------------------------------
   def __processFileSystemConfigItem(self,elem, outputLocation):
     
     name = elem.get('name')
-    if not name:
-      raise NoOraError('usermsg', "error in generate.xml, cannot create project").addReason('detail', "found folder/file element without name attribute")
+    map = elem.get('map')
+    if not name and not map:
+      raise NoOraError('usermsg', "error in generate.xml, cannot create project").addReason('detail', "found folder/file element without name or map attribute")
+    if name and map:
+      raise NoOraError('usermsg', "error in generate.xml, cannot create project").addReason('detail', "found file/folder element with both name and map attribute. Only one of them is allowed")
     
+    if name:
+      value = self.__generator.getGeneratedValue(name)
+      if value:
+        name = value
+      
     if elem.tag == 'file':
       
       # read input
@@ -182,8 +251,10 @@ class GeneratePlugin(Plugin):
       if not content:
         template = elem.get('template')
         if template:
-          templatedir = self.getApplication.getDirectory('TEMPLATE_DIR')
-          content = self.getInput().fetchInput(os.sep.join( [ templatedir, template ] ))
+          templatedir = self.getApplication().getDirectory('TEMPLATE_DIR')
+          content = self.getInput().fetchInput(templatedir, template)
+        else:
+          raise NoOraError('detail', "template file '{0}' not found in $NOORA_HOME/resources/templates".format(template))
       
       if not content:
         raise NoOraError('usermsg', "corrupted generate.xml, cannot find content for element {0}".format(name))
@@ -191,12 +262,29 @@ class GeneratePlugin(Plugin):
       # write output
       name = elem.get('name')
       if name:
-        self.getOptions().processOutput(os.sep.join( [ outputLocation, name ] ))
+        self.getOutput().write(outputLocation, name, content)
         
     elif elem.tag == 'folder':
-      pass
+      
+      if name:
+        dirpath = os.sep.join( [ outputLocation, name ] )
+        if not File(dirpath).exists():
+          os.makedirs(dirpath)
+        
+        for subelem in elem.findall("./*"):
+          self.__processFileSystemConfigItem(subelem, dirpath)
+          return
+        
+      if map:
+        dirlist = self.__generator.getGeneratedValue(map)
+        if dirlist:
+          for elem in dirlist:
+            dirpath = os.sep.join( [ outputLocation, elem ] )
+            if not File(dirpath).exists():
+              os.makedirs(dirpath)
+        
     else:
-      raise NoOraError('tag', elem.tag).addReason('detail', "invalid tag found in generate.xml")
+      raise NoOraError('tag', elem.tag).addReason('detail', "invalid tag found in generate.xml (can only process 'file' and 'folder' tags")
 
 #---------------------------------------------------------
 #---------------------------------------------------------
