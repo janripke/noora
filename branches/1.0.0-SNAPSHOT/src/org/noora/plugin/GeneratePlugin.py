@@ -88,8 +88,6 @@ class GeneratePlugin(Plugin):
       action = self.__validateOptions(project, version)
       
       # at this point we're about to really do something (no exception was raised).
-      # read the generate configuration
-      # self.__readGenerateConfig(workdir)
         
       if action & GeneratePlugin.CREATE_PROJECT_DIR:
         self.__createProject(project, workdir)
@@ -103,7 +101,6 @@ class GeneratePlugin(Plugin):
       if action & GeneratePlugin.CREATE_VERSION_DIR:
         self.__createUpdateDir(workdir)
       
-      self.__dropGenerateConfig()
     
     except NoOraError as e:
       raise e.addReason('plugin', "GeneratePlugin")
@@ -146,31 +143,7 @@ class GeneratePlugin(Plugin):
      
     return action 
   
-#---------------------------------------------------------
-  def __readGenerateConfig(self, workdir):
-    app = self.getApplication()
-    configFile = os.sep.join( [ "config", "plugins", "generate.xml" ] )
-    
-    workdir.pushDir(app.getDirectory('RESOURCE_DIR'))
 
-    try:
-
-      config = app.getConfig()
-      if File(configFile).exists():
-        config.pushConfig(configFile)
-      else:
-        raise NoOraError('usermsg', "corrupt NoOra installation, config/generate.xml is missing").addReason('detail', "generate.xml not found")
-        
-    except NoOraError as e:
-      raise e.addReason('filename', configFile)
-    finally:
-      workdir.popDir()
-
-#---------------------------------------------------------
-  def __dropGenerateConfig(self):
-    config = self.getApplication().getConfig()
-    config.popConfig()
-    
 #---------------------------------------------------------
   def __createProject(self, project, workdir):
     """ Create a project with a master config file and a populated config directory.
