@@ -72,16 +72,25 @@ class Option(object):
 #---------------------------------------------------------
   def __validateFlags(self, flags):
     if bin(self.__flags & OF_TYPE_MASK).count('1') != 1:
-      raise NoOraError('detail', "invalid flags, can only contain one of OF_OPTION, OF_ARGUMENT, OF_OPTIONARG")
+      raise NoOraError('detail', "invalid flags, may only contain one of OF_OPTION, OF_ARGUMENT, OF_OPTIONARG")
 
 #---------------------------------------------------------
   def getValues(self):
+    if self.__values is not None:
+      if self.__flags & OF_SINGLE_ARG:
+        return self.__values[0] if len(self.__values) > 0 else None
+      
     return self.__values
   
 #---------------------------------------------------------
   def setValues(self,values):
+    # note: values is always a list
+    if values is not None:
+      if self.__flags & OF_SINGLE_ARG and len(values) > 1:
+        NoOraError('detail', "cannot setValues(values) with OF_SINGLE_ARG and 'values' having > 1 elements")
+      
     self.__values = values
-    
+
 #---------------------------------------------------------
   def getDescription(self):
     return self.__description

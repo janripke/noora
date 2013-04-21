@@ -2,16 +2,35 @@
 
 <databases>
 
-	<database name="oracle">
-		<insert-version>
-		  insert into application_properties(id,name,value) values (application_properties_s.nextval,'application.version','1.0.0');
-		</insert-version>
-	</database>
-	
-	<database name="mysql">
-	</database>
-	
-	<database name="sqlite">
-	</database>
+  <database name="oracle">
+    <connector-template>
+      <oracle version="@{param:oracle-version}">
+        <host>@{param:host}</host>
+        <port>@{param:port}</port>
+        <user>@{param:user}</user>
+        <password>@{param:password}</password>
+      </oracle>
+    </connector-template>
+    <insert-version>
+      insert into application_properties(id,name,value)
+      values
+      (application_properties_s.nextval,'application.version','1.0.0');
+    </insert-version>
+  </database>
+
+  <database name="mysql">
+    <generate-connector-template>
+      <mysql version="5.6">
+        <host>dev.domain.com</host>
+        <port>3306</port>
+        <user>theUser</user>
+        <password>ItsPassword</password>
+        <database>devstore</database>
+      </mysql>
+    </generate-connector-template>
+  </database>
+
+  <database name="sqlite">
+  </database>
 
 </databases>

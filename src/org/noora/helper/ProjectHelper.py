@@ -11,7 +11,8 @@ class ProjectHelper(object):
       projdir = File(path)
     
       if projdir.isDirectory():
-        if File("project-conf.xml").exists() or File("project.conf").exists():
+        if File("{0}/project-config.xml".format(path)).exists() or \
+           File("{0}/project.conf".format(path)).exists():
           return True
         
     return False

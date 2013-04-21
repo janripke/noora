@@ -7,6 +7,9 @@ from org.noora.io.NoOraError import NoOraError
 
 class Options:
   
+  # some plugins will globally set 'required option checking' to False (e.g. the help plugin
+  performRequiredOptionCheck = True
+  
 #---------------------------------------------------------
   def __init__(self):
     self.__options=[]
@@ -46,11 +49,17 @@ class Options:
             
 #---------------------------------------------------------
   def checkRequiredOptions(self):
-    for option in self.__options:
-      if option.isRequired():
-        if not option.getValues() or len(option.getValues()) < 1:
-          raise NoOraError('usermsg', "option {0} is required".format(option.getName()))
-        
+    if self.__class__.performRequiredOptionCheck:
+      for option in self.__options:
+        if option.isRequired():
+          if not option.getValues() or len(option.getValues()) < 1:
+            raise NoOraError('usermsg', "option {0} is required".format(option.getName()))
+  
+#---------------------------------------------------------
+  @classmethod
+  def disableRequiredOptionsValidation(cls):
+    cls.performRequiredOptionCheck = False
+  
 #---------------------------------------------------------
   def size(self):
     return len(self.getOptions()) if self.getOptions() else 0 
@@ -62,8 +71,7 @@ class Options:
         if returnValue == False:
           return option
         else:
-          values = option.getValues()
-          return values[0] if values else None
+          return option.getValues()
       
 #---------------------------------------------------------
 #---------------------------------------------------------

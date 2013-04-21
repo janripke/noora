@@ -24,6 +24,8 @@ class Config(object):
     if config:
       config.load()
     self.__configs.append(config)
+    
+    return config
   
 #---------------------------------------------------------
   def popConfig(self):

@@ -14,7 +14,7 @@ class Outputable(object):
   def terminate(self):
     pass
   
-  def processOutput(self, what, content):
+  def processOutput(self, where, what, content):
     """
       Process the given output to a medium that is defined by the specialized outputable implementation
       @param what The name of the content (for instance a filename in case of an sql-script)

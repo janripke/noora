@@ -28,11 +28,15 @@ class XmlFileReader(Readable):
       Note that any include statements in the xml file are processed here as well
       @return tree root of built DOM
     """
-    handle = self.__treeroot
-    handle.parse(self.__file.getPathName())
-    root = handle.getroot()
-    ElementInclude.include(root)
-    return handle
+    
+    try:
+      handle = self.__treeroot
+      handle.parse(self.__file.getPathName())
+      root = handle.getroot()
+      ElementInclude.include(root)
+      return handle
+    except Exception as e:
+      raise NoOraError('detail', "Error parsing xml file ".format(self.getFile().getName())).addReason('parse-error', e)
   
 #---------------------------------------------------------
   def getFile(self):

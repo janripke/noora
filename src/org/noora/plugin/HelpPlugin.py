@@ -1,4 +1,5 @@
 from org.noora.cl.Builder import Builder
+from org.noora.cl.Options import Options
 from org.noora.config.Config import Config
 from org.noora.output.ConsoleOutput import ConsoleOutput
 from org.noora.plugin.Plugin import Plugin
@@ -10,13 +11,16 @@ class HelpPlugin(Plugin):
 
 #---------------------------------------------------------
   def __init__(self, name, application, inputObject, outputObject):
-    Plugin.__init__(self, name, application, inputObject, outputObject)
+    Plugin.__init__(self, name, application, inputObject, outputObject, Options())
+    
+    # do not check required options for any plugins (they will not be executed anyway)
+    Options.disableRequiredOptionsValidation()
     
 #---------------------------------------------------------
   def initialize(self):
     # overrule current output with console output
     self.setOutput(ConsoleOutput())
-  
+
 #---------------------------------------------------------
   def execute(self):
     output = self.getOutput()
@@ -33,8 +37,11 @@ class HelpPlugin(Plugin):
   
 #---------------------------------------------------------
   def __showCmdUsage(self):
-    usage = "NoOra v1.0.0 (c) 2013\nUsage: noora.py <generic-options> <plugin> <plugin-options>"
-    return usage
+    return "\n".join([ "NoOra v1.0.0 (c) 2013",
+                       "Usage: noora.py <generic-options> <plugin> <plugin-options>",
+                       "where <generic-options are:",
+                       "  -D name=value\t\tDefine <name> and set to <value>"
+                     ] )
 
 #---------------------------------------------------------
   def __showAvailablePlugins(self):
@@ -44,7 +51,7 @@ class HelpPlugin(Plugin):
     plugins = config.getElement("plugins/plugin", Config.GET_MODE_MERGE)
     for plugin in plugins:
       names.append(plugin.get('name'))
-    return "Available plugins: \n  " + "\n  ".join(sorted(names))
+    return "Available plugins: \n  " + "\n  ".join(sorted(names)) + "\nType noora.py help <plugin> for info about the plugin's options"
     
 #---------------------------------------------------------
   def __showPluginHelp(self, plugins):

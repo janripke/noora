@@ -18,6 +18,53 @@
 	         @param:<name>					- reads command-line param <name> (either long or short form)
 	  -->
 
+  <defaults>
+    <!-- generate: default version when creating a new project (used for insert statement in application_properties table) -->
+    <version>1.0.0</version>
+    
+    <!-- generate: default database when creating a new project -->
+    <database>oracle</database>
+    
+    <!-- generic default settings -->
+    <host>host.domain.com</host>
+    <port>1521</port>
+    <user>dbuser</user>
+    <password>dbpassword</password>
+
+    <!-- oracle default settings -->
+    <oracle-version>11.0.2.0.3</oracle-version>
+    <oracle-port>1521</oracle-port>
+  </defaults>
+
+  <databases>
+    <database name="oracle">
+      <connector-template>
+        <oracle version="@{param:oracle-version}">
+          <host>@{param:host}</host>
+          <port>@{param:port}</port>
+          <user>@{param:user}</user>
+          <password>@{param:password}</password>
+        </oracle>
+      </connector-template>
+      <insert-version>insert into application_properties(id,name,value) values (application_properties_s.nextval,'application.version','1.0.0');</insert-version>
+    </database>
+    <database name="mysql">
+      <connector-template>
+        <mysql version="5.6">
+          <host>dev.domain.com</host>
+          <port>3306</port>
+          <user>theUser</user>
+          <password>ItsPassword</password>
+          <database>devstore</database>
+        </mysql>
+      </connector-template>
+    </database>
+    <database name="sqlite">
+      <connector-template>
+      </connector-template>
+    </database>
+  </databases>
+
 
   <lists>
     <list name="create-objects">
@@ -63,6 +110,25 @@
     </list>
   </lists>
 
+  <tree>
+    <folder name="@{param:user}">
+      <folder name="ddl">
+        <folder map="@{list:create-objects}" />
+      </folder>
+      <folder name="dat">
+        <file name="version.sql" template="config/version.sql">
+          <subst var="version" value="@{param:version}" />
+        </file>
+        <folder map="@{list:environments}">
+          <file name="environment.sql" template="config/set_environment.sql">
+            <subst var="statement" value="@{connector:insert_statement}" />
+            <subst var="environment" value="@{list:environments.current}" />
+          </file>
+        </folder>
+      </folder>
+    </folder>
+  </tree>
+
   <keyvals>
     <keyval key="update-dir" value="update" />
     <keyval key="create-dir" value="create" />
@@ -72,6 +138,7 @@
     <file name="project-config.xml" template="project-config.xml" />
     <folder name="config">
       <file name="connectors.xml" template="config/connectors.xml" />
+      <file name="defaults.xml" template="config/defaults.xml" />
       <file name="environments.xml" template="config/environments.xml" />
       <file name="plugins.xml" template="config/plugins.xml" />
       <file name="project.xml" template="config/project.xml" />
@@ -79,14 +146,15 @@
   </config>
 
   <create-tree>
-    <folder name="@keyval:create-dir">
-      <xi:include href="config/components/revision-tree.xml" parse="xml" />
+    <folder name="@{keyval:create-dir}">
+      <xi:include href="config/components/revision-tree.xml"
+        parse="xml" />
     </folder>
   </create-tree>
 
   <update-tree>
-    <folder name="@keyval:update-dir">
-      <folder name="@param:--version">
+    <folder name="@{keyval:update-dir}">
+      <folder name="@{param:version}">
         <xi:include href="config/components/revision-tree.xml"
           parse="xml" />
       </folder>
