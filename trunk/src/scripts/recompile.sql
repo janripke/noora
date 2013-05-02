@@ -22,27 +22,25 @@ declare
 
 begin
 
-  for user_object in c_user_objects loop
-    dbms_output.put_line(user_object.object_name);
-    if user_object.object_type='PACKAGE' then
-      statement:='alter package ' || M_DQUOTE || user_object.object_name || M_DQUOTE ||  ' compile';
+  for user_object in c_user_objects
+  loop
+    if user_object.object_type in ('PACKAGE', 'PROCEDURE', 'FUNCTION', 'TRIGGER', 'VIEW')
+    then
+      statement := 'alter ' || user_object.object_type || ' ' || M_DQUOTE || user_object.object_name || M_DQUOTE || ' compile';
       execute(statement);
     end if;
-    
-    if user_object.object_type='PACKAGE BODY' then
-      statement:='alter package ' || M_DQUOTE || user_object.object_name || M_DQUOTE || ' compile body';
+  
+    if user_object.object_type = 'PACKAGE BODY'
+    then
+      statement := 'alter package ' || M_DQUOTE || user_object.object_name || M_DQUOTE || ' compile body';
       execute(statement);
     end if;
 
-    if user_object.object_type='TRIGGER' then
-      statement:='alter trigger ' || M_DQUOTE || user_object.object_name || M_DQUOTE || ' compile';
+    if user_object.object_type = 'JAVA SOURCE'
+    then
+      statement := 'alter java source ' || M_DQUOTE || user_object.object_name || M_DQUOTE || ' compile';
       execute(statement);
-    end if; 
-
-    if user_object.object_type='VIEW' then
-      statement:='alter view ' || M_DQUOTE || user_object.object_name || M_DQUOTE || ' compile';
-      execute(statement);
-    end if; 
+    end if;
     
   end loop;
 
