@@ -42,6 +42,11 @@ begin
       execute(statement);
     end if;
     
+    if user_object.object_type='MATERIALIZED VIEW' then
+      statement:='alter materialized view ' || M_DQUOTE || user_object.object_name || M_DQUOTE || ' compile';
+      execute(statement);
+    end if; 
+    
   end loop;
 
 end;
