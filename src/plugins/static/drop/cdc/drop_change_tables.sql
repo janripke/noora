@@ -1,23 +1,19 @@
-set serveroutput on
 declare
-  cursor c_change_tables is
-    select change_table_name 
-    from all_change_tables
-    where change_table_schema = user()
-    ; 
-
-  statement	varchar2(1024);
-  table_name    varchar2(256);
-  constraint_name varchar2(256);
-  M_DQUOTE      varchar2(1):='''';
-  
+  type reftype is ref cursor;
+  c_ref   reftype;
+  l_table varchar2(30);
 begin
-  for change_table in c_change_tables loop
-    table_name:=change_table.change_table_name;
-    statement:='BEGIN DBMS_CDC_PUBLISH.DROP_CHANGE_TABLE(' || M_DQUOTE || user() || M_DQUOTE ||  ',' || M_DQUOTE || table_name || M_DQUOTE || ',' || M_DQUOTE || 'Y' || M_DQUOTE || '); END;';  
-    dbms_output.put_line(statement);
-    execute immediate statement;
+  open c_ref for 'select change_table_name from change_tables';
+  loop
+    fetch c_ref
+      into l_table;
+    exit when c_ref%notfound;
+    execute immediate 'begin dbms_cdc_publish.drop_change_table(owner => user, change_table_name => :1, force_flag => :2); end;'
+      using l_table, 'Y';
   end loop;
+  close c_ref;
+exception
+  when others then
+    null;
 end;
 /
-set serveroutput off

@@ -3,9 +3,10 @@ whenever OSERROR exit 2
 set serveroutput off
 set termout off
 set feedback off
-spool feedback.log
-@"&1"
+spool install.log append
+prompt "&1"
+@@"&1"
 
 commit;
+spool off
 exit
-
