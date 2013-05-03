@@ -4,6 +4,7 @@ set serveroutput off
 set termout off
 set feedback off
 spool install.log append
+spool feedback.log
 prompt "&1"
 @@"&1"
 
