@@ -2,7 +2,6 @@
 
 from org.noora.plugin.Pluginable import Pluginable
 from org.noora.cl.Options import Options
-from org.noora.connector.ConnectorFactory import ConnectorFactory
 import logging
 
 
