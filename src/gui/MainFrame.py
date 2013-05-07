@@ -285,7 +285,7 @@ class MainFrame(AbstractFrame.AbstractFrame):
     info.Version = "0.0.8"
     info.Description ="NoOra is an attempt to apply a pattern to installing/updating Oracle database projects\r\nin order to promote portability and productivity. "
     info.Copyright = "(L) 2010, 2011, 2012, 2013 NoOra"
-    info.WebSite = ("https://sourceforge.net/apps/trac/noora/", "NoOra home page")
+    info.WebSite = ("https://sourceforge.net/p/noora/wiki/Home/", "NoOra home page")
     info.Developers = [ "Jan Ripke","Peter Kist" ]
     wx.AboutBox(info)
     
