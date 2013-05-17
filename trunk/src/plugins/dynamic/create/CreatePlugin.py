@@ -5,11 +5,13 @@ import os
 import subprocess
 import core.NooraException as NooraException
 from connectors.SqlLoaderConnector import SqlLoaderConnector
+from connectors.LoadJavaConnector import LoadJavaConnector
 
 class CreatePlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setSqlLoaderConnector(SqlLoaderConnector())
+    self.setLoadJavaConnector(LoadJavaConnector())
     self.setType("CREATE")
     
     self.addParameterDefinition('database',['-s','-si','--sid'])
@@ -21,6 +23,12 @@ class CreatePlugin(Plugin.Plugin):
   
   def getSqlLoaderConnector(self):
     return self.__sqlLoaderConnector
+  
+  def setLoadJavaConnector(self, connector):
+    self.__loadJavaConnector = connector
+    
+  def getLoadJavaConnector(self):
+    return self.__loadJavaConnector
 
   def getDescription(self):
     return "executes the defined baseline scripts in the create folder."
@@ -64,6 +72,9 @@ class CreatePlugin(Plugin.Plugin):
         projectHelper.removeFolderRecursive(extractFolder)
       elif projectHelper.getFileExtension(file).lower()=='mdl':
         pass
+      elif projectHelper.getFileExtension(file).lower()=='jar':
+        loadJavaConnector = self.getLoadJavaConnector()
+        loadJavaConnector.execute(oracleSid, oracleUser, oraclePasswd, url, '', '', ignoreErrors)  
       else:
         connector.execute(oracleSid, oracleUser, oraclePasswd, url, '', '', ignoreErrors)  
 
@@ -84,6 +95,9 @@ class CreatePlugin(Plugin.Plugin):
         projectHelper.removeFolderRecursive(folder+os.sep+projectHelper.getFileRoot(file))
       elif projectHelper.getFileExtension(file).lower()=='mdl':
         pass
+      elif projectHelper.getFileExtension(file).lower()=='jar':
+        loadJavaConnector = self.getLoadJavaConnector()
+        loadJavaConnector.execute(oracleSid, oracleUser, oraclePasswd, url, '', '', ignoreErrors)        
       else:
         connector.execute(oracleSid, oracleUser, oraclePasswd, ctlFile, file, ignoreErrors)  
 

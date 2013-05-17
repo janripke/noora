@@ -6,12 +6,14 @@ import core.NooraException as NooraException
 import os
 import subprocess
 from connectors.SqlLoaderConnector import SqlLoaderConnector
+from connectors.LoadJavaConnector import LoadJavaConnector
 
 
 class UpdatePlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setSqlLoaderConnector(SqlLoaderConnector())
+    self.setLoadJavaConnector(LoadJavaConnector())
     self.setType("UPDATE")
     
     self.addParameterDefinition('database',['-s','-si','--sid'])
@@ -24,6 +26,12 @@ class UpdatePlugin(Plugin.Plugin):
   
   def getSqlLoaderConnector(self):
     return self.__sqlLoaderConnector
+
+  def setLoadJavaConnector(self, connector):
+    self.__loadJavaConnector = connector
+  
+  def getLoadJavaConnector(self):
+    return self.__loadJavaConnector
 
 
   def getDescription(self):
@@ -93,6 +101,9 @@ class UpdatePlugin(Plugin.Plugin):
         extractFolder=projectHelper.getFileRoot(url)
         self.installComponent(extractFolder,oracleSid,oracleUser,oraclePasswd)
         projectHelper.removeFolderRecursive(extractFolder)
+      elif projectHelper.getFileExtension(file).lower()=='jar':
+        loadJavaConnector = self.getLoadJavaConnector()
+        loadJavaConnector.execute(oracleSid, oracleUser, oraclePasswd, url,'','', ignoreErrors)
       else:
         connector.execute(oracleSid, oracleUser, oraclePasswd, url,'','', ignoreErrors)        
 
@@ -110,6 +121,9 @@ class UpdatePlugin(Plugin.Plugin):
         for extractedFile in projectHelper.findFiles(folder+os.sep+projectHelper.getFileRoot(file)):
           connector.execute(oracleSid, oracleUser, oraclePasswd, ctlFile, extractedFile, ignoreErrors)
         projectHelper.removeFolderRecursive(folder+os.sep+projectHelper.getFileRoot(file))
+      elif projectHelper.getFileExtension(file).lower()=='jar':
+        loadJavaConnector = self.getLoadJavaConnector()
+        loadJavaConnector.execute(oracleSid, oracleUser, oraclePasswd, url,'','', ignoreErrors)        
       elif projectHelper.getFileExtension(file).lower()=='mdl':
         pass
       else:
