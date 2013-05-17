@@ -16,6 +16,7 @@ from org.noora.cl.Options import Options
 from org.noora.cl.MissingOptionException import MissingOptionException
 from org.noora.cl.MissingArgumentException import MissingArgumentException
 from org.noora.cl.UnrecognizedOptionException import UnrecognizedOptionException
+from org.noora.cl.UnrecognizedArgumentException import UnrecognizedArgumentException
 
 class TestParameters(unittest.TestCase):      
 
@@ -83,6 +84,22 @@ class TestParameters(unittest.TestCase):
     except UnrecognizedOptionException as uoe:
       self.assertEquals(uoe.getMessage(), 'unrecognized option -q')
     
+  def testMissingArgumentValue(self):
+    options = Options()
+    options.addOption("-?","--help", False, False,  "display help")      
+    options.addOption("-s","--sid", True, True, "tnsname (sid) of the database.")
+    options.addOption("-u","--user", True, True, "scheme (user) of the database.")
+    option = options.getOption("-s")
+    option.setValues(['localhost'])
+    parser = Parser()
+    
+    
+    
+    try:
+      commandLine = parser.parse(options,['-s=orcl'])
+      parser.checkRequiredArguments()
+    except UnrecognizedArgumentException as uae:
+      self.assertEquals(uae.getMessage(), 'unrecognized argument orcl')
  
 
  
