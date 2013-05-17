@@ -38,7 +38,7 @@ class LoadJavaConnector(Connector.Connector):
       handle=open('feedback.log','wb')
       connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
       #templateScript='@'+projectHelper.cleanPath(self.getScriptDir()+os.sep+'template.sql')
-      result=subprocess.call(['loadjava','-user',connectString , projectHelper.cleanPath(oracleScript), paramA, paramB],shell=False,stdout=handle,stderr=handle,startupinfo=startupInfo)
+      result=subprocess.call(['loadjava','-user',connectString , projectHelper.cleanPath(oracleScript)],shell=True,stdout=handle,stderr=handle,startupinfo=startupInfo)
       stream=projectHelper.readFile('feedback.log')
      
       
@@ -52,8 +52,8 @@ class LoadJavaConnector(Connector.Connector):
           raise NooraException.NooraException(stream)
       else:
         logger.info(stream)
-    except OSError:
-      raise NooraException.NooraException("Could not execute sqlplus. Is it installed and in your path?")
+    except OSError:      
+      raise NooraException.NooraException("Could not execute loadjava. Is it installed and in your path?")
 
 
 
