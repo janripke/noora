@@ -1,0 +1,76 @@
+create or replace package logger as  
+
+  /**
+   * TRACE logging is the finest grade of logging, ith can be used for detail info
+   * p_job_name, optional name of a job
+   * p_package_name, optional name of the calling package
+   * p_method_name, optional name of the calling function or procedure
+   * p_message, mandatory message to write into the log
+   */
+  procedure trace(p_job_name       in varchar2 default null
+                 ,p_package_name   in varchar2 default null
+                 ,p_method_name    in varchar2 default null
+                 ,p_message        in varchar2);
+
+  /**
+   * DEBUG logging is used when one wants to see a bit more info, also finegraned, but a bit less
+   * p_job_name, optional name of a job
+   * p_package_name, optional name of the calling package
+   * p_method_name, optional name of the calling function or procedure
+   * p_message, mandatory message to write into the log
+   */
+  procedure debug(p_job_name       in varchar2 default null
+                 ,p_package_name   in varchar2 default null
+                 ,p_method_name    in varchar2 default null
+                 ,p_message        in varchar2);
+
+  /**
+   * INFO logging is the default log level. Should tell the progress in a process
+   * p_job_name, optional name of a job
+   * p_package_name, optional name of the calling package
+   * p_method_name, optional name of the calling function or procedure
+   * p_message, mandatory message to write into the log
+   */
+  procedure info(p_job_name        in varchar2 default null
+                 ,p_package_name   in varchar2 default null
+                 ,p_method_name    in varchar2 default null
+                 ,p_message        in varchar2);
+
+  /**
+   * WARN logging is used to display WARNINGS during the process execution
+   * p_job_name, optional name of a job
+   * p_package_name, optional name of the calling package
+   * p_method_name, optional name of the calling function or procedure
+   * p_message, mandatory message to write into the log
+   */
+  procedure warn(p_job_name        in varchar2 default null
+                 ,p_package_name   in varchar2 default null
+                 ,p_method_name    in varchar2 default null
+                 ,p_message        in varchar2);
+
+  /**
+   * ERROR logging is used to log error in the process
+   * p_job_name, optional name of a job
+   * p_package_name, optional name of the calling package
+   * p_method_name, optional name of the calling function or procedure
+   * p_message, mandatory message to write into the log
+   */
+  procedure error(p_job_name       in varchar2 default null
+                 ,p_package_name   in varchar2 default null
+                 ,p_method_name    in varchar2 default null
+                 ,p_message        in varchar2);
+
+  /**
+   * FATAL logging is used when the process can't continue in case of an error, but e very serious one...
+   * p_job_name, optional name of a job
+   * p_package_name, optional name of the calling package
+   * p_method_name, optional name of the calling function or procedure
+   * p_message, mandatory message to write into the log
+   */
+  procedure fatal(p_job_name       in varchar2 default null
+                 ,p_package_name   in varchar2 default null
+                 ,p_method_name    in varchar2 default null
+                 ,p_message        in varchar2);
+
+ end logger;
+/

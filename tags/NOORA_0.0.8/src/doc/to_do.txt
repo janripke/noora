@@ -1,0 +1,12 @@
+- drop table xmltype tabellen lijkt niet te werken. (gerry)
+- (uitgevoerd) inbouwen unix voor windows support (code robert)
+- help documentatie
+- installeren schema onder een ander schema (als in chips-db)
+- (uitgevoerd) drop xml schema's toevoegen.
+- build scenario's
+- (uitgevoerd) drop.sql, create.sql, update.sql vervangen door noora.sql
+- mogelijkheid passworden op te slaan in user folder.
+- mogelijkheid sql errors te negeren van commandline optie (peter kist)
+- (uitgevoerd) oude code verwijderen.
+- (uitgevoerd) organiseren code.
+- project.conf, variabele over meerdere regels

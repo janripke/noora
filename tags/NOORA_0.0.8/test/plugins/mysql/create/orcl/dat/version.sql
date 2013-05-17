@@ -1,0 +1,1 @@
+insert into application_properties(name,value) values ('application.version','1.0.0');
