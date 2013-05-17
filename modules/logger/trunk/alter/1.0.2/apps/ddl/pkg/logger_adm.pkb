@@ -54,6 +54,39 @@ create or replace package body logger_adm as
   end;
   
   
+  procedure ins_log_archive
+     (p_logtype_code in varchar2
+     ,p_job_name     in varchar2 default null
+     ,p_package_name in varchar2 default null
+     ,p_method_name  in varchar2 default null
+     ,p_message      in varchar2) is
+  begin
+  
+    insert into log_archive 
+      (id
+      ,logtype_code
+      ,job_name
+      ,package_name
+      ,method_name
+      ,message
+      ,uniq_session_id
+      ,format_error_backtrace
+      ,format_error_stack
+      ,format_call_stack)
+    values 
+      (log_archive_s.nextval
+      ,p_logtype_code
+      ,p_job_name
+      ,p_package_name
+      ,p_method_name
+      ,p_message
+      ,dbms_session.unique_session_id
+      ,dbms_utility.format_error_backtrace
+      ,dbms_utility.format_error_stack
+      ,dbms_utility.format_call_stack);      
+  end;
+  
+  
 
   
 end logger_adm;

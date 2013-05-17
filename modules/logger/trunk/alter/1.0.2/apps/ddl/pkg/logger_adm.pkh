@@ -10,6 +10,13 @@ create or replace package logger_adm as
   procedure purge
     (p_job_name       in varchar2
     ,p_threshold_days in number);
+    
+  procedure ins_log_archive
+     (p_logtype_code in varchar2
+     ,p_job_name     in varchar2 default null
+     ,p_package_name in varchar2 default null
+     ,p_method_name  in varchar2 default null
+     ,p_message      in varchar2);    
 
  end logger_adm;
 /
