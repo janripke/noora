@@ -13,8 +13,6 @@ from org.noora.io.Properties import Properties
 from org.noora.io.PropertyLoader import PropertyLoader
 from org.noora.io.File import File
 from org.noora.io.FileReader import FileReader
-from org.noora.plugin.mysql.CreatePlugin import CreatePlugin
-from org.noora.plugin.mysql.drop.DropPlugin import DropPlugin
 from org.noora.cl.Parser import Parser
 from org.noora.connector.MysqlConnectorStub import MysqlConnectorStub
 from org.noora.connector.MysqlConnector import MysqlConnector
@@ -22,7 +20,7 @@ from org.noora.connector.ExecuteFactory import ExecuteFactory
 from org.noora.io.Files import Files
 from org.noora.classloader.ClassLoader import ClassLoader
 from org.noora.cl.Options import Options
-
+from org.noora.app.NoOraApp import NoOraApp
 
 class PluginManager():
   
@@ -76,18 +74,7 @@ class TestBase(unittest.TestCase):
     pass
   
   def tearDown(self):
-    pass
-
-  def getConfigFile(self, properties):
-    currentDir = properties.getPropertyValue("current.dir")
-    file = File(currentDir + os.sep + "project.conf")
-    if file.exists():
-      return file
-    
-    nooraDir = properties.getPropertyValue("noora.dir")
-    file = File(nooraDir + os.sep + "project.conf")
-    return file
-            
+    pass            
 
   def testNoOraAppPass(self):    
     
@@ -101,7 +88,8 @@ class TestBase(unittest.TestCase):
     properties.setProperty("noora.dir", NOORA_DIR)
     properties.setProperty("current.dir", CURRENT_DIR)
     
-    file = self.getConfigFile(properties)
+    app = NoOraApp()
+    file = app.getConfigFile(properties)
     fileReader = FileReader(file) 
     propertyLoader.load(fileReader)
     
