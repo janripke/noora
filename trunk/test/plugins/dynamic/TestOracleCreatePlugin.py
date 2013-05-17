@@ -16,7 +16,8 @@ import core.ParameterHelper as ParameterHelper
 import core.NooraException  as NooraException
 import core.ConfigReader    as ConfigReader
 import core.ProjectHelper   as ProjectHelper
-import connectors.OracleConnectorStub as OracleConnectorStub
+from connectors.OracleConnectorStub import OracleConnectorStub
+from connectors.SqlLoaderConnectorStub import SqlLoaderConnectorStub
 
 M_LF         = chr(10)
 
@@ -38,9 +39,13 @@ class TestBase(unittest.TestCase):
     projectHelper=ProjectHelper.ProjectHelper(configReader)
     return projectHelper
   
-  def getOracleConnectorSub(self):
-    oracleConnectorStub=OracleConnectorStub.OracleConnectorStub()
+  def getOracleConnectorStub(self):
+    oracleConnectorStub=OracleConnectorStub()
     return oracleConnectorStub
+  
+  def getSqlLoaderConnectorStub(self):
+    sqlLoaderConnectorStub=SqlLoaderConnectorStub()
+    return sqlLoaderConnectorStub
   
   def setPluginClass(self,pattern):
     classLoader=self.getClassLoader()
@@ -114,6 +119,10 @@ class TestBase(unittest.TestCase):
     stream = M_LF.join(lines)
     configReader.loadFromStream(stream)
     pluginClass.setConfigReader(configReader)
+    oracleConnectorStub=self.getOracleConnectorStub()
+    sqlLoaderConnectorStub=self.getSqlLoaderConnectorStub()
+    pluginClass.setConnector(oracleConnectorStub)
+    pluginClass.setSqlLoaderConnector(sqlLoaderConnectorStub)
     try:
       pluginClass.execute(parameterHelper)  
     except NooraException.NooraException as e:
@@ -144,9 +153,10 @@ class TestBase(unittest.TestCase):
     pluginClass.setProjectHelper(projectHelper)
     pluginClass.setNooraDir(NOORA_DIR)
     
-    oracleConnectorStub=self.getOracleConnectorSub()
+    oracleConnectorStub=self.getOracleConnectorStub()
+    sqlLoaderConnectorStub=self.getSqlLoaderConnectorStub()
     pluginClass.setConnector(oracleConnectorStub)
-        
+    pluginClass.setSqlLoaderConnector(sqlLoaderConnectorStub)    
     pluginClass.execute(parameterHelper)
        
 
