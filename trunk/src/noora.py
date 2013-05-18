@@ -10,7 +10,7 @@ import core.ClassLoader     as ClassLoader
 import logging.handlers
 
 __revision__ = "$Revision$"
-__version__  = "0.0.8"
+__version__  = "0.0.9-SNAPSHOT"
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
 BASE_DIR     = os.path.abspath('.')
