@@ -1,10 +1,11 @@
+@require(generator)
 <?xml version="1.0" encoding="UTF-8"?>
 <project-config xmlns:xi="http://www.w3.org/2001/XInclude">
 
   <!-- name of the project -->
-  <name>@{param:project}</name>
+  <name>@generator.param('project')</name>
   
-  <xi:include href="config/defaults" parse="xml" />
+  <xi:include href="config/defaults.xml" parse="xml" />
   
   <xi:include href="config/plugins.xml" parse="xml" />
   <xi:include href="config/connectors.xml" parse="xml" />
