@@ -12,30 +12,66 @@ from org.noora.io.NoOraError import NoOraError
 from org.noora.output.ConsoleOutput import ConsoleOutput
 from org.noora.plugin.Pluginable import PER_EXIT
 
+import logging.handlers
 import os
 
 
+
 class NoOraApp(object):
+  """ Application object that centralizes NoOra functionality.
+    1. It initializes the log, reads the config, loads the plugins and processes command line arguments.
+    2. It executes the plugins that were specified (command line arguments)
+    3. Terminates all plugins that were initialized.
+    
+    It is also the central access point to the applications data (directories, config data, loaded plugins).
+  """
 
 #---------------------------------------------------------
   def __init__(self, params):
+    
+    ## @var __parameters
+    # @brief 'preprocessed' command line arguments. Note that these are not part of the 'cl' Options. 
+    #        They are however used to provide the Option objects with values.
     self.__parameters = Params(params[1:])
 
     noora_dir = os.path.abspath(os.path.dirname(params[0]))
     project_dir = os.path.abspath(".")
 
+    ## @var __directories
+    # @brief Map of often used directory paths
+    #        Values: NOORA_DIR, INVOCATION_DIR, RESOURCE_DIR, TEMPLATE_DIR
     self.__directories = { 'NOORA_DIR'     : noora_dir,
-                           'INVOKATION_DIR': project_dir,
+                           'INVOCATION_DIR': project_dir,
                            'RESOURCE_DIR'  : os.sep.join([ noora_dir, 'resources']),
                            'TEMPLATE_DIR'  : os.sep.join([ noora_dir, 'resources', 'templates' ])
                          }
-
-    self.__config = Config()
+    
+    ## @var __config
+    # @brief configuration object, contains one ore more processed configuration files
+    self.__config = Config();
+    
+    ## @var __plugins
+    # @brief List of loaded plugins (as specified on the command line).
     self.__plugins = []
+    
+    ## @var __defines
+    # @brief List of -D <name>=<value> command line options.
     self.__defines = Options();
+    
+    ## @var __console
+    # @brief device that acts as console for runtime output.
+    self.__console = ConsoleOutput()
+    
+    ## @var __logger
+    # @brief Logger to be used
+    self.__logger = None
 
 #---------------------------------------------------------
   def initialize(self):
+    """ Initializes the NoOra application object.
+      Initializes the log, reads the config, loads the plugins and processes command-line arguments
+      @raise NoOraError: some initialization error occurred
+    """
     self.__initLog()
     self.__readConfig()
     self.__loadPlugins()
@@ -46,11 +82,17 @@ class NoOraApp(object):
 
 #---------------------------------------------------------
   def terminate(self):
+    """ Terminates the loaded plugins
+    """
     for plugin in self.__plugins:
       plugin.terminate()
 
 #---------------------------------------------------------
   def run(self):
+    """ Executes the loaded plugins.
+      Before execution, each plugin loads its configuration file. 
+      When the plugin returns PER_EXIT then the execution is stopped, otherwise the next plugin in the list is executed.
+    """
     for plugin in self.__plugins:
       plugin.readConfig()
       if plugin.execute() == PER_EXIT:
@@ -88,19 +130,35 @@ class NoOraApp(object):
     return value
 
 #---------------------------------------------------------
+# logger methods
+#---------------------------------------------------------
+  @classmethod
+  def error(cls, message):
+    cls.__logger.error(message)
+    
+  @classmethod
+  def warning(cls, message):
+    cls.__logger.warning(message)
+    
+#---------------------------------------------------------
 # Private methods
 #---------------------------------------------------------
   def __initLog(self):
-    pass
+
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    
+    handler = logging.handlers.RotatingFileHandler('noora.log', 'a', 0, 5)
+    handler.setFormatter(formatter)
+    
+    self.__logger = logging.getLogger('NoOraLogger')
+    self.__logger.addHandler(handler)         
+    handler.doRollover()        
+    self.__logger.setLevel(logging.ERROR)
 
 #---------------------------------------------------------
   def __parseParameters(self):
-    # 1. get generic + plugin options
-    # 2. get options from params
-    # 3. check required options
-    # 4. check options that will not be used (not define in 1.)
-    # 5. store param-options for later use (self.__options)
 
+    # set plugin's Options using the NoOraApp's Params.
     for plugin in self.__plugins:
       try:
         options = plugin.getOptions()
@@ -109,13 +167,15 @@ class NoOraApp(object):
       except NoOraError as e:
         raise e.addReason('plugin', plugin.getName())
 
-    # any parameter that is not 'processed' by a plugin should generate a warning
+    # any parameter that is not 'processed' by a plugin is marked 'unused'
     unusedParams = [ ]
     for param in self.__parameters.getParams():
       if not isinstance(param, PluginParameter):
         if not param.isUsed():
           unusedParams.append(param)
 
+    # report unused parameters unless the parameter is '-D'
+    # In that case, add the -D to self.__defines
     for param in unusedParams:
       name = param.getName()
       if name == "-D":
@@ -170,6 +230,11 @@ class NoOraApp(object):
 #---------------------------------------------------------
 
   def __loadPlugins(self):
+    """ Load the specified plugins using the ClassLoader.
+      The plugin class is taken from the config (plugins/plugin[@name=<plugin-name>]/class)
+      The order of the plugins is stored as specified by plugins/plugin[@name]/priority where lowest means first and highest means last.
+    """
+    
     loader = ClassLoader()
 
     try:
@@ -201,11 +266,28 @@ class NoOraApp(object):
 
 #---------------------------------------------------------
   def __getProjectDefaultValue(self, name):
+    """ Get default value from config
+      Each of the config files is queried for <root>/defaults/<name> and <root>/defaults/lists/list[@name='<name>'].
+      In case of a list, the element list is converted to a list of strings
+    """
     value = self.getConfig().getProperty("defaults/{0}".format(name))
-    return value
+    if value is not None:
+      return value
+    
+    list = self.getConfig().getElement("defaults/lists/list[@name='{0}']/item".format(name))
+    if list is not None and len(list) > 0:
+      result = []
+      for elem in list:
+        result.append(elem.text)
+      return result
+    
+    return None
   
 #---------------------------------------------------------
   def __getEnvironmentValue(self, name):
+    """ Get environment variable
+    Note that the environment variable name should be 'NOORA_<name>'
+    """
     envname = 'NOORA_' + name
     value = os.environ.get(envname)
     return value

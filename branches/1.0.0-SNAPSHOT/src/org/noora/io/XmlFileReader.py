@@ -36,7 +36,7 @@ class XmlFileReader(Readable):
       ElementInclude.include(root)
       return handle
     except Exception as e:
-      raise NoOraError('detail', "Error parsing xml file ".format(self.getFile().getName())).addReason('parse-error', e)
+      raise NoOraError('detail', "Error parsing xml file {0} or one of its included files".format(self.getFile().getPathName())).addReason('parse-error', e)
   
 #---------------------------------------------------------
   def getFile(self):

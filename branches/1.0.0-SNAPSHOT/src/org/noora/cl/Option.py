@@ -36,7 +36,6 @@ class Option(object):
       raise NoOraError('detail', "cannot create Option without either a short or long name (both are not given)")
       
 #---------------------------------------------------------
-      
   def getShortName(self):
     return self.__shortName
   
@@ -67,7 +66,7 @@ class Option(object):
     """ Get the type of the option's value.
       @return: OF_SINGLE_ARG (values contains a scalar) or OF_MULTI_ARG (values contains a list)
     """
-    return self.__flgs & OF_ARG_MASK
+    return self.__flags & OF_ARG_MASK
   
 #---------------------------------------------------------
   def __validateFlags(self, flags):
@@ -82,7 +81,14 @@ class Option(object):
       
     return self.__values
   
+  def values(self):
+    return self.getValues()
+  
 #---------------------------------------------------------
+  ## Set values
+  # @param values a list of values.
+  # @throw NoOraError when flag & OF_SINGLE_ARG and the values list contains > 1 element
+  #
   def setValues(self,values):
     # note: values is always a list
     if values is not None:

@@ -1,4 +1,8 @@
 from org.noora.output.Outputable import Outputable
+from wheezy.template.engine import Engine
+from wheezy.template.loader import DictLoader
+from wheezy.template.ext.core import CoreExtension
+
 
 class Output(Outputable):
   
@@ -8,10 +12,10 @@ class Output(Outputable):
 #---------------------------------------------------------
   def write(self, where, what, content):
     if self.__plugin:
-      generator = self.__plugin.getGenerator()
-      if generator:
-        content = generator.replaceGeneratedValues(content)
-        
+      
+      # apply template substitution to content
+      content = self.__applyTemplateSubstitution(content);
+       
     self.outputContent(where, what, content)
 
 #---------------------------------------------------------
@@ -23,3 +27,19 @@ class Output(Outputable):
 #---------------------------------------------------------
   def setPlugin(self,plugin):
     self.__plugin = plugin
+    
+#---------------------------------------------------------
+# private methods
+#---------------------------------------------------------
+  def __applyTemplateSubstitution(self, content):
+    generator = self.__plugin.getGenerator()
+    if generator:
+      
+      engine = Engine(loader     = DictLoader({ 'template' : content}),
+                      extensions = [ CoreExtension() ])
+      template = engine.get_template('template')
+      content = template.render({ 'generator' : generator })
+      
+    return content
+
+    
