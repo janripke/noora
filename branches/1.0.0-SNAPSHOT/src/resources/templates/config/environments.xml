@@ -1,21 +1,10 @@
+@require(generator)
 <?xml version="1.0" encoding="UTF-8"?>
 
-<environments default="dev">
+<environments default="@generator.param('environments')[0]">
 
-  <environment name="dev">
-    <connector>store-dev</connector>
-  </environment>
-
-  <environment name="test">
-    <connector>store-test</connector>
-  </environment>
-
-  <environment name="uat">
-    <connector>store-uat</connector>
-  </environment>
-
-  <environment name="prod">
-    <connector>store</connector>
-  </environment>
+@for env in generator.param('environments'):
+  <environment name="@env" />
+@end
 
 </environments>

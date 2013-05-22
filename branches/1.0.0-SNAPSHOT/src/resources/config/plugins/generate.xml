@@ -67,25 +67,7 @@
 
 
   <lists>
-    <list name="create-objects">
-      <item>usr</item>
-      <item>dbl</item>
-      <item>lib</item>
-      <item>dir</item>
-      <item>scm</item>
-      <item>seq</item>
-      <item>syn</item>
-      <item>tab</item>
-      <item>cst</item>
-      <item>fct</item>
-      <item>prc</item>
-      <item>pkg</item>
-      <item>jar</item>
-      <item>vw</item>
-      <item>trg</item>
-      <item>idx</item>
-      <item>gra</item>
-    </list>
+   
     <list name="drop-objects">
       <item>scm</item>
       <item>usr</item>
@@ -102,12 +84,7 @@
       <item>idx</item>
       <item>dbl</item>
     </list>
-    <list name="environments">
-      <item>dev</item>
-      <item>test</item>
-      <item>acc</item>
-      <item>prod</item>
-    </list>
+
   </lists>
 
   <tree>
@@ -147,16 +124,14 @@
 
   <create-tree>
     <folder name="@{keyval:create-dir}">
-      <xi:include href="config/components/revision-tree.xml"
-        parse="xml" />
+      <xi:include href="config/components/revision-tree.xml" parse="xml" />
     </folder>
   </create-tree>
 
   <update-tree>
     <folder name="@{keyval:update-dir}">
       <folder name="@{param:version}">
-        <xi:include href="config/components/revision-tree.xml"
-          parse="xml" />
+        <xi:include href="config/components/revision-tree.xml" parse="xml" />
       </folder>
     </folder>
   </update-tree>

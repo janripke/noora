@@ -1,3 +1,4 @@
+@require(generator)
 <?xml version="1.0" encoding="UTF-8"?>
 
 <connectors>
@@ -12,12 +13,15 @@
     - socket: use a socket connection to push scripts to the database.
    -->
 
-  <connector name="@{param:user}" type="command">
-    @{database:connector-template}
+@for con in generator.param('connectors'):
+  <connector name="@con" type="command">
+    @generator.database('connector-template')
     <blocked>
       <plugin>recreate</plugin>
       <plugin>drop</plugin>
     </blocked>
   </connector>
-
+  
+@end
+  
 </connectors>

@@ -1,8 +1,32 @@
+@require(generator)
 <?xml version="1.0" encoding="UTF-8"?>
 
 <defaults>
 
+  <version>1.0.0</version>
+  
+  <!--  Used when no environment is specified -->
+  <environment>@generator.param('environments')[0]</environment>
+  
+  <!--  Used when no environment is specified -->
+  <connector>@generator.param('connectors')[0]</connector>
+
   <lists>
+
+    <!-- the supported environments. Noora cannot handle environments that are not listed here -->
+    <list name="environments">
+      @for env in generator.param('environments'):
+        <item>@env</item>
+      @end
+    </list>
+    
+    <!-- the supported connectors. Noora cannot handle connectors that are not listed here -->
+    <list name="connectors">
+      @for con in generator.param('connectors'):
+        <item>@con</item>
+      @end
+    </list>
+
     <list name="create-objects">
       <item>usr</item>
       <item>dbl</item>
@@ -22,6 +46,7 @@
       <item>idx</item>
       <item>gra</item>
     </list>
+
   </lists>
 
 </defaults>
