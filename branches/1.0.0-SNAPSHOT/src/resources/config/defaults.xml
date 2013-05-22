@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <defaults>
-  <!--  -->
-  <version>1.0.1</version>
+
+  <!-- The default version when creating a new project (override with command line argument 'version') -->
+  <version>1.0.0</version>
+  
+  <!-- default environment (override with command line argument 'environment') -->
+  <environment>dev</environment>
+  
+  <host>host.domain.nl</host>
+  <port>1521</port> <!--  default to oracle database -->
+  <user>someuser</user>
+  <password>somepassword</password>
 
   <lists>
+  
+    <!-- default list of subdirectories in 'dll' folder -->
     <list name="create-objects">
       <item>usr</item>
       <item>dbl</item>
@@ -24,6 +35,24 @@
       <item>idx</item>
       <item>gra</item>
     </list>
+
+    <!-- default list of environments (override with command line argument 'environment') -->
+    <list name="environments">
+      <item>dev</item>
+      <item>test</item>
+      <item>acc</item>
+      <item>prod</item>
+    </list>
+    
+    <!-- default list of environments (override with command line argument 'environment') -->
+    <list name="connectors">
+      <item>devdb</item>
+      <item>testdb</item>
+      <item>accdb</item>
+      <item>proddb</item>
+    </list>
+
   </lists>
+
 </defaults>
 
