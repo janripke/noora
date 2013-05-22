@@ -28,4 +28,10 @@
     <config>config/plugins/generate.xml</config>
   </plugin>
 
+  <plugin name="create">
+    <class>org.noora.plugin.CreatePlugin.CreatePlugin</class>
+    <description>create the database by processing the scripts in the NoOra project.</description>
+    <priority>210</priority>
+  </plugin>
+
 </plugins>

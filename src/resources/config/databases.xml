@@ -19,7 +19,7 @@
   </database>
 
   <database name="mysql">
-    <generate-connector-template>
+    <connector-template>
       <mysql version="5.6">
         <host>dev.domain.com</host>
         <port>3306</port>
@@ -27,7 +27,7 @@
         <password>ItsPassword</password>
         <database>devstore</database>
       </mysql>
-    </generate-connector-template>
+    </connector-template>
   </database>
 
   <database name="sqlite">

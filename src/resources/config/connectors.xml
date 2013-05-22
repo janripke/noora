@@ -2,13 +2,19 @@
 
 <connectors>
 
-  <connector name="store-dev" type="command">
-    <oracle version="11.0.2.0.3">
-      <host>dev.domain.com</host>
-      <port>1521</port>
-      <user>theUser</user>
-      <password>ItsPassword</password>
-    </oracle>
-  </connector>
+	<!-- the generic noora config does not define any connectors, the project must define them.
+	
+	example connector:
+
+    <connector name="devdb" type="command">
+      <oracle version="11.0.2.0.3">
+        <host>dev.domain.com</host>
+        <port>1521</port>
+        <user>theUser</user>
+        <password>ItsPassword</password>
+      </oracle>
+    </connector>
+    
+    -->
 
 </connectors>
