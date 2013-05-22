@@ -1,7 +1,8 @@
 
+from org.noora.config.PropertyConfig import PropertyConfig
 from org.noora.config.XmlConfig import XmlConfig
 from org.noora.io.File import File
-from org.noora.config.PropertyConfig import PropertyConfig
+from org.noora.io.NoOraError import NoOraError
 
 class Config(object):
   
@@ -100,10 +101,13 @@ class Config(object):
     configfile = File(filepath)
     ext = configfile.getExtension();
     
-    if (ext == "xml"):
-      return XmlConfig(configfile);
-    elif (ext == "conf"):
-      return PropertyConfig(configfile)
-    else:
-      return None;
+    try:
+      if (ext == "xml"):
+        return XmlConfig(configfile);
+      elif (ext == "conf"):
+        return PropertyConfig(configfile)
+      else:
+        return None;
+    except NoOraError as e:
+      raise e.addReason('filename', filepath)
   

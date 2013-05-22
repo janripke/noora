@@ -1,6 +1,6 @@
 
 from org.noora.cl.Option import Option, OF_OPTIONARG, OF_SINGLE_ARG, OF_REQUIRED, \
-  OF_OPTION
+  OF_OPTION, OF_MULTI_ARG
 from org.noora.cl.Options import Options
 from org.noora.config.Generator import Generator
 from org.noora.helper.ProjectHelper import ProjectHelper
@@ -10,8 +10,9 @@ from org.noora.io.NoOraError import NoOraError
 from org.noora.output.FileSystemOutput import FileSystemOutput
 from org.noora.plugin.Plugin import Plugin
 from org.noora.plugin.Pluginable import PER_CONTINUE
-from xml.etree import ElementTree
+
 import os
+
 
 
 class GeneratePlugin(Plugin):
@@ -24,15 +25,15 @@ class GeneratePlugin(Plugin):
 #---------------------------------------------------------
   def __init__(self, name, application, inputObject, outputObject):
     options = Options()
-    options.add(Option("-pr", "--project",
+    options.add(Option(None, "--project",
                        OF_OPTIONARG | OF_SINGLE_ARG,
                        "specify name of project to create", "project"))
     options.add(Option("-d", "--database",
                        OF_OPTIONARG | OF_REQUIRED | OF_SINGLE_ARG,
-                       "specify the database (oracle,mysql or sqlite", "database"))
-    options.add(Option("-c", "--connector",
-                       OF_OPTIONARG | OF_SINGLE_ARG,
-                       "specify name of connector (e.g. for oracle this would be the SID)", "connector"))
+                       "specify the database (oracle,mysql or sqlite)", "database"))
+    options.add(Option("-c", "--connectors",
+                       OF_OPTIONARG | OF_MULTI_ARG,
+                       "specify names of connector as comma separated list, no spaces (e.g. for oracle this would be the SID)", "c1[,c2,...]"))
     options.add(Option("-h", "--host",
                        OF_OPTIONARG | OF_SINGLE_ARG,
                        "specify database host (or ip-address)", "host"))
@@ -45,6 +46,9 @@ class GeneratePlugin(Plugin):
     options.add(Option(None, "--password",
                        OF_OPTIONARG | OF_SINGLE_ARG,
                        "specify the password to connect to the database", "password"))
+    options.add(Option("-e", "--environments",
+                       OF_OPTIONARG | OF_MULTI_ARG,
+                       "specify one or more environments (comma separated, no spaces)", "env1[,env2,...]"))
     options.add(Option("-v", "--version",
                        OF_OPTION | OF_SINGLE_ARG,
                        "specify the default version of the database (x.y.z)", "version"))
@@ -108,6 +112,7 @@ class GeneratePlugin(Plugin):
       # pop without push has no effect (e.g. when generate was invoked within the project directory)
       workdir.popDir()
           
+    # continue running other plugins (if any)
     return PER_CONTINUE
 
 #---------------------------------------------------------
@@ -143,7 +148,6 @@ class GeneratePlugin(Plugin):
      
     return action 
   
-
 #---------------------------------------------------------
   def __createProject(self, project, workdir):
     """ Create a project with a master config file and a populated config directory.
@@ -168,7 +172,7 @@ class GeneratePlugin(Plugin):
       for elem in configDefinition.findall("./*"):
         self.__processFileSystemConfigItem(elem, os.sep.join( [ curdir, project ] ))
     except NoOraError as e:
-      raise e.addReason('action', "create project")
+      raise e.addReason('action', "create project configuration")
     finally:
       workdir.popDir()
 
@@ -203,7 +207,7 @@ class GeneratePlugin(Plugin):
       raise e.addReason('action', "create 'create' revision tree")
     
 #---------------------------------------------------------
-  def __processFileSystemConfigItem(self,elem, outputLocation):
+  def __processFileSystemConfigItem(self, elem, outputLocation):
     
     name = elem.get('name')
     map = elem.get('map')
@@ -212,53 +216,61 @@ class GeneratePlugin(Plugin):
     if name and map:
       raise NoOraError('usermsg', "error in generate.xml, cannot create project").addReason('detail', "found file/folder element with both name and map attribute. Only one of them is allowed")
     
-    if name:
-      value = self.__generator.getGeneratedValue(name)
-      if value:
-        name = value
+    try:
+    
+    
+      if name:
+        value = self.__generator.getGeneratedValue(name)
+        if value:
+          name = value
       
-    if elem.tag == 'file':
-      
-      # read input
-      content = elem.get('content')
-      if not content:
-        template = elem.get('template')
-        if template:
-          templatedir = self.getApplication().getDirectory('TEMPLATE_DIR')
-          content = self.getInput().fetchInput(templatedir, template)
-        else:
-          raise NoOraError('detail', "template file '{0}' not found in $NOORA_HOME/resources/templates".format(template))
-      
-      if not content:
-        raise NoOraError('usermsg', "corrupted generate.xml, cannot find content for element {0}".format(name))
+      if elem.tag == 'file':
+        
+        # read input
+        content = elem.get('content')
+        if not content:
+          template = elem.get('template')
+          if template:
+            templatedir = self.getApplication().getDirectory('TEMPLATE_DIR')
+            content = self.getInput().fetchInput(templatedir, template)
+          else:
+            raise NoOraError('detail', "template file '{0}' not found in $NOORA_HOME/resources/templates".format(template))
+        
+        if not content:
+          raise NoOraError('usermsg', "corrupted generate.xml, cannot find content for element {0}".format(name))
+            
+        # write output
+        name = elem.get('name')
+        if name:
+          self.getOutput().write(outputLocation, name, content)
+        
+      elif elem.tag == 'folder':
+        
+        if name is not None:
+          dirpath = os.sep.join( [ outputLocation, name ] )
+          if not File(dirpath).exists():
+            os.makedirs(dirpath)
+          children = elem.findall("./*")
+          for child in children:
+            self.__processFileSystemConfigItem(child, dirpath)
           
-      # write output
-      name = elem.get('name')
-      if name:
-        self.getOutput().write(outputLocation, name, content)
-        
-    elif elem.tag == 'folder':
-      
-      if name:
-        dirpath = os.sep.join( [ outputLocation, name ] )
-        if not File(dirpath).exists():
-          os.makedirs(dirpath)
-        
-        for subelem in elem.findall("./*"):
-          self.__processFileSystemConfigItem(subelem, dirpath)
-          return
-        
-      if map:
-        dirlist = self.__generator.getGeneratedValue(map)
-        if dirlist:
-          for elem in dirlist:
-            dirpath = os.sep.join( [ outputLocation, elem ] )
-            if not File(dirpath).exists():
-              os.makedirs(dirpath)
-        
-    else:
-      raise NoOraError('tag', elem.tag).addReason('detail', "invalid tag found in generate.xml (can only process 'file' and 'folder' tags")
+        if map is not None:
+          dirlist = self.__generator.getGeneratedValue(map)
+          if dirlist:
+            for mapelem in dirlist:
+              dirpath = os.sep.join( [ outputLocation, mapelem ] )
+              if not File(dirpath).exists():
+                os.makedirs(dirpath)
+              children = elem.findall("./*")
+              for child in children:
+                self.__processFileSystemConfigItem(child, dirpath)
+                          
+      else:
+        raise NoOraError('tag', elem.tag).addReason('detail', "invalid tag found in generate.xml (can only process 'file' and 'folder' tags")
 
+    except NoOraError as e:
+      raise e.addReason('element', elem.tag).addReason('name', name if name else "unknown")
+    
 #---------------------------------------------------------
 #---------------------------------------------------------
 #---------------------------------------------------------

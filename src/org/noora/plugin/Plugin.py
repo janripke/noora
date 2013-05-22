@@ -9,19 +9,44 @@ import logging
 __revision__ = "$Revision: $"
 
 class Plugin(Pluginable):
+  """ Base for all plugins.
+  
+    The base is initialize,execute,terminate based.
+  """
   
 #---------------------------------------------------------
   def __init__(self, name, application, inputObject, outputObject, options):
+    ## @var __name
+    # @brief Plugin name
     self.__name              = name
+    
+    ## @var __application
+    # @brief the NoOra application object that loaded this plugin
     self.__application       = application
+    
+    ## @var __input
+    # @brief the input object used to read input data (files, from socket, etc...)
     self.__input             = inputObject
+    
+    ## @var __output
+    # @brief the output object to write output files to
     self.__output            = outputObject
+    
+    ## @var __executionPriority
+    # @brief the order in which this plugin will be executed (lower will run first, higher will run after this plugin)
+    # defaults to 10000
     self.__executionPriority = 10000
+    
+    ## @var __options
+    # @brief Options object that defines the command-line arguments that are relevant for this plugin.
+    # These options will be set by the plugin's initialize method
     self.__options           = options
     self.__pluginConfig      = None
 
 #---------------------------------------------------------
   def initialize(self):
+    """ Initialize the input and output objects
+    """
     if self.__input:
       self.__input.initialize()
     if self.__output:
@@ -29,6 +54,8 @@ class Plugin(Pluginable):
   
 #---------------------------------------------------------
   def terminate(self):
+    """ Terminate the input and output objects
+    """
     if self.__input:
       self.__input.terminate()
     if self.__output:
@@ -40,11 +67,17 @@ class Plugin(Pluginable):
   
 #---------------------------------------------------------
   def readConfig(self):
+    """ Read plugin specific config file.
+      If the config file does not exist, then silently ignore it (do not raise an error).
+      The configuration will be pushed onto the config-stack.
+    """
+    
     workdir = Directory()
     workdir.pushDir(self.__application.getDirectory('RESOURCE_DIR'))
     
     try:
       config = self.__application.getConfig()
+      
       configElem = config.getFirstElement("plugins/plugin[@name='{0}']/config".format(self.__name))
       if configElem is not None:
       
@@ -62,6 +95,8 @@ class Plugin(Pluginable):
 
 #---------------------------------------------------------
   def popConfig(self):
+    """ Pop the plugin configuration from the config-stack
+    """
     if self.__pluginConfig is not None:
       config = self.__application.getConfig()
       config.popConfig()
@@ -76,6 +111,11 @@ class Plugin(Pluginable):
 
 #---------------------------------------------------------
   def getOptionValue(self,name):
+    """
+      Find the value of an option.
+      The value may be a single value (OF_SINGLE_ARG) or a list of values (OF_MULTI_ARG)
+      When option 'name' cannot be found, then ask the application for this option (stored as 'define')
+    """
     
     # assume the long name
     optionname = "--" + name;
@@ -120,44 +160,6 @@ class Plugin(Pluginable):
   def getOptions(self):
     return self.__options
 
-#---------------------------------------------------------
-#---------------------------------------------------------
-#---------------------------------------------------------
-  
-  # pre 1.0.0 stuff
-  
-  CREATE = "CREATE"
-  logger = logging.getLogger("NoOraLogger")
-  
-  #def __init__(self, type, connectable):
-  #  Pluginable.__init__(self, type, connectable)
-  #  self.__options = Options()
-  #  self.setType(type)
-  #  self.setConnector(connectable)    
-
-  def setConnector(self, connectable):
-    self.__connectable=connectable
-
-  def getConnector(self):
-    return self.__connectable
-  
-  def setExecutor(self, executable):
-    self.__executable=executable
-
-  def getExecutor(self):
-    return self.__executable
-
-  def setType(self, type):
-    self.__type = type
-
-  def getType(self):
-    return self.__type
-
-  def getRevision(self):
-    return self.__revision__
-
-#  def getOptions(self):
-#    return self.__options
   
 
     

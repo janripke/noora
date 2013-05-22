@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from org.noora.app.Params import OptionParameter, ArgParameter
-from org.noora.cl.Option import OF_OPTION, OF_OPTIONARG
+from org.noora.cl.Option import OF_OPTION, OF_OPTIONARG, OF_MULTI_ARG
 from org.noora.cl.OptionFactory import OptionFactory
 from org.noora.io.NoOraError import NoOraError
 
@@ -43,7 +43,11 @@ class Options:
             break
         if isinstance(param, ArgParameter) and option.getTypeFlag() == OF_OPTIONARG:
           if option.matchesName(param.getName()):
-            option.setValues( [ param.getValue() ] )
+            paramval = param.getValue()
+            if option.getArgType() & OF_MULTI_ARG:
+              option.setValues(paramval.split(","))
+            else:
+              option.setValues( [ param.getValue() ] )
             param.setUsed(True)
             break
             

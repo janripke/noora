@@ -4,7 +4,7 @@ class DatabaseOutput(Outputable):
 
   def __init__(self):
     Outputable.__init__(self)
-    self.__connector = None
+    self.__connector = { }
   
   def initialize(self):
     pass
@@ -12,5 +12,6 @@ class DatabaseOutput(Outputable):
   def terminate(self):
     pass
   
-  def processOutput(self, what, content):
-    print content
+   
+  def outputContent(self, where, what, content):
+    
