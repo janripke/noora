@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<folder name="@{param:user}">
+<folder map="@{list:connectors}">
   <folder name="ddl">
     <folder map="@{list:create-objects}" />
   </folder>
   <folder name="dat">
+    <folder map="@{list:environments}" />
   </folder>
 </folder>
 

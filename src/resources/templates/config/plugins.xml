@@ -3,20 +3,20 @@
 <!-- list of plugins that are supported/required for this project -->
 <plugins>
 
-	<plugin name="drop">
-		<class>static.drop.DropPlugin.DropPlugin</class>
-	</plugin>
-
-	<plugin name="create">
-		<class>dynamic.create.CreatePlugin.CreatePlugin</class>
-	</plugin>
-
-	<plugin name="update">
-		<class>dynamic.update.UpdatePlugin.UpdatePlugin</class>
-	</plugin>
-
-	<plugin name="recreate">
-		<class>dynamic.recreate.RecreatePlugin.RecreatePlugin</class>
-	</plugin>
+  <!-- add project specific plugins here or disable/override the default noora plugins -->
+  
+  <!-- example (override priority, which is normally 100, so that plugin will always run last).
+    Note that the complete plugin definition must be given. You cannot overrule only one or two attributes.
+    The 'config' attribute is optional and is only required when the plugin uses a separate configuration.
+   -->
+  
+  <!-- 
+    <plugin name="generate">
+      <class>org.noora.plugin.GeneratePlugin.GeneratePlugin</class>
+      <description>intiates a new NoOra database project, or a new release of an existing database project.</description>
+      <priority>1000</priority>
+      <config>config/plugins/generate.xml</config>
+    </plugin>
+   -->
 
 </plugins>
