@@ -38,7 +38,7 @@ class LoadJavaConnector(Connector.Connector):
       handle=open('feedback.log','wb')
       connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
       #templateScript='@'+projectHelper.cleanPath(self.getScriptDir()+os.sep+'template.sql')
-      result=subprocess.call(['loadjava','-user',connectString , projectHelper.cleanPath(oracleScript)],shell=True,stdout=handle,stderr=handle,startupinfo=startupInfo)
+      result=subprocess.call(['loadjava','-user',connectString, '-resolve', '-force', projectHelper.cleanPath(oracleScript)],shell=True,stdout=handle,stderr=handle,startupinfo=startupInfo)
       stream=projectHelper.readFile('feedback.log')
      
       
