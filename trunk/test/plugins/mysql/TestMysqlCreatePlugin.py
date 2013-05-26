@@ -13,7 +13,7 @@ from org.noora.io.Properties import Properties
 from org.noora.io.PropertyLoader import PropertyLoader
 from org.noora.io.File import File
 from org.noora.io.FileReader import FileReader
-from org.noora.plugin.mysql.CreatePlugin import CreatePlugin
+from org.noora.plugin.mysql.create.CreatePlugin import CreatePlugin
 from org.noora.cl.Parser import Parser
 from org.noora.connector.MysqlConnectorStub import MysqlConnectorStub
 from org.noora.connector.MysqlConnector import MysqlConnector
