@@ -7,6 +7,7 @@ from org.noora.cl.OptionFactory import OptionFactory
 from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
 from org.noora.connector.ExecuteFactory import ExecuteFactory
 from org.noora.connector.ConnectorFactory import ConnectorFactory
+from org.noora.plugin.mysql.drop.BlockedHostException import BlockedHostException
 import os
 
 class DropPlugin(Plugin):
@@ -50,14 +51,20 @@ class DropPlugin(Plugin):
     return properties.getPropertyValue('noora.dir')+os.sep+'org'+os.sep+'noora'+os.sep+'plugin'+os.sep+'mysql'+os.sep+'drop'
     #return self.getNooraDir()+os.sep+'plugins'+os.sep+'static'+os.sep+'drop'
 
+  def checkBlockedHosts(self, host, properties):
+    blockedHosts = properties.getPropertyValues('BLOCKED_HOSTS')
+    if host in blockedHosts:
+      raise BlockedHostException("blocked host", host)
+
   def execute(self, commandLine, properties):
     #if parameterHelper.hasParameter('-h'):
     #  self.getUsage()
     #  exit(1)
 
-    ignoreErrors = commandLine.getOptionValue('--igoore-errors', False)
+    ignoreErrors = commandLine.getOptionValue('--ignore-errors', False)
 
     host = commandLine.getOptionValue('-h')  
+    self.checkBlockedHosts(host, properties)
 
     defaultDatabases = properties.getPropertyValues('DATABASES')
     databases = commandLine.getOptionValues('-d', defaultDatabases)
