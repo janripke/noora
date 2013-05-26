@@ -97,7 +97,7 @@ class TestParameters(unittest.TestCase):
     
     try:
       commandLine = parser.parse(options,['-s=orcl'])
-      parser.checkRequiredArguments()
+      
     except UnrecognizedArgumentException as uae:
       self.assertEquals(uae.getMessage(), 'unrecognized argument orcl')
  
