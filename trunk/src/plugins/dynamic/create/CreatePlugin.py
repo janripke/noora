@@ -82,7 +82,6 @@ class CreatePlugin(Plugin.Plugin):
   def loadFiles(self, folder, oracleSid, oracleUser, oraclePasswd, ctlFile, ignoreErrors):   
     connector=self.getSqlLoaderConnector()
     projectHelper=self.getProjectHelper() 
-    
     files=projectHelper.findFiles(folder)
     for file in files:
       url=folder+os.sep+file
@@ -99,7 +98,7 @@ class CreatePlugin(Plugin.Plugin):
         loadJavaConnector = self.getLoadJavaConnector()
         loadJavaConnector.execute(oracleSid, oracleUser, oraclePasswd, url, '', '', ignoreErrors)        
       else:
-        connector.execute(oracleSid, oracleUser, oraclePasswd, ctlFile, file, ignoreErrors)  
+        connector.execute(oracleSid, oracleUser, oraclePasswd, ctlFile, folder + os.sep + file, ignoreErrors)  
 
 
 
@@ -174,7 +173,7 @@ class CreatePlugin(Plugin.Plugin):
       if projectHelper.folderPresent(folder):
         ctlFolders = projectHelper.findFolders(folder)
         for ctlFolder in ctlFolders:
-          ctlFile = folder+os.sep+ctlFolder + ".ctl"
+          ctlFile = folder+os.sep+ctlFolder+os.sep+ctlFolder+".ctl"
           self.loadFiles(folder+os.sep+ctlFolder, oracleSid, oracleUser, oraclePasswd, ctlFile, ignoreErrors)
 
 
@@ -183,7 +182,7 @@ class CreatePlugin(Plugin.Plugin):
       if projectHelper.folderPresent(folder):
         ctlFolders = projectHelper.findFolders(folder)
         for ctlFolder in ctlFolders:
-          ctlFile = folder+os.sep+ctlFolder + ".ctl"
+          ctlFile = folder+os.sep+ctlFolder + os.sep + environment + os.sep + ctlFolder+ ".ctl"
           envFolder=folder + os.sep + ctlFolder + os.sep + environment
           if projectHelper.folderPresent(envFolder):          
             self.loadFiles(envFolder, oracleSid, oracleUser, oraclePasswd, ctlFile, ignoreErrors)
