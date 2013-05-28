@@ -42,7 +42,7 @@ class DropPlugin(Plugin):
 
   def execute(self, commandLine, properties):
 
-    ignoreErrors = commandLine.getOptionValue('--igoore-errors', False)
+    ignoreErrors = commandLine.getOptionValue('--ignore-errors', False)
     host = commandLine.getOptionValue('-s')
 
     defaultSchemes = properties.getPropertyValues('SCHEMES')
