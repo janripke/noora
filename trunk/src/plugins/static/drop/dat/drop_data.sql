@@ -22,8 +22,8 @@ declare
   M_DQUOTE        varchar2(1):='"';
   
 begin
-	dbms_output.put_line('Disabling all constraints');
-	for user_object in c_user_objects loop
+  dbms_output.put_line('Disabling all constraints');
+  for user_object in c_user_objects loop
 	  table_name:=user_object.table_name;
     for constraint in c_constraints(table_name) loop
       statement:='ALTER TABLE ' || table_name || ' disable constraint ' || M_DQUOTE || constraint.constraint_name || M_DQUOTE || ' cascade';
