@@ -75,9 +75,12 @@ class UpdatePlugin(Plugin.Plugin):
     createFolder=projectHelper.getCreateFolder()
     if projectHelper.folderPresent(createFolder):
       versions.append(defaultVersion)
-    versionHelper=VersionHelper.VersionHelper(versions)
-    versions=versionHelper.sort()
+   
+    #versionHelper=VersionHelper.VersionHelper(versions)
+    #versions=versionHelper.sort()
+    versions.sort()    
     return versions
+    
 
 
   def installComponent(self, url, oracleSid, oracleUser, oraclePasswd):
@@ -190,13 +193,13 @@ class UpdatePlugin(Plugin.Plugin):
     projectHelper.failOnEmpty(version,'no version was given')
     
     # find the versions
-    versions=self.getVersions(defaultVersion)    
+    versions=self.getVersions(defaultVersion)      
     version=version[0]
     projectHelper.failOnValueNotFound(versions,version,'the given version is not valid for this project.')
     
     projectHelper.failOnFolderNotPresent(self.getAlterDir()+os.sep+version,'the update folder for this version is not present.')
 
-    previousVersion=self.getPreviousVersion(versions,version)
+    previousVersion=self.getPreviousVersion(versions,version)    
     projectHelper.failOnNone(previousVersion,'the previous version of this version could not be found.')
 
     versionScheme=configReader.getValue('VERSION_SCHEME')
