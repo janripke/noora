@@ -55,8 +55,10 @@ class RecreatePlugin(Plugin.Plugin):
     createFolder=projectHelper.getCreateFolder()
     if projectHelper.folderPresent(createFolder):
       versions.append(defaultVersion)
-    versionHelper=VersionHelper.VersionHelper(versions)
-    versions=versionHelper.sort()
+    #versionHelper=VersionHelper.VersionHelper(versions)
+    #versions=versionHelper.sort()
+    
+    versions.sort()            
     return versions  
   
   def getPlugin(self, plugins, pluginType):
