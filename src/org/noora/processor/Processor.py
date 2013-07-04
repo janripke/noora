@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from org.noora.processor.Processable import Processable
 from org.noora.processor.ProcessorException import ProcessorException
+from org.noora.processor.ProcessorResult import ProcessorResult
 from org.noora.io.FileReader import FileReader
 import subprocess
 
@@ -33,7 +34,13 @@ class Processor(Processable):
         file = stderr.getFile()
         reader = FileReader(file)
         stream = reader.read()     
-        raise ProcessorException(stream)    
+        raise ProcessorException(stream)
+      
+      file = stdout.getFile()
+      reader = FileReader(file)
+      stream = reader.read()           
+      return ProcessorResult(stream)
+          
     except OSError:
       raise ProcessorException("Could not execute call. Is it installed and in your path?")
 
