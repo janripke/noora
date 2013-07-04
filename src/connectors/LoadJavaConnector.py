@@ -37,8 +37,10 @@ class LoadJavaConnector(Connector.Connector):
       projectHelper=self.getProjectHelper()
       handle=open('feedback.log','wb')
       connectString=oracleUser+'/'+oraclePasswd+'@'+oracleSid
+      
+      executeList=['loadjava','-user',connectString, '-resolve', '-force', projectHelper.cleanPath(oracleScript)]
       #templateScript='@'+projectHelper.cleanPath(self.getScriptDir()+os.sep+'template.sql')
-      result=subprocess.call(['loadjava','-user',connectString, '-resolve', '-force', projectHelper.cleanPath(oracleScript)],shell=True,stdout=handle,stderr=handle,startupinfo=startupInfo)
+      result=subprocess.call(executeList,shell=False,stdout=handle,stderr=handle,startupinfo=startupInfo)
       stream=projectHelper.readFile('feedback.log')
      
       
@@ -51,6 +53,7 @@ class LoadJavaConnector(Connector.Connector):
         if ignoreErrors==False:
           raise NooraException.NooraException(stream)
       else:
+        print stream
         logger.info(stream)
     except OSError:      
       raise NooraException.NooraException("Could not execute loadjava. Is it installed and in your path?")
