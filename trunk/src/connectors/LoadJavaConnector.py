@@ -53,7 +53,6 @@ class LoadJavaConnector(Connector.Connector):
         if ignoreErrors==False:
           raise NooraException.NooraException(stream)
       else:
-        print stream
         logger.info(stream)
     except OSError:      
       raise NooraException.NooraException("Could not execute loadjava. Is it installed and in your path?")
