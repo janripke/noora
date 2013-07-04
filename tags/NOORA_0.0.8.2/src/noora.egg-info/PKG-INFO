@@ -1,0 +1,17 @@
+Metadata-Version: 1.1
+Name: noora
+Version: 0.0.8.2
+Summary: noora database installer.
+Home-page: https://sourceforge.net/projects/noora/
+Author: Jan Ripke
+Author-email: janripke@gmail.com
+License: GPL
+Description:       NoOra is an attempt to apply a pattern to develop and install Oracle database projects, to promote portability and productivity.  ...
+              
+Keywords: database install tools
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Programming Language :: Python
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Database
