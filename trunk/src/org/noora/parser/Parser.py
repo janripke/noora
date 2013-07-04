@@ -19,7 +19,8 @@ class Parser(Parsable):
     
     stream= readable.read()    
     for property in properties.list():
-      stream = stream.replace("{" + property.getKey() + "}",property.getValue())    
+      if property.getValue():
+        stream = stream.replace("{" + property.getKey() + "}",property.getValue())    
     return stream
     
 

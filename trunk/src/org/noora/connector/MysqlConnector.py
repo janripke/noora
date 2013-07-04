@@ -16,6 +16,13 @@ class MysqlConnector(Connector):
   
   def __init__(self):
     Connector.__init__(self)
+    self.__processorResult = None
+    
+  def setProcessorResult(self, processorResult):
+    self.__processorResult = processorResult
+    
+  def getProcessorResult(self):
+    return self.__processorResult    
   
   def execute(self, executable, properties):
     
@@ -23,7 +30,8 @@ class MysqlConnector(Connector):
     scriptReader = FileReader(script) 
       
     cp = Properties()
-    cp.setProperty('database', executable.getDatabase())     
+    cp.setProperty('database', executable.getDatabase())
+    cp.setProperty('environment', properties.getPropertyValue('environment'))      
     parser = Parser(scriptReader,cp)      
     preProcessor = PreProcessor()
     stream = preProcessor.parse(parser)
@@ -45,12 +53,13 @@ class MysqlConnector(Connector):
     cp.setProperty(Processor.STDIN,scriptReader)
     cp.setProperty(Processor.STDOUT, feedbackWriter)
     cp.setProperty(Processor.STARTUPINFO, startupInfo)
-    cp.setProperty(Processor.ARGUMENT, ["mysql","--host="+executable.getHost(),"--user="+executable.getUsername(),"--password="+executable.getPassword(),executable.getDatabase()])
+    cp.setProperty(Processor.ARGUMENT, ["mysql","--show-warnings","--host="+executable.getHost(),"--user="+executable.getUsername(),"--password="+executable.getPassword(),executable.getDatabase()])
     cp.setProperty(Processor.SHELL, False)
     mysqlCall= Call(cp)
           
     processor = Processor()
-    processor.call(mysqlCall)
+    processorResult = processor.call(mysqlCall)
+    self.setProcessorResult(processorResult)
          
     logger = logging.getLogger('NoOraLogger')
     logger.info(executable.getScript())

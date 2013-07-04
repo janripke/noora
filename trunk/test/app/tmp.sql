@@ -1,1 +1,1 @@
-insert into application_properties(name,value) values ('application.environment','dev');
+select value into @environment from application_properties where name='application.environment' and value='dev';

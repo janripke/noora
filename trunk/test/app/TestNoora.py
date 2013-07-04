@@ -87,7 +87,7 @@ class TestBase(unittest.TestCase):
     propertyLoader = PropertyLoader(properties)        
     properties.setProperty("noora.dir", NOORA_DIR)
     properties.setProperty("current.dir", CURRENT_DIR)
-    
+    properties.setProperty("plugin.dir", NOORA_DIR + os.sep + 'org' + os.sep + 'noora' + os.sep + 'plugin')
     app = NoOraApp()
     file = app.getConfigFile(properties)
     fileReader = FileReader(file) 
@@ -100,7 +100,7 @@ class TestBase(unittest.TestCase):
     pluginManager.load(pluginsProperty)
     options = pluginManager.getOptions()
       
-    arguments = ['drop','create','-h=192.168.1.13','-d=orcl','-e=dev']
+    arguments = ['drop','create','update','-h=192.168.1.13','-d=orcl','-e=dev','-v=1.0.1']
     
     parser = Parser()       
     commands = parser.parse(options, arguments)
