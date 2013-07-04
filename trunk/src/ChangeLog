@@ -1,3 +1,13 @@
+release 0.0.8.2
+- bug : fixed incorrect version sorting in updatePlugin and recreatePlugin.
+- bug : fixed loadjava execution.
+- bug : fixed drop jars.
+- bug : fixed recompile java classes
+
+release 0.0.8.1
+- bug : fixed added resolve and force option to loadjava
+- bug : fixed sqlloader
+
 release 0.0.8
 - added oracle cdc support
 - added oracle sqlloader support
