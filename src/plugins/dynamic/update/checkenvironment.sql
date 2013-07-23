@@ -22,7 +22,7 @@ declare
 begin
 
   database_environment:=get_database_environment;  
-  if nvl(database_environment,'dev')<>'&expected_environment' then
+  if upper(nvl(database_environment,'dev'))<> upper('&expected_environment') then
     raise_application_error(-20000,'incorrect database environment');   
   end if;
 
