@@ -61,6 +61,15 @@ class UpdatePlugin(Plugin):
     if "(Code 1329)" in connector.getProcessorResult().getResult():
       raise InvalidEnvironmentException("invalid environment",environment) 
 
+  def checkVersion(self, connector, executor, version, properties):
+    pluginFolder = properties.getPropertyValue('plugin.dir')
+    properties.setProperty('version',version)
+    script = File(pluginFolder+os.sep+'mysql'+os.sep+'update'+os.sep+'checkversion.sql')
+    executor.setScript(script)      
+    connector.execute(executor, properties)
+    if "(Code 1329)" in connector.getProcessorResult().getResult():
+      raise InvalidEnvironmentException("invalid version",version) 
+
 
 
   def execute(self, commandLine, properties):

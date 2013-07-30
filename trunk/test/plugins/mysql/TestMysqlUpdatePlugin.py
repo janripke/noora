@@ -13,13 +13,10 @@ from org.noora.io.Properties import Properties
 from org.noora.io.PropertyLoader import PropertyLoader
 from org.noora.io.File import File
 from org.noora.io.FileReader import FileReader
-from org.noora.plugin.mysql.create.CreatePlugin import CreatePlugin
-from org.noora.plugin.mysql.drop.DropPlugin import DropPlugin
+from org.noora.plugin.mysql.update.UpdatePlugin import UpdatePlugin
 from org.noora.cl.Parser import Parser
-from org.noora.connector.MysqlConnectorStub import MysqlConnectorStub
 from org.noora.connector.MysqlConnector import MysqlConnector
 from org.noora.connector.ExecuteFactory import ExecuteFactory
-from org.noora.io.Files import Files
 
 class TestBase(unittest.TestCase): 
     
@@ -30,10 +27,8 @@ class TestBase(unittest.TestCase):
     pass
         
 
-  def testDropPass(self):    
-    
-    NOORA_DIR   = os.path.abspath('.').split('test')[0]+"src"
-    
+  def testUpdatePass(self):    
+
     properties = Properties()        
     propertyLoader = PropertyLoader(properties)        
     file = File("project.conf")
@@ -41,17 +36,20 @@ class TestBase(unittest.TestCase):
     propertyLoader.load(fileReader)
     
     properties.setProperty("noora.dir", NOORA_DIR)
+    properties.setProperty("plugin.dir", NOORA_DIR+os.sep+"org"+os.sep+"noora"+os.sep+"plugin")
 
     #connectable=MysqlConnector()
-    dropPlugin = DropPlugin()
-    options = dropPlugin.getOptions(properties)
-    
-    arguments = ['-h=192.168.1.11','-d=orcl','-e=dev']
+    updatePlugin = UpdatePlugin()
+    print updatePlugin.getRevision()
+    options = updatePlugin.getOptions(properties)
+
+    arguments = ['-h=192.168.1.13','-e=dev','-v=1.0.1']
     parser = Parser()
     commandLine = parser.parse(options,arguments)
+    parser.checkRequiredOptions()
+    parser.checkRequiredArguments()
+    updatePlugin.execute(commandLine, properties)
     
-    
-    dropPlugin.execute(commandLine, properties)
     
        
 
