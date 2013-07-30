@@ -38,8 +38,8 @@ class TestBase(unittest.TestCase):
     
     properties.setProperty("noora.dir", NOORA_DIR)
 
-    connectable=MysqlConnector()
-    createPlugin = CreatePlugin(connectable)
+    #connectable=MysqlConnector()
+    createPlugin = CreatePlugin()
     print createPlugin.getRevision()
     options = createPlugin.getOptions(properties)
 
