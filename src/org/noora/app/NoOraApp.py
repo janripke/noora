@@ -11,7 +11,7 @@ class NoOraApp(Appable):
   logger = logging.getLogger("NoOraLogger")
   
   __revision__ = "$Revision: 229 $"
-  __version__  = "0.0.8.2"
+  __version__  = "0.0.8.3-SNAPSHOT"
 
   
   def __init__(self):
