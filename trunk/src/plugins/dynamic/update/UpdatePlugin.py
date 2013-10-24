@@ -76,9 +76,9 @@ class UpdatePlugin(Plugin.Plugin):
     if projectHelper.folderPresent(createFolder):
       versions.append(defaultVersion)
    
-    #versionHelper=VersionHelper.VersionHelper(versions)
-    #versions=versionHelper.sort()
-    versions.sort()    
+    versionHelper=VersionHelper.VersionHelper(versions)
+    versions=versionHelper.sort()
+    #versions.sort()    
     return versions
     
 
@@ -197,7 +197,7 @@ class UpdatePlugin(Plugin.Plugin):
         
     version=version[0]
     projectHelper.failOnValueNotFound(versions,version,'the given version is not valid for this project.')
-        
+      
     projectHelper.failOnFolderNotPresent(self.getAlterDir()+os.sep+version,'the update folder for this version is not present.')
 
     previousVersion=self.getPreviousVersion(versions,version)    

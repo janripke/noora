@@ -55,10 +55,11 @@ class RecreatePlugin(Plugin.Plugin):
     createFolder=projectHelper.getCreateFolder()
     if projectHelper.folderPresent(createFolder):
       versions.append(defaultVersion)
-    #versionHelper=VersionHelper.VersionHelper(versions)
-    #versions=versionHelper.sort()
     
-    versions.sort()            
+    versionHelper=VersionHelper.VersionHelper(versions)
+    versions=versionHelper.sort()
+    
+    #versions.sort()     
     return versions  
   
   def getPlugin(self, plugins, pluginType):
@@ -194,7 +195,6 @@ class RecreatePlugin(Plugin.Plugin):
 
     # find the versions
     versions=self.getVersions(defaultVersion)
-    
     maxVersion=self.getMaxVersion(versions)
     maxVersion=parameterHelper.getParameterValue(['-m=','--max='],[maxVersion])
     maxVersion=maxVersion[0]

@@ -35,7 +35,7 @@ class VersionHelper:
       majorPart=self.getMajorPart(version)
       minorPart=self.getMinorPart(version)
       revisionPart=self.getRevisionPart(version)
-      items.append([(10*revisionPart)+(1000*minorPart)+(10000*majorPart),version])
+      items.append([(10*revisionPart)+(1000*minorPart)+(100000*majorPart),version])
     return items
 
   def sort(self):
