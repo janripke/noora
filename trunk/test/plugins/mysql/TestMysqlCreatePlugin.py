@@ -43,7 +43,7 @@ class TestBase(unittest.TestCase):
     print createPlugin.getRevision()
     options = createPlugin.getOptions(properties)
 
-    arguments = ['-h=192.168.1.13','-e=dev']
+    arguments = ['-h=192.168.1.15','-e=dev']
     parser = Parser()
     commandLine = parser.parse(options,arguments)
     parser.checkRequiredOptions()

@@ -46,7 +46,7 @@ class TestBase(unittest.TestCase):
     dropPlugin = DropPlugin()
     options = dropPlugin.getOptions(properties)
     
-    arguments = ['-h=192.168.1.11','-d=orcl','-e=dev']
+    arguments = ['-h=localhost','-d=orcl','-e=dev']
     parser = Parser()
     commandLine = parser.parse(options,arguments)
     
