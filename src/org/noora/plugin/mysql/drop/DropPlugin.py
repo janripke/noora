@@ -55,6 +55,7 @@ class DropPlugin(Plugin):
     blockedHosts = properties.getPropertyValues('BLOCKED_HOSTS')
     if host in blockedHosts:
       raise BlockedHostException("blocked host", host)
+    
 
   def execute(self, commandLine, properties):
     #if parameterHelper.hasParameter('-h'):
