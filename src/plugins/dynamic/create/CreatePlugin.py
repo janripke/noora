@@ -115,8 +115,7 @@ class CreatePlugin(Plugin.Plugin):
     
     ignoreErrors=False  
     if  parameterHelper.hasParameter('-ignore_errors')==True:
-      ignoreErrors=True
-    print ignoreErrors      
+      ignoreErrors=True        
 
     configReader=self.getConfigReader()
     projectHelper=self.getProjectHelper()
@@ -140,7 +139,7 @@ class CreatePlugin(Plugin.Plugin):
     objects = configReader.getValue('CREATE_OBJECTS')
     projectHelper.failOnNone(objects,'the variable CREATE_OBJECTS is not set.')
     projectHelper.failOnEmpty(objects,'the variable CREATE_OBJECTS is not set.')
-
+    
     for scheme in schemes:
       print "creating scheme '"+scheme+"' in database '"+oracleSid+"' using environment '"+environment+"'"
       oracleUser=projectHelper.getOracleUser(oracleSid, scheme)
