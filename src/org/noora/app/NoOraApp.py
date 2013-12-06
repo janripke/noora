@@ -10,7 +10,7 @@ class NoOraApp(Appable):
   
   logger = logging.getLogger("NoOraLogger")
   
-  __revision__ = "$Revision: 229 $"
+  __revision__ = "$Revision$"
   __version__  = "0.0.9-SNAPSHOT"
 
   
