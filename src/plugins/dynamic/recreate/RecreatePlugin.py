@@ -6,19 +6,33 @@ import core.NooraException  as NooraException
 import core.ClassLoader     as ClassLoader
 import core.ParameterHelper as ParameterHelper
 import os
-import sys
-import subprocess
 import traceback
+from connectors.LoadJavaConnector import LoadJavaConnector
+from connectors.SqlLoaderConnector import SqlLoaderConnector
 
 class RecreatePlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setType("RECREATE")
-    
+    self.setSqlLoaderConnector(SqlLoaderConnector())
+    self.setLoadJavaConnector(LoadJavaConnector())
     self.addParameterDefinition('database',['-s','-si','--sid'])
     self.addParameterDefinition('scheme',['-u','-sc','--scheme'])
     self.addParameterDefinition('environment',['-e','--env'])
     self.addParameterDefinition('version',['-m','--max'])
+
+  def setSqlLoaderConnector(self, connector):
+    self.__sqlLoaderConnector = connector
+  
+  def getSqlLoaderConnector(self):
+    return self.__sqlLoaderConnector
+
+  def setLoadJavaConnector(self, connector):
+    self.__loadJavaConnector = connector
+    
+  def getLoadJavaConnector(self):
+    return self.__loadJavaConnector
+
     
   def getDescription(self):
     return "recreates the database objects of the defined schemes."
@@ -89,6 +103,7 @@ class RecreatePlugin(Plugin.Plugin):
     
       parameterHelper=ParameterHelper.ParameterHelper()
       parameterHelper.setParameters(parameters)
+      dropPlugin.setConnector(self.getConnector())        
       dropPlugin.execute(parameterHelper)
     except NooraException.NooraException as e:
       print e.getMessage()    
@@ -110,6 +125,9 @@ class RecreatePlugin(Plugin.Plugin):
     
       parameterHelper=ParameterHelper.ParameterHelper()
       parameterHelper.setParameters(parameters)
+      createPlugin.setConnector(self.getConnector())
+      createPlugin.setLoadJavaConnector(self.getLoadJavaConnector())
+      createPlugin.setSqlLoaderConnector(self.getSqlLoaderConnector())
       createPlugin.execute(parameterHelper)
     except NooraException.NooraException as e:
       print e.getMessage()    
@@ -133,6 +151,9 @@ class RecreatePlugin(Plugin.Plugin):
     
           parameterHelper=ParameterHelper.ParameterHelper()
           parameterHelper.setParameters(parameters)
+          updatePlugin.setConnector(self.getConnector())
+          updatePlugin.setLoadJavaConnector(self.getLoadJavaConnector())
+          updatePlugin.setSqlLoaderConnector(self.getSqlLoaderConnector())
           updatePlugin.execute(parameterHelper)
           
         if version==maxVersion:
@@ -196,7 +217,7 @@ class RecreatePlugin(Plugin.Plugin):
     # find the versions
     versions=self.getVersions(defaultVersion)
     maxVersion=self.getMaxVersion(versions)
-    maxVersion=parameterHelper.getParameterValue(['-m=','--max='],[maxVersion])
+    maxVersion=parameterHelper.getParameterValue(['-m=','--max=','-v=','--version='],[maxVersion])
     maxVersion=maxVersion[0]
     projectHelper.failOnValueNotFound(versions,maxVersion,'the given max version is not valid for this project.')
     

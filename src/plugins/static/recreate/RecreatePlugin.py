@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import core.Plugin as Plugin
+from connectors.LoadJavaConnector import LoadJavaConnector
 import os
 import subprocess
 
@@ -9,6 +10,13 @@ class RecreatePlugin(Plugin.Plugin):
   def __init__(self):
     Plugin.Plugin.__init__(self)
     self.setType("RECREATE")
+    self.setLoadJavaConnector(LoadJavaConnector())
+
+  def setLoadJavaConnector(self, connector):
+    self.__loadJavaConnector = connector
+    
+  def getLoadJavaConnector(self):
+    return self.__loadJavaConnector
 
 
   def getUsage(self):  
