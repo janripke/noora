@@ -52,6 +52,7 @@ class Plugin:
 
   def setConnector(self, connector):
     self.__connector=connector
+    
 
   def getConnector(self):
     return self.__connector

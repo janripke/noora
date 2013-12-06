@@ -6,11 +6,12 @@ M_LF = chr(10)
 
 class ConfigReader:
 
-  def __init__(self, filename):
+  def __init__(self, filename=None):
     self.__lines = []
     self.__message = None
     self.__filename = filename
-    self.loadFromFile(filename)
+    if self.__filename:
+      self.loadFromFile(filename)
 
   def parse(self, stream):
     stream = StreamHelper.StreamHelper().convert(stream)
@@ -67,7 +68,7 @@ class ConfigReader:
       if self.hasValue(keyword, value) == False:
         raise NooraException.NooraException("the given value " + value + " for keyword " + keyword + " is not valid for this project.")
 
-  def failOnValueNotFound(self, keyword, values, message):
+  def failOnValueNotFound(self, keyword, values, message):    
     for value in values:
       if self.hasValue(keyword, value) == False:
         raise NooraException.NooraException(message)
