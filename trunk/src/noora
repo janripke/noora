@@ -8,6 +8,7 @@ import core.ParameterHelper as ParameterHelper
 import core.NooraException  as NooraException
 import core.ClassLoader     as ClassLoader
 import logging.handlers
+from org.noora.app.NoOraApp import NoOraApp
 
 __revision__ = "$Revision$"
 __version__  = "0.0.9-SNAPSHOT"
@@ -20,8 +21,9 @@ sys.path.append(PLUGIN_DIR)
 
 
 def getRevision():  
-  print "noora version '" + __version__ + "'"
-  print "noora runtime (build " + __version__  + "_" + __revision__.split(":")[1].rstrip("$").strip() + ")"
+  app = NoOraApp()
+  print "noora version '" + app.getVersion() + "'"
+  print "noora runtime (build " + app.getVersion()  + "_" + app.getRevision().split(":")[1].rstrip("$").strip() + ")"
 
 def findTemplateFile(filename):
   url=BASE_DIR+os.sep+filename
