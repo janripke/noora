@@ -9,7 +9,7 @@ import core.NooraException  as NooraException
 import core.ClassLoader     as ClassLoader
 import logging.handlers
 
-__revision__ = "$Revision: 117 $"
+__revision__ = "$Revision$"
 __version__  = "0.0.9-SNAPSHOT"
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
