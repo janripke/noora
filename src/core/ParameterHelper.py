@@ -6,11 +6,14 @@ class ParameterHelper:
   
   def __init__(self):
     self.__parameters=[]
-    self.setParameters(sys.argv)
+    self.appendParameters(sys.argv)
 
-  def setParameters(self,parameters):
+  def appendParameters(self,parameters):
     for param in parameters:
       self.__parameters.append(param)
+      
+  def setParameters(self, parameters):
+    self.__parameters = parameters
       
   def clearParameters(self):
       self.__parameters=[]
