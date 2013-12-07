@@ -11,8 +11,8 @@ class NoOraApp(Appable):
   logger = logging.getLogger("NoOraLogger")
   
   __revision__ = "$Revision$"
-  __version__  = "0.0.9"
-
+  __version__  = "1.0.0-SNAPSHOT"
+  __name__     = "noora"
   
   def __init__(self):
     Appable.__init__(self)
@@ -22,6 +22,9 @@ class NoOraApp(Appable):
 
   def getVersion(self):
     return self.__version__
+  
+  def getName(self):
+    return self.__name__
 
   def getConfigFile(self, properties):
     currentDir = properties.getPropertyValue("current.dir")
