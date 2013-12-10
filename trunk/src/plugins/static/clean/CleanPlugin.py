@@ -16,7 +16,7 @@ class CleanPlugin(Plugin.Plugin):
     print "-u= --scheme=  not required, contains the scheme."
     print "-v= --verion=  not required, contains the version."
 
-  def execute(self, parameterHelper):
+  def execute(self, app, parameterHelper, plugins):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    

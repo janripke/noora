@@ -65,7 +65,7 @@ class MysqlCreatePlugin(MysqlPlugin.MysqlPlugin):
     connector.execute(mysqlHost, database, mysqlUser, mysqlPasswd, mysqlScript, '', '', ignoreErrors)
     
 
-  def execute(self, parameterHelper):
+  def execute(self, app, parameterHelper, plugins):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    
