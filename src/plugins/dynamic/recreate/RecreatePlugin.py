@@ -93,7 +93,7 @@ class RecreatePlugin(Plugin.Plugin):
     parameters.append(optionType)
     return parameters
 
-  def dropDatabase(self, plugins, oracleSid, scheme, environment):
+  def dropDatabase(self, app, plugins, oracleSid, scheme, environment):
     try:
       dropPlugin = self.getPlugin(plugins, 'drop')
       parameters=[]
@@ -104,7 +104,7 @@ class RecreatePlugin(Plugin.Plugin):
       parameterHelper=ParameterHelper.ParameterHelper()
       parameterHelper.setParameters(parameters)
       dropPlugin.setConnector(self.getConnector())        
-      dropPlugin.execute(parameterHelper)
+      dropPlugin.execute(app, parameterHelper, plugins)
     except NooraException.NooraException as e:
       print e.getMessage()    
       exit(1)
@@ -113,7 +113,7 @@ class RecreatePlugin(Plugin.Plugin):
       exit(1)
 
 
-  def createDatabase(self, plugins, oracleSid, scheme, environment):
+  def createDatabase(self, app, plugins, oracleSid, scheme, environment):
     try:
       createPlugin = self.getPlugin(plugins, 'create')
       parameters=[]
@@ -128,7 +128,7 @@ class RecreatePlugin(Plugin.Plugin):
       createPlugin.setConnector(self.getConnector())
       createPlugin.setLoadJavaConnector(self.getLoadJavaConnector())
       createPlugin.setSqlLoaderConnector(self.getSqlLoaderConnector())
-      createPlugin.execute(parameterHelper)
+      createPlugin.execute(app, parameterHelper, plugins)
     except NooraException.NooraException as e:
       print e.getMessage()    
       exit(1)
@@ -136,7 +136,7 @@ class RecreatePlugin(Plugin.Plugin):
       print traceback.print_exc()
       exit(1)
 
-  def updateDatabase(self, plugins, oracleSid, scheme, environment, versions, maxVersion):
+  def updateDatabase(self, app, plugins, oracleSid, scheme, environment, versions, maxVersion):
     try:
       for version in versions:
         if version!=versions[0]:
@@ -154,7 +154,7 @@ class RecreatePlugin(Plugin.Plugin):
           updatePlugin.setConnector(self.getConnector())
           updatePlugin.setLoadJavaConnector(self.getLoadJavaConnector())
           updatePlugin.setSqlLoaderConnector(self.getSqlLoaderConnector())
-          updatePlugin.execute(parameterHelper)
+          updatePlugin.execute(app, parameterHelper, plugins)
           
         if version==maxVersion:
           break
@@ -226,9 +226,9 @@ class RecreatePlugin(Plugin.Plugin):
     projectHelper.failOnEmpty(plugins,'the variable PLUGINS is not set.')
         
 
-    self.dropDatabase(plugins, oracleSid, scheme, environment)
-    self.createDatabase(plugins, oracleSid, scheme, environment)
-    self.updateDatabase(plugins, oracleSid, scheme, environment, versions, maxVersion)
+    self.dropDatabase(app, plugins, oracleSid, scheme, environment)
+    self.createDatabase(app, plugins, oracleSid, scheme, environment)
+    self.updateDatabase(app, plugins, oracleSid, scheme, environment, versions, maxVersion)
 
     if  parameterHelper.hasParameter('-nocompile')==False:
       for scheme in schemes:
