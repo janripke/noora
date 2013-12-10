@@ -82,7 +82,7 @@ if __name__ == "__main__":
     for plugin in pluginManager.getPlugins():
       for parameter in parameters:
         if parameter.upper() == plugin.getType():       
-          plugin.execute(parameterHelper)
+          plugin.execute(app,parameterHelper,pluginManager.getPlugins())
           exit(0)
 
     helpPlugin.execute(app, parameterHelper, pluginManager.getPlugins())

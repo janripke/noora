@@ -25,7 +25,7 @@ class DropPlugin(Plugin.Plugin):
   def getDropDir(self):
     return self.getNooraDir()+os.sep+'plugins'+os.sep+'static'+os.sep+'drop'
 
-  def execute(self, parameterHelper):
+  def execute(self, app, parameterHelper, plugins):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)

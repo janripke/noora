@@ -30,7 +30,7 @@ class CreatePlugin(Plugin.Plugin):
     connector.execute(oracleSid, oracleUser, oraclePasswd, oracleScript,'','', ignoreErrors)
 
 
-  def execute(self, parameterHelper):
+  def execute(self, app, parameterHelper, plugins):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    

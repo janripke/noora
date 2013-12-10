@@ -39,7 +39,7 @@ class PreparePlugin(Plugin.Plugin):
     return stream
 
 
-  def execute(self, parameterHelper):
+  def execute(self, app, parameterHelper, plugins):
     if parameterHelper.hasParameter('-h'):
       self.getUsage()
       exit(1)    
