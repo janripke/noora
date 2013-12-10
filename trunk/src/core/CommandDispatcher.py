@@ -52,7 +52,7 @@ class ExecuteThread(Thread):
       plugin=executionContext.getPlugin()
       parameterHelper=executionContext.getParameterHelper()
       id=executionContext.getId()
-      plugin.execute(parameterHelper)
+      plugin.execute(None, parameterHelper, None)
       filename=plugin.getConfigReader().getFilename()
       wx.PostEvent(None, PluginFinishedEvent.PluginFinishedEvent(id, os.path.abspath('.'), filename))
     except NooraException.NooraException as e:      
