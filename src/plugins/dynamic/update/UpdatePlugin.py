@@ -202,7 +202,7 @@ class UpdatePlugin(Plugin.Plugin):
 
     previousVersion=self.getPreviousVersion(versions,version)    
     projectHelper.failOnNone(previousVersion,'the previous version of this version could not be found.')
-
+    
     versionScheme=configReader.getValue('VERSION_SCHEME')
     projectHelper.failOnNone(previousVersion,'the variable VERSION_SCHEME is not set.')
     oracleUser=projectHelper.getOracleUser(oracleSid, versionScheme)
@@ -212,6 +212,7 @@ class UpdatePlugin(Plugin.Plugin):
     projectHelper.failOnNone(versionSelectStatement,'the variable VERSION_SELECT_STATEMENT is not set.')
     environmentSelectStatement=configReader.getValue('ENVIRONMENT_SELECT_STATEMENT')
     projectHelper.failOnNone(versionSelectStatement,'the variable ENVIRONMENT_SELECT_STATEMENT is not set.')
+   
     self.checkVersion(oracleSid,oracleUser,oraclePasswd,previousVersion,versionSelectStatement, ignoreErrors)
     self.checkEnvironment(oracleSid,oracleUser,oraclePasswd,environment,environmentSelectStatement, ignoreErrors)
 

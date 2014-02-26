@@ -10,13 +10,24 @@ class VersionHelper:
     return self.__versions
 
   def getMajorPart(self, value):
-    return int(value.split('.')[0])
+    if len(value.split('.'))>=1:
+      return int(value.split('.')[0])
+    return 0
 
   def getMinorPart(self, value):
-    return int(value.split('.')[1])
+    if len(value.split('.'))>=2:
+      return int(value.split('.')[1])
+    return 0
 
   def getRevisionPart(self, value):
-    return int(value.split('.')[2])
+    if len(value.split('.'))>=3:
+      return int(value.split('.')[2])
+    return 0
+  
+  def getPatchPart(self, value):    
+    if len(value.split('.'))>=4:
+      return int(value.split('.')[3])  
+    return 0
 
   def getNextRevision(self, default):
     versions=self.getVersions()
@@ -26,7 +37,8 @@ class VersionHelper:
       majorPart=self.getMajorPart(lastVersion)
       minorPart=self.getMinorPart(lastVersion)
       revisionPart=self.getRevisionPart(lastVersion)
-      return str(majorPart)+'.'+str(minorPart)+'.'+str(revisionPart+1)
+      patchPart=self.getPatchPart(lastVersion)
+      return str(majorPart)+'.'+str(minorPart)+'.'+str(revisionPart)+'.'+str(patchPart+1)
     return default
 
   def getWeightList(self, versions):
@@ -35,7 +47,8 @@ class VersionHelper:
       majorPart=self.getMajorPart(version)
       minorPart=self.getMinorPart(version)
       revisionPart=self.getRevisionPart(version)
-      items.append([(10*revisionPart)+(1000*minorPart)+(100000*majorPart),version])
+      patchPart=self.getPatchPart(version)
+      items.append([(patchPart)+(100*revisionPart)+(10000*minorPart)+(1000000*majorPart),version])
     return items
 
   def sort(self):
