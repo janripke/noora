@@ -11,7 +11,7 @@ import logging.handlers
 from org.noora.app.NoOraApp import NoOraApp
 
 __revision__ = "$Revision$"
-__version__  = "1.0.0-SNAPSHOT"
+__version__  = "1.0.0"
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
 BASE_DIR     = os.path.abspath('.') 
