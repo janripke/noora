@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='noora',
-    version='1.0.0-SNAPSHOT',
+    version='1.0.0',
     description='noora database project development.',
     author='Jan Ripke',
     author_email='janripke@gmail.com',
