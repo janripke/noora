@@ -4,22 +4,19 @@ import unittest
 import os
 import sys
 
-BASE_DIR    = os.path.abspath('.')
-NOORA_DIR   = BASE_DIR.split('test')[0]+"src"
-
-sys.path.append(NOORA_DIR)
 
 from org.noora.io.Properties import Properties
 from org.noora.io.PropertyLoader import PropertyLoader
 from org.noora.io.File import File
 from org.noora.io.FileReader import FileReader
-from org.noora.plugin.mysql.create.CreatePlugin import CreatePlugin
 from org.noora.cl.Parser import Parser
-from org.noora.connector.MysqlConnectorStub import MysqlConnectorStub
-from org.noora.connector.MysqlConnector import MysqlConnector
+from org.noora.connector.OracleConnectorStub import OracleConnectorStub
+from org.noora.plugin.oracle.create.CreatePlugin import CreatePlugin
 from org.noora.connector.ExecuteFactory import ExecuteFactory
+from org.noora.io.Files import Files
 
-class TestBase(unittest.TestCase): 
+
+class TestOraclePlugin(unittest.TestCase): 
     
   def setUp(self):
     pass
@@ -28,8 +25,10 @@ class TestBase(unittest.TestCase):
     pass
         
 
-  def testCreatePass(self):    
-
+  def testCreatePluginPass(self):    
+    
+    NOORA_DIR   = os.path.abspath('.').split('test')[0]+"src"
+    
     properties = Properties()        
     propertyLoader = PropertyLoader(properties)        
     file = File("project.conf")
@@ -37,19 +36,18 @@ class TestBase(unittest.TestCase):
     propertyLoader.load(fileReader)
     
     properties.setProperty("noora.dir", NOORA_DIR)
+    properties.setProperty("noora.script.dir", NOORA_DIR + os.sep + "scripts")
 
-    #connectable=MysqlConnector()
+    connectable=OracleConnectorStub()
     createPlugin = CreatePlugin()
-    print createPlugin.getRevision()
     options = createPlugin.getOptions(properties)
-
-    arguments = ['-h=localhost','-e=dev']
+    
+    arguments = ['-s=orcl','-e=dev']
     parser = Parser()
     commandLine = parser.parse(options,arguments)
-    parser.checkRequiredOptions()
-    parser.checkRequiredArguments()
-    createPlugin.execute(commandLine, properties)
     
+    
+    createPlugin.execute(commandLine, properties)
     
        
 

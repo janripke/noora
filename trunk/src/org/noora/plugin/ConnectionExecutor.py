@@ -35,7 +35,7 @@ class ConnectionExecutor:
       filters.add(ff)  
     
     if folder.isDirectory():
-      files = Files.list(folder)     
+      files = Files.list(folder)           
       for file in files:              
         if filters.accept(file)==False and file.isDirectory()==False:  
           url = file.getPath()+os.sep+file.getName()        

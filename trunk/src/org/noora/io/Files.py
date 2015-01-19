@@ -29,7 +29,8 @@ class Files:
     
     if file.exists():
       folder = file.getPath()+os.sep+file.getName()
-      fileList=os.listdir(folder)
+      fileList=os.listdir(folder) 
+      fileList.sort()     
       for fileItem in fileList:
         pathName = folder + os.sep + fileItem
         candidateFile = File(pathName)

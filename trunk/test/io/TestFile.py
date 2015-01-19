@@ -42,9 +42,7 @@ class TestFile(unittest.TestCase):
   def testListFiles(self):
     
     folder = File(NOORA_DIR + os.sep + 'org'+os.sep+'noora'+os.sep+'plugin'+os.sep+'mysql'+os.sep+'drop')
-    files = Files.list(file=folder, recursive=True)
-   
-   
+    files = Files.list(file=folder, recursive=True)   
    
   def testFileFilter(self):
     

@@ -4,16 +4,11 @@ import unittest
 import os
 import sys
 
-BASE_DIR    = os.path.abspath('.')
-NOORA_DIR   = BASE_DIR.split('test')[0]+"src"
-
-sys.path.append(NOORA_DIR)
 
 from org.noora.io.Properties import Properties
 from org.noora.io.PropertyLoader import PropertyLoader
 from org.noora.io.File import File
 from org.noora.io.FileReader import FileReader
-from org.noora.plugin.mysql.CreatePlugin import CreatePlugin
 from org.noora.plugin.oracle.drop.DropPlugin import DropPlugin
 from org.noora.cl.Parser import Parser
 from org.noora.connector.OracleConnectorStub import OracleConnectorStub
