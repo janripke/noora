@@ -1,0 +1,25 @@
+start mysql service on linux (mariadb)
+$ su - root
+$ systemctl start mysqld.service
+
+
+change mysql root password
+$ mysql -u root
+mysql> use mysql;
+mysql> update user set password=PASSWORD("new-password") where user='root';
+mysql> flush privileges;
+mysql> exit
+
+
+create user apps and grant all privileges
+$ mysql --user=root --password=[password]
+mysql> CREATE USER 'apps'@'localhost' IDENTIFIED BY 'apps';
+mysql> GRANT ALL PRIVILEGES ON * . * TO 'apps'@'localhost'
+mysql> flush privileges;
+mysql> exit
+
+
+
+create database orcl
+mysql --user=apps --password=[password]
+mysql> create database orcl;

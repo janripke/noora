@@ -1,0 +1,1 @@
+ALTER TABLE entries ADD CONSTRAINT eny_spe_fk FOREIGN KEY (spe_id) REFERENCES spaces (id);
