@@ -48,7 +48,7 @@ class CreatePlugin(Plugin):
     host = commandLine.getOptionValue('-h')  
     defaultDatabases = properties.getPropertyValues('DATABASES')
     databases = commandLine.getOptionValues('-d', defaultDatabases)
-    defaultEnvironment = properties.getProperty('DEFAULT_ENVIRONMENT')
+    defaultEnvironment = properties.getPropertyValues('DEFAULT_ENVIRONMENT')
     environment = commandLine.getOptionValue('-e', defaultEnvironment)
     objects = properties.getPropertyValues('CREATE_OBJECTS')
     

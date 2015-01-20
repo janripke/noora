@@ -1,26 +1,35 @@
 #!/usr/bin/env python
-   
-import unittest
+
+import logging.handlers
 import os
 import sys
 
-CURRENT_DIR    = os.path.abspath('.')
-NOORA_DIR   = CURRENT_DIR.split('test')[0]+"src"
-
-sys.path.append(NOORA_DIR)
-
-from org.noora.io.Properties import Properties
-from org.noora.io.PropertyLoader import PropertyLoader
+import core.ClassLoader     as ClassLoader
+import core.ConfigReader    as ConfigReader
+import core.NooraException  as NooraException
+import core.ParameterHelper as ParameterHelper
+import core.PluginManager   as PluginManager
+from org.noora.app.NoOraApp import NoOraApp
+from org.noora.cl.Options import Options
+from org.noora.cl.Parser import Parser
+from org.noora.classloader.ClassLoader import ClassLoader
+from org.noora.connector.ExecuteFactory import ExecuteFactory
+from org.noora.connector.MysqlConnector import MysqlConnector
+from org.noora.connector.MysqlConnectorStub import MysqlConnectorStub
 from org.noora.io.File import File
 from org.noora.io.FileReader import FileReader
-from org.noora.cl.Parser import Parser
-from org.noora.connector.MysqlConnectorStub import MysqlConnectorStub
-from org.noora.connector.MysqlConnector import MysqlConnector
-from org.noora.connector.ExecuteFactory import ExecuteFactory
 from org.noora.io.Files import Files
-from org.noora.classloader.ClassLoader import ClassLoader
-from org.noora.cl.Options import Options
-from org.noora.app.NoOraApp import NoOraApp
+from org.noora.io.Properties import Properties
+from org.noora.io.PropertyLoader import PropertyLoader
+
+import core.ParameterHelper as ParameterHelper
+
+
+__revision__ = "$Revision: $"
+__version__  = "1.0.0-SNAPSHOT"
+
+NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
+CURRENT_DIR  = os.path.abspath('.') 
 
 class PluginManager():
   
@@ -66,23 +75,17 @@ class PluginManager():
       if plugin.getType().lower()==type.lower():
         return plugin
 
-  
+def getRevision(app):  
+  print "noora version '" + app.getVersion() + "'"
+  print "noora runtime (build " + app.getVersion()  + "_" + app.getRevision().split(":")[1].rstrip("$").strip() + ")"
 
-class TestBase(unittest.TestCase): 
-    
-  def setUp(self):
-    pass
-  
-  def tearDown(self):
-    pass            
 
-  def testNoOraAppPass(self):    
-    
-    NOORA_DIR   = os.path.abspath('.').split('test')[0]+"src"
-    
-    sys.path.append(NOORA_DIR)
-    CURRENT_DIR = os.path.abspath('.')
-    
+def failOnPluginNotFound(message):
+  raise NooraException.NooraException(message)
+
+
+if __name__ == "__main__":
+
     properties = Properties()        
     propertyLoader = PropertyLoader(properties)        
     properties.setProperty("noora.dir", NOORA_DIR)
@@ -93,14 +96,17 @@ class TestBase(unittest.TestCase):
     fileReader = FileReader(file) 
     propertyLoader.load(fileReader)
     
+    
     classLoader = ClassLoader() 
     options = Options() 
     pluginManager = PluginManager(classLoader, options)
     pluginsProperty = properties.getProperty('PLUGINS')
     pluginManager.load(pluginsProperty)
     options = pluginManager.getOptions()
-      
-    arguments = ['drop','create','update','-h=localhost','-d=orcl','-e=dev','-v=1.0.1']
+    
+    
+    #arguments = ['drop','create','update','-h=localhost','-d=orcl','-e=dev','-v=1.0.1']
+    arguments = sys.argv[1:]
     
     parser = Parser()       
     commands = parser.parse(options, arguments)
@@ -114,8 +120,4 @@ class TestBase(unittest.TestCase):
       parser.checkRequiredArguments()
       
       plugin.execute(commandLine, properties)
-   
-       
-
-if __name__=='__main__':
-    unittest.main()
+ 
