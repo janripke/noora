@@ -43,7 +43,7 @@ class TestBase(unittest.TestCase):
     print updatePlugin.getRevision()
     options = updatePlugin.getOptions(properties)
 
-    arguments = ['-h=192.168.1.13','-e=dev','-v=1.0.1']
+    arguments = ['-h=localhost','-e=dev','-v=1.0.1']
     parser = Parser()
     commandLine = parser.parse(options,arguments)
     parser.checkRequiredOptions()

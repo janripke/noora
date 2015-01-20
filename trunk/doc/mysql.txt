@@ -1,5 +1,18 @@
 start mysql service on linux (mariadb)
 $ su - root
+
+$ systemctl start mariadb.service
+
+or
+
+$ systemctl start mysqld.service
+
+start mysql service on linux on boot (mariadb)
+$ su - root
+$ systemctl enable mariadb.service
+
+or
+
 $ systemctl start mysqld.service
 
 

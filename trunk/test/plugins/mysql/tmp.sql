@@ -1,1 +1,1 @@
-insert into application_properties(name,value) values ('application.environment','dev');
+update application_properties set value='1.0.1' where name='application.version';
