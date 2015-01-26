@@ -4,19 +4,11 @@ import logging.handlers
 import os
 import sys
 
-import core.ClassLoader     as ClassLoader
-import core.ConfigReader    as ConfigReader
-import core.NooraException  as NooraException
-import core.ParameterHelper as ParameterHelper
-import core.PluginManager   as PluginManager
+
 from org.noora.app.NoOraApp import NoOraApp
 from org.noora.cl.Options import Options
 from org.noora.cl.Parser import Parser
 from org.noora.classloader.ClassLoader import ClassLoader
-from org.noora.connector.ExecuteFactory import ExecuteFactory
-from org.noora.connector.MysqlConnector import MysqlConnector
-from org.noora.connector.MysqlConnectorStub import MysqlConnectorStub
-from org.noora.io.File import File
 from org.noora.io.FileReader import FileReader
 from org.noora.io.Files import Files
 from org.noora.io.Properties import Properties
@@ -80,8 +72,7 @@ def getRevision(app):
   print "noora runtime (build " + app.getVersion()  + "_" + app.getRevision().split(":")[1].rstrip("$").strip() + ")"
 
 
-def failOnPluginNotFound(message):
-  raise NooraException.NooraException(message)
+
 
 
 if __name__ == "__main__":
@@ -91,6 +82,7 @@ if __name__ == "__main__":
     properties.setProperty("noora.dir", NOORA_DIR)
     properties.setProperty("current.dir", CURRENT_DIR)
     properties.setProperty("plugin.dir", NOORA_DIR + os.sep + 'org' + os.sep + 'noora' + os.sep + 'plugin')
+    properties.setProperty("project.file", "myproject.conf")
     app = NoOraApp()
     file = app.getConfigFile(properties)
     fileReader = FileReader(file) 

@@ -13,6 +13,10 @@ from org.noora.version.Versions import Versions
 from org.noora.version.Version import Version
 from core.VersionHelper import VersionHelper
 
+from org.noora.io.Properties import Properties
+from org.noora.io.PropertyLoader import PropertyLoader
+from org.noora.io.File import File
+from org.noora.io.Files import Files
 
 class TestBase(unittest.TestCase): 
     
@@ -21,7 +25,41 @@ class TestBase(unittest.TestCase):
   
   def tearDown(self):
     pass
-        
+  
+  def testVersionLoader(self):
+    
+    properties = Properties()        
+    propertyLoader = PropertyLoader(properties)        
+    properties.setProperty("current.dir", os.path.abspath('.'))
+    properties.setProperty("project.file", "myproject.conf")
+    properties.setProperty("alter.dir",properties.getPropertyValue("current.dir")+os.sep+"alter")
+    properties.setProperty("create.dir",properties.getPropertyValue("current.dir")+os.sep+"create")
+    print "current.dir",properties.getPropertyValue("current.dir")
+    print "alter.dir",properties.getPropertyValue("alter.dir")
+    
+    alter = File(properties.getPropertyValue("alter.dir"))
+    if alter.exists():
+      files = Files()
+      versions = files.list(alter)
+    create = File(properties.getPropertyValue("create.dir"))
+    if create.exists():
+      versions.append("1.0.0")
+    
+    print "versions",versions
+    
+    versions=[]
+    alterFolder=projectHelper.getAlterFolder()
+    if projectHelper.folderPresent(alterFolder):
+      versions=projectHelper.findFolders(alterFolder)
+    createFolder=projectHelper.getCreateFolder()
+    if projectHelper.folderPresent(createFolder):
+      versions.append(defaultVersion)
+   
+    versionHelper=VersionHelper.VersionHelper(versions)
+    versions=versionHelper.sort()
+    #versions.sort()    
+    return versions
+          
 
   def testVersionListPass(self):
     v = [[2,10,0], [2,7,2,4], [2,8,0], [2,8,0,1], [2,8,0,2], [2,9,0]]

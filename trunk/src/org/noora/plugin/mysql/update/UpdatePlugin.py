@@ -78,8 +78,6 @@ class UpdatePlugin(Plugin):
     host = commandLine.getOptionValue('-h')  
     version = commandLine.getOptionValue('-v')
     
-    
-    
     defaultDatabases = properties.getPropertyValues('DATABASES')
     databases = commandLine.getOptionValues('-d', defaultDatabases)
     defaultEnvironment = properties.getPropertyValues('DEFAULT_ENVIRONMENT')
