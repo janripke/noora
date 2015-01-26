@@ -11,7 +11,7 @@ class NoOraApp(Appable):
   logger = logging.getLogger("NoOraLogger")
   
   __revision__ = "$Revision$"
-  __version__  = "1.0.0"
+  __version__  = "1.0.1-SNAPSHOT"
   __name__     = "noora"
   
   def __init__(self):
@@ -28,12 +28,15 @@ class NoOraApp(Appable):
 
   def getConfigFile(self, properties):
     currentDir = properties.getPropertyValue("current.dir")
-    file = File(currentDir + os.sep + "project.conf")
+    projectFile = properties.getPropertyValue("project.file")
+    
+    file = File(currentDir + os.sep + projectFile)
     if file.exists():
       return file
     
     nooraDir = properties.getPropertyValue("noora.dir")
-    file = File(nooraDir + os.sep + "project.conf")
+    file = File(nooraDir + os.sep + projectFile)
+    print "file",file
     return file
 
 
