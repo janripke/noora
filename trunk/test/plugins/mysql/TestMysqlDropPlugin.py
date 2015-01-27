@@ -36,7 +36,7 @@ class TestBase(unittest.TestCase):
     
     properties = Properties()        
     propertyLoader = PropertyLoader(properties)        
-    file = File("project.conf")
+    file = File("myproject.conf")
     fileReader = FileReader(file) 
     propertyLoader.load(fileReader)
     

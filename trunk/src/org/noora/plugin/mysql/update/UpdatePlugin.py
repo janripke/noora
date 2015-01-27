@@ -9,6 +9,9 @@ from org.noora.connector.ExecuteFactory import ExecuteFactory
 from org.noora.connector.ConnectorFactory import ConnectorFactory
 from org.noora.plugin.mysql.update.UnknownVersionException import UnknownVersionException
 from org.noora.plugin.mysql.update.InvalidEnvironmentException import InvalidEnvironmentException
+from org.noora.version.Version import Version
+from org.noora.version.Versions import Versions
+from org.noora.version.VersionLoader import VersionLoader
 
 class UpdatePlugin(Plugin):
   
@@ -63,12 +66,23 @@ class UpdatePlugin(Plugin):
 
   def checkVersion(self, connector, executor, version, properties):
     pluginFolder = properties.getPropertyValue('plugin.dir')
-    properties.setProperty('version',version)
+    
+    versions = Versions()
+    versionLoader = VersionLoader(versions)
+    versionLoader.load(properties)
+    versions.sort()
+    #versions.sort()
+    #print "versions",versions.getVersions()
+    v = Version(version)
+    previous = versions.previous(v).getValue()
+    
+    
+    properties.setProperty('previous',previous)
     script = File(pluginFolder+os.sep+'mysql'+os.sep+'update'+os.sep+'checkversion.sql')
     executor.setScript(script)      
     connector.execute(executor, properties)
     if "(Code 1329)" in connector.getProcessorResult().getResult():
-      raise InvalidEnvironmentException("invalid version",version) 
+      raise InvalidEnvironmentException("invalid version",previous) 
 
 
 
@@ -104,6 +118,7 @@ class UpdatePlugin(Plugin):
       executor.setUsername(user)        
       
       self.checkEnvironment(connector, executor, environment, properties)
+      self.checkVersion( connector, executor, version, properties)
       
       for object in objects:  
 

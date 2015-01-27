@@ -31,12 +31,17 @@ class TestBase(unittest.TestCase):
 
     properties = Properties()        
     propertyLoader = PropertyLoader(properties)        
-    file = File("project.conf")
+    file = File("myproject.conf")
     fileReader = FileReader(file) 
     propertyLoader.load(fileReader)
     
     properties.setProperty("noora.dir", NOORA_DIR)
     properties.setProperty("plugin.dir", NOORA_DIR+os.sep+"org"+os.sep+"noora"+os.sep+"plugin")
+    properties.setProperty("current.dir", os.path.abspath('.'))
+    properties.setProperty("alter.dir",properties.getPropertyValue("current.dir")+os.sep+"alter")
+    properties.setProperty("create.dir",properties.getPropertyValue("current.dir")+os.sep+"create")
+
+
 
     #connectable=MysqlConnector()
     updatePlugin = UpdatePlugin()
