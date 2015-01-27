@@ -31,7 +31,8 @@ class MysqlConnector(Connector):
       
     cp = Properties()
     cp.setProperty('database', executable.getDatabase())
-    cp.setProperty('environment', properties.getPropertyValue('environment'))      
+    cp.setProperty('environment', properties.getPropertyValue('environment'))    
+    cp.setProperty('previous', properties.getPropertyValue('previous'))  
     parser = Parser(scriptReader,cp)      
     preProcessor = PreProcessor()
     stream = preProcessor.parse(parser)

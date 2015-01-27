@@ -24,7 +24,7 @@ class File(Fileable):
     return True
   
   def isFile(self):
-    pathName = self.__pathName
+    pathName = self.__pathName    
     return os.path.isfile(pathName)
   
   def isDirectory(self):

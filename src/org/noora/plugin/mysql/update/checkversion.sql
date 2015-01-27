@@ -1,1 +1,1 @@
-select value into @version from application_properties where name='application.version' and value='{version}';
+select value into @version from application_properties where name='application.version' and value='{previous}';
