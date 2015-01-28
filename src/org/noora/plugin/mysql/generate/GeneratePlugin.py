@@ -16,7 +16,7 @@ from org.noora.version.VersionLoader import VersionLoader
 
 class GeneratePlugin(Plugin):
   
-  __revision__ = "$Revision: $"
+  __revision__ = "$Revision$"
   
   def __init__(self):
     Plugin.__init__(self, "GENERATE", None)
