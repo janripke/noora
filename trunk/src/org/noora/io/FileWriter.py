@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 from org.noora.io.Writeable import Writeable
+from org.noora.io.Path import Path
+
 
 class FileWriter(Writeable):
   def __init__(self, file=None):
     Writeable.__init__(self)
     self.__file = file
-    pathName = file.getPath() + file.getName()            
+    pathName = Path.path(file.getPath(),file.getName())            
     self.__handle = open(pathName,'wb')
 
   def getFile(self):

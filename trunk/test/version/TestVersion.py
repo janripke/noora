@@ -17,11 +17,26 @@ from org.noora.io.PropertyLoader import PropertyLoader
 from org.noora.io.File import File
 from org.noora.io.Files import Files
 from org.noora.io.FileReader import FileReader
+from org.noora.io.Path import Path
 
 from org.noora.version.Version import Version
 from org.noora.version.VersionLoader import VersionLoader   
     
-
+class VersionGuesser():
+  def __init__(self, properties, versions):
+    self.__properties = properties
+    self.__versions = versions    
+  
+  def __next__(self, last):
+    last
+  
+  def guess(self):
+    versions = self.__versions
+    properties = self.__properties
+    if versions.next():
+      return versions.next()
+    return Version(properties.getPropertyValue("DEFAULT_VERSION"))
+  
 class TestBase(unittest.TestCase): 
     
   def setUp(self):
@@ -41,11 +56,11 @@ class TestBase(unittest.TestCase):
     
     properties.setProperty("current.dir", os.path.abspath('.'))
     properties.setProperty("project.file", "myproject.conf")
-    properties.setProperty("alter.dir",properties.getPropertyValue("current.dir")+os.sep+"alter")
-    properties.setProperty("create.dir",properties.getPropertyValue("current.dir")+os.sep+"create")
+    properties.setProperty("alter.dir",Path.path(properties.getPropertyValue("current.dir"),"alter"))
+    properties.setProperty("create.dir",Path.path(properties.getPropertyValue("current.dir"),"create"))
     print "current.dir",properties.getPropertyValue("current.dir")
-    print "alter.dir",properties.getPropertyValue("alter.dir")
-    print "default_version", properties.getPropertyValues("DEFAULT_VERSION")
+    #print "alter.dir",properties.getPropertyValue("alter.dir")
+    #print "default_version :" + properties.getPropertyValues("DEFAULT_VERSION")
     
     
     # a File object is not a Version object
@@ -58,6 +73,30 @@ class TestBase(unittest.TestCase):
     #print "versions",versions.getVersions()
     v = Version('1.0.1')
     print versions.previous(v).getValue()
+    
+    print versions.last().toString()
+    print versions.next().toString()
+    
+    versionGuesser=VersionGuesser(properties, versions)
+    print versionGuesser.guess().toString()
+    
+    
+    
+    # versioning is subject of study, so the are several methods of versioning used.
+    # this means that there is some level abstraction present. 
+    # the abstraction level present requires to implement a specific method or choice.
+    # i will study this on a later moment, for now it would be a good idea to create a class which 
+    # implements a specific versioning system, which is acknowledged or not.
+    
+    # it took me about 7 days to even start programming. In respect to previous sentences this actually means
+    # that i felt that there were different approaches. 
+    # the link http://en.wikipedia.org/wiki/Software_versioning learned me that there are different approaches.
+    # in order to achieve a robust versioning system for Noora, more research is required. 
+    
+    # for python, it would be nice that i build a system which implements all the acknowledged version systems.
+    # on the other hand, with the Noora approach in mind, the implementation of Mayor,Minor,Revision,Patch system 
+    # would be, for now, the best approach.
+    
     
     #versions=[]
     #alterFolder=projectHelper.getAlterFolder()
@@ -88,7 +127,7 @@ class TestBase(unittest.TestCase):
       print version.getMajor(), version.getMinor(), version.getRevision(),version.getPatch()
             
 
-  def testVersionListPass(self):
+  def versionListPass(self):
     v = [[2,10,0], [2,7,2,4], [2,8,0], [2,8,0,1], [2,8,0,2], [2,9,0]]
     v.sort()
     print v[0]

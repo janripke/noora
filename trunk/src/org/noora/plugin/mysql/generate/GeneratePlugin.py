@@ -3,16 +3,19 @@ import os
 from org.noora.plugin.Plugin import Plugin
 from org.noora.helper.PropertyHelper import PropertyHelper
 from org.noora.io.File import File
-from org.noora.cl.OptionFactory import OptionFactory
+from org.noora.io.Path import Path
 from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
 from org.noora.connector.ExecuteFactory import ExecuteFactory
-from org.noora.connector.ConnectorFactory import ConnectorFactory
 from org.noora.plugin.mysql.update.UnknownVersionException import UnknownVersionException
 from org.noora.plugin.mysql.update.InvalidEnvironmentException import InvalidEnvironmentException
 from org.noora.plugin.mysql.update.InvalidVersionException import InvalidVersionException
 from org.noora.version.Version import Version
 from org.noora.version.Versions import Versions
 from org.noora.version.VersionLoader import VersionLoader
+from core.Property import FileReader
+from org.noora.io.FileWriter import FileWriter
+from org.noora.io.Properties import Properties
+from org.noora.io.PropertyLoader import PropertyLoader
 
 class GeneratePlugin(Plugin):
   
@@ -25,27 +28,17 @@ class GeneratePlugin(Plugin):
     return "initiates a new database project, or a new release of an existing database project."
   
   def getOptions(self, properties):
+        
     options = Plugin.getOptions(self)
     options.addOption("-?", "--help", False, False,  "display help")
     
-    option = OptionFactory.newOption("-h", "--host", True, True, "hostname of the mysql-server.")
-    option.setValues(properties.getPropertyValues('MYSQL_HOSTS'))
-    options.add(option)
+    options.addOption("-pr", "--project", False, False, "name of the database project.")
+    options.addOption("-h", "--host", False, False, "hostname of the mysql-server.")
+    options.addOption("-d", "--database", False, False,  "database in the mysql-server.")
+    options.addOption("-u", "--username", False, False,  "username in the mysql-server.")
+    options.addOption("-p", "--password", False, False,  "password in the mysql-server.")
+    options.addOption("-v", "--version", False, False,  "version of the database project.")
     
-    option = OptionFactory.newOption("-d", "--database", True, False, "database in the mysql-server.")
-    option.setValues(properties.getPropertyValues('DATABASES'))
-    options.add(option)
-    
-    option = OptionFactory.newOption("-e", "--environment", True, False, "environment descriptor of the mysql-server.")
-    option.setValues(properties.getPropertyValues('ENVIRONMENTS'))
-    options.add(option)
-    
-    option = OptionFactory.newOption("-v", "--version", True, True, "version folder to install.")
-    #option.setValues(properties.getPropertyValues('ENVIRONMENTS'))
-    options.add(option)
-    
-    
-    options.addOption("-i", "--ignore-errors", True, False, "ignore errors.")          
     return options
   
   def checkVersionFolder(self, version, properties):
@@ -86,61 +79,57 @@ class GeneratePlugin(Plugin):
 
 
   def execute(self, commandLine, properties):
-    ignoreErrors = commandLine.getOptionValue('--ignore-errors', False)
-   
-    host = commandLine.getOptionValue('-h')  
-    version = commandLine.getOptionValue('-v')
     
-    defaultDatabases = properties.getPropertyValues('DATABASES')
-    databases = commandLine.getOptionValues('-d', defaultDatabases)
-    defaultEnvironment = properties.getPropertyValues('DEFAULT_ENVIRONMENT')
-    environment = commandLine.getOptionValue('-e', defaultEnvironment)
-    objects = properties.getPropertyValues('CREATE_OBJECTS')
-    versionDatabase = properties.getPropertyValues('VERSION_DATABASE')
+    configFile = File(Path.path(properties.getPropertyValue('current.dir'),properties.getPropertyValue('project.file')))
+    if configFile.exists()==False:      
+      project = commandLine.getOptionValue('-pr')
+      host = commandLine.getOptionValue('-h')
+      database = commandLine.getOptionValue('-d')
+      username = commandLine.getOptionValue('-u')
+      password = commandLine.getOptionValue('-p')
+      version = commandLine.getOptionValue('-v')
+      
+      # create the project folder
+      os.makedirs(project)
+      
+
+      #create project.conf
+      templateFile = File(Path.path(properties.getPropertyValue('plugin.dir'),'mysql','generate','templates',properties.getPropertyValue('project.file')))
+      reader = FileReader(templateFile)
+      stream = reader.read()
+      stream=stream.replace('{host}',host)
+      stream=stream.replace('{database}',database)
+      stream=stream.replace('{username}',username)
+      stream=stream.replace('{password}',password)
+      stream=stream.replace('{version}',version)
+      
+      configFile = File(Path.path(properties.getPropertyValue('current.dir'),project,properties.getPropertyValue('project.file')))      
+      writer = FileWriter(configFile)
+      writer.write(stream)
+      writer.close()
     
     alterDir = properties.getPropertyValue('alter.dir')
+    createDir = properties.getPropertyValue('create.dir')
     
-    self.checkVersionFolder(version, properties)
+      
+    # load project.conf
+    properties = Properties()        
+    propertyLoader = PropertyLoader(properties)    
+    fileReader = FileReader(configFile) 
+    propertyLoader.load(fileReader)
+    
+    properties.setProperty("alter.dir",alterDir)  
+    properties.setProperty("create.dir",createDir)
     
     
-    connector = self.getConnector()    
-
-    for database in databases:
-      print "updating database '"+database+"' on host '"+host+"' using environment '"+environment+"'"
+    # resolve the version folder
+    # create the version folder
+    
+    
+    versions = Versions()
+    versionLoader = VersionLoader(versions)
+    versionLoader.load(properties)
+    versions.sort()  
+    #print versions.list()
+    
       
-      users= properties.getPropertyValues('MYSQL_USERS')
-      user = PropertyHelper.getMysqlUser(users, host, database)
-      passwd = PropertyHelper.getMysqlPasswd(users, host, database)
-
-      executor = ExecuteFactory.newMysqlExecute()
-      executor.setHost(host)
-      executor.setDatabase(database)
-      executor.setIgnoreErrors(ignoreErrors)
-      executor.setPassword(passwd)
-      executor.setUsername(user)        
-      
-      if database == versionDatabase:
-        self.checkEnvironment(connector, executor, environment, properties)
-        self.checkVersion( connector, executor, version, properties)
-      
-      for object in objects:  
-
-        # global ddl objects
-        folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'ddl'+os.sep+object)
-        ConnectionExecutor.execute(connector, executor, properties, folder)
-
-        # environment specific ddl objects
-        folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'ddl'+os.sep+object+os.sep+environment)
-        ConnectionExecutor.execute(connector, executor, properties, folder)
-
-      # global dat objects
-      folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'dat')
-      ConnectionExecutor.execute(connector, executor, properties, folder)
-
-      # environment specific dat objects
-      folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'dat'+os.sep+environment)
-      ConnectionExecutor.execute(connector, executor, properties, folder)
-
-      print "database '"+database+"' updated."
-
-
