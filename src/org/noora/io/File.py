@@ -4,12 +4,14 @@ import os
 
 class File(Fileable):
   def __init__(self, pathName=None):
-    Fileable.__init__(self)
+    Fileable.__init__(self)    
     self.__pathName=pathName
     
   @staticmethod
   def pathSeperator():
     return os.sep    
+  
+
     
   def exists(self):
     if self.isFile():

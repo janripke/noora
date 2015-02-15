@@ -21,9 +21,7 @@ from org.noora.io.Filters import Filters
 from org.noora.io.FolderFilterLoader import FolderFilterLoader
 from org.noora.io.PropertyProvider import FileFormatAdapter
 
-class TestFile(unittest.TestCase): 
-  
-  NOORA_DIR   = os.path.abspath('.').split('test')[0]+"src"     
+class TestFile(unittest.TestCase):  
 
   def setUp(self):
     pass

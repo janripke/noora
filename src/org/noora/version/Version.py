@@ -13,6 +13,51 @@ class Version:
   def getValue(self):
     return self.__value
   
+  def toString(self):
+    return self.__value
+  
+  def getMayor(self):
+    value = self.__value
+    if len(value.split('.'))>= 1:
+      return value.split('.')[0]
+  
+  def getMinor(self):
+    value = self.__value
+    if len(value.split('.'))>= 2:
+      return value.split('.')[1]
+  
+  def getRevision(self):
+    value = self.__value
+    if len(value.split('.'))>= 3:
+      return value.split('.')[2]
+  
+  def getPatch(self):
+    value = self.__value
+    if len(value.split('.'))>= 4:
+      return value.split('.')[3]
+    
+  def hasMayor(self):
+    if self.getMayor():
+      return True
+    return False
+  
+  def hasMinor(self):
+    if self.getMinor():
+      return True
+    return False
+  
+  def hasRevision(self):
+    if self.getRevision():
+      return True
+    return False
+  
+  def hasPatch(self):
+    if self.getPatch():
+      return True
+    return False
+      
+    
+  
   def getWeight(self):
     return self.__weight  
   

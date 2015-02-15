@@ -1,3 +1,9 @@
+release 1.0.1
+- added : mynoora
+- added : mysql drop plugin
+- added : mysql create plugin
+- added : mysql update plugin
+
 release 1.0.0
 - added : help plugin, ticket #3
 

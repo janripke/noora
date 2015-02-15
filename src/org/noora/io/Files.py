@@ -23,6 +23,8 @@ class Files:
     file = fileReader.getFile()
     file.delete()
   
+  
+  
   @staticmethod
   def list(file=None,recursive=False, exclude=None):
     result=[]

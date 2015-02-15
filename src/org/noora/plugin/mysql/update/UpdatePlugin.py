@@ -9,6 +9,7 @@ from org.noora.connector.ExecuteFactory import ExecuteFactory
 from org.noora.connector.ConnectorFactory import ConnectorFactory
 from org.noora.plugin.mysql.update.UnknownVersionException import UnknownVersionException
 from org.noora.plugin.mysql.update.InvalidEnvironmentException import InvalidEnvironmentException
+from org.noora.plugin.mysql.update.InvalidVersionException import InvalidVersionException
 from org.noora.version.Version import Version
 from org.noora.version.Versions import Versions
 from org.noora.version.VersionLoader import VersionLoader
@@ -23,9 +24,6 @@ class UpdatePlugin(Plugin):
   def getDescription(self):
     return "install the given update part of a database project in the database."
   
-  def getAlterDir(self):
-    return os.path.abspath('.')+os.sep+'alter'
-
   def getOptions(self, properties):
     options = Plugin.getOptions(self)
     options.addOption("-?", "--help", False, False,  "display help")
@@ -51,7 +49,8 @@ class UpdatePlugin(Plugin):
     return options
   
   def checkVersionFolder(self, version, properties):
-    versionFolder = File(self.getAlterDir()+os.sep+version)
+    alterDir = properties.getPropertyValue('alter.dir')
+    versionFolder = File(alterDir+os.sep+version)
     if versionFolder.notExists():
       raise UnknownVersionException("unknown version folder", version)
 
@@ -82,7 +81,7 @@ class UpdatePlugin(Plugin):
     executor.setScript(script)      
     connector.execute(executor, properties)
     if "(Code 1329)" in connector.getProcessorResult().getResult():
-      raise InvalidEnvironmentException("invalid version",previous) 
+      raise InvalidVersionException("invalid version",previous) 
 
 
 
@@ -97,6 +96,9 @@ class UpdatePlugin(Plugin):
     defaultEnvironment = properties.getPropertyValues('DEFAULT_ENVIRONMENT')
     environment = commandLine.getOptionValue('-e', defaultEnvironment)
     objects = properties.getPropertyValues('CREATE_OBJECTS')
+    versionDatabase = properties.getPropertyValues('VERSION_DATABASE')
+    
+    alterDir = properties.getPropertyValue('alter.dir')
     
     self.checkVersionFolder(version, properties)
     
@@ -117,25 +119,26 @@ class UpdatePlugin(Plugin):
       executor.setPassword(passwd)
       executor.setUsername(user)        
       
-      self.checkEnvironment(connector, executor, environment, properties)
-      self.checkVersion( connector, executor, version, properties)
+      if database == versionDatabase:
+        self.checkEnvironment(connector, executor, environment, properties)
+        self.checkVersion( connector, executor, version, properties)
       
       for object in objects:  
 
         # global ddl objects
-        folder=File(self.getAlterDir()+os.sep+version+os.sep+database+os.sep+'ddl'+os.sep+object)
+        folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'ddl'+os.sep+object)
         ConnectionExecutor.execute(connector, executor, properties, folder)
 
         # environment specific ddl objects
-        folder=File(self.getAlterDir()+os.sep+version+os.sep+database+os.sep+'ddl'+os.sep+object+os.sep+environment)
+        folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'ddl'+os.sep+object+os.sep+environment)
         ConnectionExecutor.execute(connector, executor, properties, folder)
 
       # global dat objects
-      folder=File(self.getAlterDir()+os.sep+version+os.sep+database+os.sep+'dat')
+      folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'dat')
       ConnectionExecutor.execute(connector, executor, properties, folder)
 
       # environment specific dat objects
-      folder=File(self.getAlterDir()+os.sep+version+os.sep+database+os.sep+'dat'+os.sep+environment)
+      folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'dat'+os.sep+environment)
       ConnectionExecutor.execute(connector, executor, properties, folder)
 
       print "database '"+database+"' updated."

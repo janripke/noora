@@ -110,7 +110,7 @@ class FileReader(Readable):
   def __init__(self, file=None):
     Readable.__init__(self)
     self.__file = file
-    pathName = file.getPath() + file.getName()
+    pathName = file.getPath() + os.sep + file.getName()
     self.__handle = open(pathName,'rb')
     
   def read(self):
