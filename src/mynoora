@@ -103,13 +103,14 @@ if __name__ == "__main__":
     
     #arguments = ['drop','create','update','-h=localhost','-d=orcl','-e=dev','-v=1.0.1']
     arguments = sys.argv[1:]
-    
+   
     parser = Parser()       
     commands = parser.parse(options, arguments)
 
     for command in commands.getOptions().getOptions():
+      
       plugin = pluginManager.findByType(command.getType())
-    
+      
       options=plugin.getOptions(properties)
       commandLine = parser.parse(options,arguments)
       parser.checkRequiredOptions()
