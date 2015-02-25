@@ -30,12 +30,20 @@ class VersionGuesser():
   def __next__(self, last):
     last
   
-  def guess(self):
+  def guess(self, version):
     versions = self.__versions
     properties = self.__properties
+    if version:
+      return Version(version)
     if versions.next():
       return versions.next()
     return Version(properties.getPropertyValue("DEFAULT_VERSION"))
+  
+  def toFolder(self, version):
+    properties = self.__properties
+    if version == properties.getPropertyValue("DEFAULT_VERSION"):
+      return properties.getPropertyValue("create.dir")
+    return Path.path(properties.getPropertyValue("alter.dir"),version)
   
 class TestBase(unittest.TestCase): 
     
@@ -78,8 +86,8 @@ class TestBase(unittest.TestCase):
     print versions.next().toString()
     
     versionGuesser=VersionGuesser(properties, versions)
-    print versionGuesser.guess().toString()
-    
+    nextVersion = versionGuesser.guess(None).toString()
+    print versionGuesser.toFolder(nextVersion)
     
     
     # versioning is subject of study, so the are several methods of versioning used.
