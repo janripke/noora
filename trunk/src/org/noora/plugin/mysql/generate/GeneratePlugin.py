@@ -85,6 +85,7 @@ class GeneratePlugin(Plugin):
     project = commandLine.getOptionValue('-pr')
     version = commandLine.getOptionValue('-v')
     
+    
     configFile = File(Path.path(properties.getPropertyValue('current.dir'),properties.getPropertyValue('project.file')))
     if configFile.exists()==False:      
       #project = commandLine.getOptionValue('-pr')
