@@ -1,9 +1,20 @@
 set serveroutput on
 declare
+/* 
   cursor c_user_objects is
     select table_name 
     from user_tables
-    where table_name not in ('CREATE$JAVA$LOB$TABLE'); 
+    where table_name not in ('CREATE$JAVA$LOB$TABLE')
+    order by 1 desc;
+*/
+  cursor c_user_objects is
+    select ut.table_name
+    from user_tables ut, user_tab_partitions tp
+    where ut.table_name = tp.table_name(+)
+    and ut.table_name not in ('CREATE$JAVA$LOB$TABLE')
+    group by ut.table_name
+    order by nvl(max(tp.partition_position),-1);
+
 
   cursor c_constraints(b_table_name varchar2) is
     select constraint_name 
@@ -31,3 +42,4 @@ begin
 end;
 /
 set serveroutput off
+
