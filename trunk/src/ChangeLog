@@ -3,6 +3,8 @@ release 1.0.1
 - added : mysql drop plugin
 - added : mysql create plugin
 - added : mysql update plugin
+- added : mysql generate plugin
+- fixed : oracle table dropping, using partitioning.
 
 release 1.0.0
 - added : help plugin, ticket #3
