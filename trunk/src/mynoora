@@ -106,7 +106,7 @@ if __name__ == "__main__":
    
     parser = Parser()       
     commands = parser.parse(options, arguments)
-
+    
     for command in commands.getOptions().getOptions():
       
       plugin = pluginManager.findByType(command.getType())

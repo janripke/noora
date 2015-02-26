@@ -36,7 +36,6 @@ class NoOraApp(Appable):
     
     nooraDir = properties.getPropertyValue("noora.dir")
     file = File(nooraDir + os.sep + projectFile)
-    print "file",file
     return file
 
 
