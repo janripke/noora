@@ -1,0 +1,1 @@
+insert into application_properties(id,name,value) values (application_properties_s.nextval,'application.version','1.0.0');

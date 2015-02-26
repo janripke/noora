@@ -1,0 +1,25 @@
+create table holidays
+(id                         number(12) not null
+,created_at                 date
+,created_by                 varchar2(45)
+,updated_at                 date
+,updated_by                 varchar2(45)
+,day                        date
+,year                       number(4)
+,description                varchar2(100)
+)nologging;
+
+
+alter table holidays add constraint HOLIDAYS_PK primary key (id) using index nologging;
+
+alter table holidays add constraint HOLIDAYS_CREATED_AT_NN check (created_at is not null);
+alter table holidays add constraint HOLIDAYS_CREATED_BY_NN check (created_by is not null);
+alter table holidays add constraint HOLIDAYS_UPDATED_AT_NN check (updated_at is not null);
+alter table holidays add constraint HOLIDAYS_UPDATED_BY_NN check (updated_by is not null);
+
+alter table holidays add constraint HOLIDAYS_DAY_NN check (day is not null);
+alter table holidays add constraint HOLIDAYS_YEAR_NN check (year is not null);
+alter table holidays add constraint HOLIDAYS_DESCRIPTION_NN check (description is not null);
+
+alter table holidays add constraint HOLIDAYS_YEAR_DESC_UNIQ unique (year,description) using index nologging;
+alter table holidays add constraint HOLIDAYS_DAY_YEAR_UNIQ unique (day,year) using index nologging;

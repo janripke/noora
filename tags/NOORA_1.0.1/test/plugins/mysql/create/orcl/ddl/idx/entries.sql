@@ -1,0 +1,1 @@
+CREATE INDEX eny_spe_id_idx ON entries (spe_id);
