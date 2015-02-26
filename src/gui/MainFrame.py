@@ -282,9 +282,9 @@ class MainFrame(AbstractFrame.AbstractFrame):
   def onAbout(self, evt):
     info = wx.AboutDialogInfo()
     info.Name = "NoOra Gui"
-    info.Version = "1.0.0"
+    info.Version = "1.0.1"
     info.Description ="NoOra is an attempt to apply a pattern to installing/updating Oracle database projects\r\nin order to promote portability and productivity. "
-    info.Copyright = "(L) 2010, 2011, 2012, 2013, 2014 NoOra"
+    info.Copyright = "(L) 2010, 2011, 2012, 2013, 2014, 2015 NoOra"
     info.WebSite = ("https://sourceforge.net/p/noora/wiki/Home/", "NoOra home page")
     info.Developers = [ "Jan Ripke","Peter Kist" ]
     wx.AboutBox(info)
