@@ -14,6 +14,11 @@ class CommandLine:
     options = self.__options
     return options.hasOption(type)
 
+  def getOption(self, type):
+    options = self.getOptions()
+    if options.hasOption(type):
+      return options.getOption(type)
+
   def getOptionValues(self, type, defaultValue=None):
     options = self.getOptions()
     if options.hasOption(type):

@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 import os
 from org.noora.plugin.Plugin import Plugin
-from org.noora.helper.PropertyHelper import PropertyHelper
 from org.noora.io.File import File
 from org.noora.io.Files import Files
 from org.noora.io.Path import Path
-from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
-from org.noora.connector.ExecuteFactory import ExecuteFactory
 from org.noora.plugin.mysql.update.UnknownVersionException import UnknownVersionException
 from org.noora.plugin.mysql.update.InvalidEnvironmentException import InvalidEnvironmentException
 from org.noora.plugin.mysql.update.InvalidVersionException import InvalidVersionException
@@ -224,15 +221,5 @@ class GeneratePlugin(Plugin):
               targetWriter.write(stream)
               targetWriter.close()
               
-      #  files=projectHelper.findFiles(folder)
-      #  for object in objects:
-      #    folder=self.getPluginDir()+os.sep+'templates'+os.sep+object
-      #    if projectHelper.folderPresent(folder):
-      #      files=projectHelper.findFiles(folder)
-      #      for file in files:
-      #        sourceFile=folder+os.sep+file
-      #        targetFile=ddlFolder+os.sep+object+os.sep+file
-      #        projectHelper.copyFile(sourceFile,targetFile)
-
     print "version "+nextVersion+" created."
     

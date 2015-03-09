@@ -15,8 +15,10 @@ sys.path.append(PLUGIN_DIR)
 from plugins.dynamic.create.CreatePlugin import CreatePlugin
 from core.ParameterHelper import ParameterHelper
 from core.ConfigReader import ConfigReader
+from core.PluginManager import PluginManager
 from connectors.OracleConnectorStub import OracleConnectorStub
 from connectors.SqlLoaderConnectorStub import SqlLoaderConnectorStub
+from org.noora.app.NoOraApp import NoOraApp
 
 M_LF         = chr(10)
 
@@ -36,8 +38,10 @@ class TestBase(unittest.TestCase):
     createPlugin.setSqlLoaderConnector(sqlLoaderConnector)
     
     
+    app = NoOraApp()
+    pluginManager = PluginManager()
     
-    createPlugin.execute(parameterHelper)
+    createPlugin.execute(app,parameterHelper,pluginManager)
     
 
        
