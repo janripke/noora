@@ -36,6 +36,13 @@ class PropertyHelper:
     return None
 
   @staticmethod
+  def getPostgresqlUser(users, host, port, database):
+    for user in users:
+      if user[0].lower() == host.lower() and user[1].lower() == port.lower() and user[2].lower() == database.lower():
+        return user[3]
+    return None
+
+  @staticmethod
   def getOracleUser(users, sid, scheme):
     for user in users:
       if user[0].lower() == sid.lower() and user[1].lower() == scheme.lower():
