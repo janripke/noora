@@ -153,6 +153,24 @@ class ProjectHelper:
     return None
 
 
+  def getEnvironmentGroups(self, environment):
+    environmentGroups=self.__configReader.getValue('ENVIRONMENT_GROUPS')
+      
+    groups = []
+    if environmentGroups:
+      for environmentGroup in environmentGroups:
+        # print environmentGroup
+        group = environmentGroup[0].lower()
+        environments = environmentGroup[1]
+        # print group, environments
+        
+        if environments:
+          for env in environments:
+            if environment.lower()==env.lower():
+              groups.append(group)
+    return groups
+
+
   def readFile(self, filename):
     handle=open(filename,'rb')
     stream=handle.read()

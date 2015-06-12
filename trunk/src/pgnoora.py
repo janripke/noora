@@ -18,7 +18,7 @@ import core.ParameterHelper as ParameterHelper
 
 
 __revision__ = "$Revision: 336 $"
-__version__  = "1.0.0-SNAPSHOT"
+__version__  = "1.0.2"
 
 NOORA_DIR    = os.path.abspath(os.path.dirname(sys.argv[0]))
 CURRENT_DIR  = os.path.abspath('.') 

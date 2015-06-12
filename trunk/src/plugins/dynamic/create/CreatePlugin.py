@@ -157,6 +157,12 @@ class CreatePlugin(Plugin.Plugin):
         if projectHelper.folderPresent(folder):
           self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
 
+        # environment group specific ddl objects
+        for environmentGroup in projectHelper.getEnvironmentGroups(environment):
+          folder=self.getCreateDir()+os.sep+scheme+os.sep+'ddl'+os.sep+object+os.sep+environmentGroup
+          if projectHelper.folderPresent(folder):
+            self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
+
       # global dat objects
       folder=self.getCreateDir()+os.sep+scheme+os.sep+'dat'
       if projectHelper.folderPresent(folder):
@@ -166,6 +172,13 @@ class CreatePlugin(Plugin.Plugin):
       folder=self.getCreateDir()+os.sep+scheme+os.sep+'dat'+os.sep+environment
       if projectHelper.folderPresent(folder):
         self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
+      
+      # environment group specific dat objects
+      for environmentGroup in projectHelper.getEnvironmentGroups(environment):
+        folder=self.getCreateDir()+os.sep+scheme+os.sep+'dat'+os.sep+environmentGroup
+        if projectHelper.folderPresent(folder):
+          self.installFiles(folder, oracleSid, oracleUser, oraclePasswd, ignoreErrors)
+      
         
       # global sqlldr files
       folder=self.getCreateDir()+os.sep+scheme+os.sep+'sqlldr'
@@ -185,6 +198,20 @@ class CreatePlugin(Plugin.Plugin):
           envFolder=folder + os.sep + ctlFolder + os.sep + environment
           if projectHelper.folderPresent(envFolder):          
             self.loadFiles(envFolder, oracleSid, oracleUser, oraclePasswd, ctlFile, ignoreErrors)
+
+      # environment group sqlldr files
+      folder=self.getCreateDir()+os.sep+scheme+os.sep+'sqlldr'
+      if projectHelper.folderPresent(folder):
+        ctlFolders = projectHelper.findFolders(folder)
+        for ctlFolder in ctlFolders:
+          
+          for environmentGroup in projectHelper.getEnvironmentGroups(environment):
+          
+            ctlFile = folder+os.sep+ctlFolder + os.sep + environmentGroup + os.sep + ctlFolder+ ".ctl"
+            envFolder=folder + os.sep + ctlFolder + os.sep + environmentGroup
+            if projectHelper.folderPresent(envFolder):          
+              self.loadFiles(envFolder, oracleSid, oracleUser, oraclePasswd, ctlFile, ignoreErrors)
+
 
           
     
