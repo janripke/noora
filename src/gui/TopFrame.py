@@ -70,7 +70,7 @@ class TopFrame(AbstractFrame.AbstractFrame):
         self.Close(True);
         
     def onAbout(self, event):
-        dlg = wx.MessageDialog(self, 'Noora GUI v1.0.0', '(c) 2010', wx.OK|wx.ICON_INFORMATION)
+        dlg = wx.MessageDialog(self, 'Noora GUI v1.0.2', '(l) 2015', wx.OK|wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
 
