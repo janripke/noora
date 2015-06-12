@@ -1,0 +1,41 @@
+release 1.0.2
+- added : oracle environment grouping support. files contained in the group folder are installed on the given environments.
+- added : postgres sql, pgnoora.
+
+release 1.0.1
+- added : mynoora
+- added : mysql drop pluginl
+- added : mysql create plugin
+- added : mysql update plugin
+- added : mysql generate plugin
+- fixed : oracle table dropping, using partitioning.
+
+release 1.0.0
+- added : help plugin, ticket #3
+
+release 0.0.9
+- added : recreate supports -v option, will replace -m in the future.
+- bug : fixed -u option in recreate.
+- bug : fixed version ordering.
+
+release 0.0.8.2
+- bug : fixed incorrect version sorting in updatePlugin and recreatePlugin.
+- bug : fixed loadjava execution.
+- bug : fixed drop jars.
+- bug : fixed recompile java classes
+
+release 0.0.8.1
+- bug : fixed added resolve and force option to loadjava
+- bug : fixed sqlloader
+
+release 0.0.8
+- added oracle cdc support
+- added oracle sqlloader support
+- added oracle materialized view support (mvw)
+- added oracle materialized view compile support
+- added oracle mlog support
+- added oracle loadjava support
+- bug : fixed open an existing project in noora-gui
+- bug : fixed files contained in the dat folder are not included in a component
+- bug : fixed unittest.sql script.
+- bug : fixed cywin support in setup.py

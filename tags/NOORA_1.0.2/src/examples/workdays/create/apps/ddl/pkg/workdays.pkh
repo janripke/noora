@@ -1,0 +1,10 @@
+create or replace package workdays as
+
+  function add_workdays
+    (p_date in date, p_days in number) return date;    
+
+  function is_holiday
+    (p_date in date) return boolean;
+    
+end workdays;
+/

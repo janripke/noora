@@ -1,0 +1,7 @@
+create or replace package ut_stager as
+
+  procedure t_import_pass;
+  function create_sample_file(p_job_name in varchar2) return varchar2;
+
+end ut_stager;
+/

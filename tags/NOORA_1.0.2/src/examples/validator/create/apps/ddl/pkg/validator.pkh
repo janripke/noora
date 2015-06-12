@@ -1,0 +1,22 @@
+create or replace package validator as
+
+  type t_mapping is record
+    (source_table_name   varchar2(256)
+    ,source_column_name  varchar2(256)
+    ,target_table_name   varchar2(256)
+    ,target_column_name  varchar2(256));
+
+  type t_mappings is table of t_mapping index by binary_integer;
+
+  function to_mappings
+    (p_job_name   in varchar2
+    ,p_mapping    in varchar2) return t_mappings;
+    
+  procedure create_validate_table
+    (p_job_name            in varchar2 default null
+    ,p_table_name          in varchar2
+    ,p_validate_table_name in varchar2);
+
+
+end validator;
+/
