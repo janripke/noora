@@ -1,26 +1,19 @@
 set serveroutput on
 declare
-/*
-  cursor c_user_objects is
-    select table_name 
-    from user_tables
-    where table_name not in ('CREATE$JAVA$LOB$TABLE')
-    order by 1 desc;
-*/
-  cursor c_user_objects is
-    select ut.table_name
-    from user_tables ut, user_tab_partitions tp
-    where ut.table_name = tp.table_name(+)
-    and ut.table_name not in ('CREATE$JAVA$LOB$TABLE')
-    group by ut.table_name
-    order by nvl(max(tp.high_value_length),-1);
+
+cursor c_user_objects is
+    select ut.table_name 
+    from user_tables ut, user_part_tables upt
+    where ut.table_name not in ('CREATE$JAVA$LOB$TABLE')
+    and ut.TABLE_NAME = upt.TABLE_NAME(+)   
+    order by nvl(upt.PARTITIONING_TYPE(+),ut.TABLE_NAME) desc;
 
   cursor c_constraints(b_table_name varchar2) is
     select constraint_name 
     from user_constraints
     where table_name=b_table_name;
 
-  statement	varchar2(1024);
+  statement         varchar2(1024);
   table_name    varchar2(256);
   constraint_name varchar2(256);
   M_DQUOTE      varchar2(1):='"';
