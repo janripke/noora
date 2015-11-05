@@ -1,0 +1,1 @@
+ALTER TABLE projects ADD CONSTRAINT pjt_usr_id_fk FOREIGN KEY (usr_id) REFERENCES users (id) ON DELETE CASCADE;

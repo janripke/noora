@@ -1,0 +1,1 @@
+CREATE INDEX pfe_pjt_id_idx ON projectfiles (pjt_id);

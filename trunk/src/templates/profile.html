@@ -1,0 +1,12 @@
+$def with (post, form)
+
+$if session.get('usergroup', '')=='administrator':
+	<li><a href="/user">Users</a></li>
+	<li><a href="/project/$session.get('hashcode', '')">Projects</a></li>
+		
+
+<h3>User profile</h3>
+<form action="" method="post">$:form.render()</form>
+<br>
+<hr>
+

@@ -1,0 +1,1 @@
+ALTER TABLE projectfiles ADD CONSTRAINT pfe_pjt_id_fk FOREIGN KEY (pjt_id) REFERENCES projects (id) ON DELETE CASCADE;

@@ -1,0 +1,22 @@
+$def with (form, projects)
+
+	<h3>Add new project</h3>
+	<form action="" method="post">$:form.render()</form>	
+	<hr>
+
+	<h3>Projects</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>name</th>
+				<th>options</th>
+			</tr>
+		</thead>
+		<tbody>
+		$for project in projects:
+			<tr>
+				<td><a href="/project_edit/$project.hashcode">$project.name</a></td>				
+				<td> <a href="/project_delete/$project.hashcode">delete</a></td>
+			</tr>
+		</tbody>
+	</table>

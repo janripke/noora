@@ -1,0 +1,1 @@
+CREATE INDEX usr_grp_id_idx ON users (grp_id);
