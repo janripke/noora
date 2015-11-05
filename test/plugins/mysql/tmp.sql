@@ -1,1 +1,1 @@
-update application_properties set value='1.0.1' where name='application.version';
+update application_properties set value='1.0.2' where name='application.version';

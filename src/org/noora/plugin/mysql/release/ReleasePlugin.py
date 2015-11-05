@@ -26,7 +26,7 @@ class ReleasePlugin(Plugin):
     Plugin.__init__(self, "RELEASE", None)
     
   def getDescription(self):
-    return "creates a database project archive."
+    return "create a database project archive."
   
   def getOptions(self, properties):
         

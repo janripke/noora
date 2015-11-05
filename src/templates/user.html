@@ -1,0 +1,18 @@
+$def with (users)
+
+	<h3>Users</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>username</th>
+				<th>options</th>
+			</tr>
+		</thead>
+		<tbody>
+		$for user in users:
+			<tr>
+				<td><a href="/user_edit/$user.hashcode">$user.username</a></td>				
+				<td> <a href="/user_delete/$user.hashcode"><img src="/images/delete.png" width="16"></a></td>
+			</tr>
+		</tbody>
+	</table>

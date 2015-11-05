@@ -1,0 +1,1 @@
+CREATE INDEX pjt_usr_id_idx ON projects (usr_id);

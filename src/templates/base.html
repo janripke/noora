@@ -1,0 +1,37 @@
+$def with (page)
+
+<html>
+<head>
+<title>mynoora</title>
+<style>
+#menu {
+	width: 200px;
+	float: bottom;
+}
+</style>
+
+<link rel="stylesheet" href="/static/shared.css" type="text/css">  
+            
+</head>
+
+<body>
+    
+    <a href="/"><img src="/images/logo.png"/></a>
+	<ul id="menu">
+	    <li><a href="/contact">Contact</a></li>
+		$if session.get('username', '')=='':
+			<li><a href="/signup">Signup</a></li>		
+		$if session.get('username', '')=='':
+		  <li><a href="/login">Login</a></li>
+		$else:
+		  <li><a href="/logout">Logout</a></li>  		  	
+		$if session.get('username', '')!='':
+		  <li><a href="/profile/$session.get('hashcode', '')">$session.get('username', '')</a></li>
+        $if session.get('username', '')!='':
+          <li><a href="/project/$session.get('hashcode', '')">Projects</a>
+		    
+	</ul>
+    <hr>         
+	$:page
+</body>
+</html>
