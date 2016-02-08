@@ -32,7 +32,7 @@ class DeployEmailPlugin(Plugin):
         option.setValues(properties.getPropertyValues('ENVIRONMENTS'))
         options.add(option)
 
-        option = OptionFactory.newOption("-v", "--version", True, True, "version of emlails to deploy")
+        option = OptionFactory.newOption("-v", "--version", True, True, "version of emails to deploy")
         options.add(option)
 
         return options

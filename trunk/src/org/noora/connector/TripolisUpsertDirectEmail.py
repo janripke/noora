@@ -1,6 +1,12 @@
+import logging
 from suds.client import Client
 from suds.multipart import MultipartFilter
 
+logging.basicConfig(level=logging.INFO)
+logging.getLogger('suds.client').setLevel(logging.DEBUG)
+logging.getLogger('suds.transport').setLevel(logging.DEBUG)
+logging.getLogger('suds.xsd.schema').setLevel(logging.DEBUG)
+logging.getLogger('suds.wsdl').setLevel(logging.DEBUG)
 
 class TripolisUpsertDirectEmail:
     def __init__(self, url, client, username, password, workspace, direct_email_type, tripolis_direct_email):
