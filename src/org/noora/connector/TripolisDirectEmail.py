@@ -45,7 +45,6 @@ class TripolisDirectEmail:
 
         try:
             label
-            name
             subject
             description
             fromName

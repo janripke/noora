@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+import suds
 
+from org.noora.connector import Tripolis2Api
 from org.noora.connector.Connector import Connector
+from org.noora.connector.Tripolis2Api import Tripoli2ApiException
 from org.noora.connector.TripolisDirectEmail import TripolisDirectEmail
 from org.noora.connector.TripolisEmailFileConcatenator import TripolisEmailFileConcatenator
-from org.noora.connector.TripolisUpsertDirectEmail import TripolisUpsertDirectEmail
-
 
 class TripolisDeployEmailConnector(Connector):
   
@@ -22,17 +23,30 @@ class TripolisDeployEmailConnector(Connector):
 
     script = TripolisEmailFileConcatenator.toPython(executable.getScript())
     tripolis_direct_email = TripolisDirectEmail(script)
-    url = properties.getPropertyValue('URL')
     client = properties.getPropertyValue('CLIENT')
     username = properties.getPropertyValue('USERNAME')
     password = properties.getPropertyValue('PASSWORD')
     workspace = executable.getWorkspace()
     direct_email_type = executable.getDirectEmailType()
 
-    TripolisUpsertDirectEmail(url, client, username, password, workspace, direct_email_type, tripolis_direct_email).upsert()
-    print executable.getScript().getName()
+    auth_info = Tripolis2Api.AuthInfo(client, username, password)
 
+    try:
+      workspace = Tripolis2Api.WorkspaceService(auth_info).getByField('name', workspace)
+      for direct_email_type_api in Tripolis2Api.DirectEmailTypeService(auth_info).getByWorkspaceId(workspace.id):
+        if direct_email_type == direct_email_type_api.name:
+          found = False
+          for direct_email_type_for_listing in Tripolis2Api.DirectEmailService(auth_info).getByDirectEmailTypeId(direct_email_type_api.id):
+            if (not direct_email_type_for_listing.isArchived) and direct_email_type_for_listing.name == tripolis_direct_email.getName():
+              found = True
+              break
 
+          if found:
+            Tripolis2Api.DirectEmailService(auth_info).update(direct_email_type_for_listing, tripolis_direct_email)
+          else:
+            Tripolis2Api.DirectEmailService(auth_info).create(direct_email_type_api.id, tripolis_direct_email)
+    except Tripoli2ApiException as e:
+      print e.message
 
 
 
