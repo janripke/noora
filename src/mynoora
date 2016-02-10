@@ -82,7 +82,7 @@ if __name__ == "__main__":
     properties.setProperty("noora.dir", NOORA_DIR)
     properties.setProperty("current.dir", CURRENT_DIR)
     properties.setProperty("plugin.dir", NOORA_DIR + os.sep + 'org' + os.sep + 'noora' + os.sep + 'plugin')
-    properties.setProperty("project.file", "project.conf")
+    properties.setProperty("project.file", "myproject.conf")
     properties.setProperty("alter.dir",properties.getPropertyValue("current.dir")+os.sep+"alter")
     properties.setProperty("create.dir",properties.getPropertyValue("current.dir")+os.sep+"create")
     
