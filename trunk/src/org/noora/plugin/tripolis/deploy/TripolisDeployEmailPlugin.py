@@ -11,11 +11,11 @@ from org.noora.plugin.ConnectionExecutor import ConnectionExecutor
 from org.noora.plugin.Plugin import Plugin
 
 
-class DeployEmailPlugin(Plugin):
+class TripolisDeployEmailPlugin(Plugin):
     __revision__ = "$Revision$"
 
     def __init__(self):
-        Plugin.__init__(self, "DEPLOY:EMAIL", ConnectorFactory.newTripolisDeployEmailConnector())
+        Plugin.__init__(self, "TRIPOLIS:DEPLOY:EMAIL", ConnectorFactory.newTripolisDeployEmailConnector())
 
     def getDescription(self):
         return "deploys all emails to Tripolis"
