@@ -35,18 +35,17 @@ class TripolisDeployEmailConnector(Connector):
       workspace = Tripolis2Api.WorkspaceService(auth_info).getByField('name', workspace)
       for direct_email_type_api in Tripolis2Api.DirectEmailTypeService(auth_info).getByWorkspaceId(workspace.id):
         if direct_email_type == direct_email_type_api.name:
-          found = False
+          update = False
           for direct_email_type_for_listing in Tripolis2Api.DirectEmailService(auth_info).getByDirectEmailTypeId(direct_email_type_api.id):
-            if (not direct_email_type_for_listing.isArchived) and direct_email_type_for_listing.name == tripolis_direct_email.getName():
-              found = True
+            if direct_email_type_for_listing.name == tripolis_direct_email.getName():
+              if direct_email_type_for_listing.isArchived:
+                raise Tripoli2ApiException("Cannot update email. " + direct_email_type_for_listing.label + " is archived.")
+              update = True
               break
 
-          if found:
+          if update:
             Tripolis2Api.DirectEmailService(auth_info).update(direct_email_type_for_listing, tripolis_direct_email)
           else:
             Tripolis2Api.DirectEmailService(auth_info).create(direct_email_type_api.id, tripolis_direct_email)
     except Tripoli2ApiException as e:
-      print e.message
-
-
-
+      raise Tripoli2ApiException(e.message)
