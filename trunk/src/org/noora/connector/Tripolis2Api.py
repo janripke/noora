@@ -11,10 +11,15 @@ from suds import WebFault
 #logging.getLogger('suds.transport').setLevel(logging.DEBUG)
 #logging.getLogger('suds.xsd.schema').setLevel(logging.DEBUG)
 #logging.getLogger('suds.wsdl').setLevel(logging.DEBUG)
+from suds.sax.text import Text
+
 
 class Tripoli2ApiException(Exception):
     def __init__(self, message):
         self.message = message
+
+    def __str__(self):
+        print "\r\n" + self.message
 
 class AuthInfo:
     def __init__(self, client, username, password):
@@ -145,7 +150,7 @@ class DirectEmailService:
         self.__client.set_options(soapheaders=auth_info.get())
 
     """
-    Returns a list of DirectEmailForListin objects or None if not workspace found, i.e.
+    Returns a list of DirectEmailForListing objects or None if not workspace found, i.e.
     [(DirectEmailForListing){
      id = "Yy2tB_Q2nS9bPIwy7RzKEg"
      directEmailTypeId = "fcw6GMjj1fk__uaAFGsVFQ"
@@ -172,6 +177,9 @@ class DirectEmailService:
 
         try:
             response = self.__client.service.getByDirectEmailTypeId(request)
+            # response.directEmails is an empty string, of no emails are in the direct email type
+            if isinstance(response.directEmails, Text):
+                return []
             return response.directEmails.directEmail
         except WebFault as e:
             if e.fault.detail.errorResponse.errors.error.message == 'directEmailTypeId not found':
@@ -184,10 +192,10 @@ class DirectEmailService:
         request.id = direct_email_for_listing.id
         request.label = tripolis_direct_email.getLabel()
         request.name = tripolis_direct_email.getName()
-        request.subject = tripolis_direct_email.getSubject()
-        request.htmlSource = tripolis_direct_email.getHtml()
-        request.textSource = tripolis_direct_email.getText()
-        request.fromName = tripolis_direct_email.getFromName()
+        request.subject = unicode(tripolis_direct_email.getSubject(), encoding='utf-8')
+        request.htmlSource = unicode(tripolis_direct_email.getHtml(), encoding='utf-8')
+        request.textSource = unicode(tripolis_direct_email.getText(), encoding='utf-8')
+        request.fromName = unicode(tripolis_direct_email.getFromName(), encoding='utf-8')
         request.fromAddress = tripolis_direct_email.getFromAddress()
         request.replyToAddress = tripolis_direct_email.getReplyTo()
 
@@ -202,10 +210,10 @@ class DirectEmailService:
         request.directEmailTypeId = direct_email_type_id
         request.label = tripolis_direct_email.getLabel()
         request.name = tripolis_direct_email.getName()
-        request.subject = tripolis_direct_email.getSubject()
-        request.htmlSource = tripolis_direct_email.getHtml()
-        request.textSource = tripolis_direct_email.getText()
-        request.fromName = tripolis_direct_email.getFromName()
+        request.subject = unicode(tripolis_direct_email.getSubject(), encoding='utf-8')
+        request.htmlSource = unicode(tripolis_direct_email.getHtml(), encoding='utf-8')
+        request.textSource = unicode(tripolis_direct_email.getText(), encoding='utf-8')
+        request.fromName = unicode(tripolis_direct_email.getFromName(), encoding='utf-8')
         request.fromAddress = tripolis_direct_email.getFromAddress()
         request.replyToAddress = tripolis_direct_email.getReplyTo()
 
@@ -213,10 +221,3 @@ class DirectEmailService:
             return self.__client.service.create(request).id
         except WebFault as e:
             raise Tripoli2ApiException(e.fault.detail.errorResponse.errors.error.message)
-
-#for defl in DirectEmailService().getByDirectEmailTypeId('fcw6GMjj1fk__uaAFGsVFQ'):
-#    if defl.name == '09invitenewuser':
-#        print DirectEmailService().update(defl, 'html2', 'text2')
-#        break
-
-#DirectEmailService().create('fcw6GMjj1fk__uaAFGsVFQ', 'test_label2', 'test_subject', 'test_name_werkt', 'html', 'text')
