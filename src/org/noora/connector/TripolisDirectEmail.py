@@ -40,7 +40,7 @@ class TripolisDirectEmail:
     copyright ${nu?string.yyyy} KPN
     \"""
     """
-    def __init__(self, data):
+    def __init__(self, data, executable = None):
         exec (data)
 
         try:
@@ -64,6 +64,9 @@ class TripolisDirectEmail:
             self.__replyTo = replyTo
             self.__html = html
             self.__text = text
+        
+        if executable:
+            self.__description = ' '.join(filter(None, (self.__description, '(' + executable.getAdditionalDescription() + ')')))
 
     def getLabel(self):
         return self.__label

@@ -9,6 +9,7 @@ class TripolisExecute(Execute):
     Execute.__init__(self)
     self.__workspace = None
     self.__direct_email_type = None
+    self.__additional_description = None
 
   def getWorkspace(self):
     return self.__workspace
@@ -19,5 +20,12 @@ class TripolisExecute(Execute):
   def getDirectEmailType(self):
     return self.__direct_email_type
 
-  def setDiretEmailType(self, value):
+  def setDirectEmailType(self, value):
     self.__direct_email_type = value
+
+  def getAdditionalDescription(self):
+    return self.__additional_description
+
+  def setAdditionalDescription(self, value):
+    self.__additional_description = value
+

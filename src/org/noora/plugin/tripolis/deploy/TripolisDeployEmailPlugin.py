@@ -43,7 +43,8 @@ class TripolisDeployEmailPlugin(Plugin):
         defaultEnvironment = properties.getPropertyValues('DEFAULT_ENVIRONMENT')
         environment = commandLine.getOptionValue('-e', defaultEnvironment)
         version = commandLine.getOptionValue('-v')
-
+        version_in_description = properties.getPropertyValues('VERSION_IN_DESCRIPTION')
+        
         connector = self.getConnector()
 
         folder = File(Path.path(os.path.abspath('.'),version))
@@ -52,7 +53,9 @@ class TripolisDeployEmailPlugin(Plugin):
             print "Creating '"+directEmailType.getName()+"' emails, using environment '"+environment+"'"
             executor = ExecuteFactory.newTripolisExecute()
             executor.setWorkspace(workspace)
-            executor.setDiretEmailType(directEmailType.getName())
+            executor.setDirectEmailType(directEmailType.getName())
+            if version_in_description == 'Y':
+              executor.setAdditionalDescription(version)
 
             # global email objects
             ConnectionExecutor.execute(connector, executor, properties, directEmailType)
