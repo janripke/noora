@@ -891,6 +891,7 @@ create or replace package body app_utl as
   procedure set_process_running
     (p_module_name in varchar2, p_action_name in varchar2)
   is
+  begin
     dbms_application_info.set_module(module_name => p_module_name
                                     ,action_name => p_action_name);
   end set_process_running;
@@ -899,7 +900,6 @@ create or replace package body app_utl as
   function is_process_running
     (p_module_name in varchar2, p_action_name in varchar2)
   return boolean is
-  
     l_result boolean;
     cursor c_session is
       select 1 
@@ -909,7 +909,7 @@ create or replace package body app_utl as
       and s.STATUS = 'ACTIVE'
       and s.audsid <> userenv('sessionid');
     r_session c_session%rowtype;
-  end if;
+  begin
     open c_session;
     fetch c_session 
     into r_session;
