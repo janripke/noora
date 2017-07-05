@@ -55,10 +55,11 @@ create or replace package app_utl as
   function get_column_count(p_string in varchar2,   p_delimiter in varchar2) return integer;
   function get_column(p_string in varchar2,   p_delimiter in varchar2,   p_column in integer) return varchar2;
 
-  function file_header_is_valid(p_job_name    in varchar2
-                               ,p_folder      in varchar2
-                               ,p_filename    in varchar2
-                               ,p_file_header in varchar2) return boolean;
+  function file_header_is_valid
+    (p_job_name    in varchar2
+    ,p_folder      in varchar2
+    ,p_filename    in varchar2
+    ,p_file_header in varchar2) return boolean;
 
   function open_file(p_folder        in varchar2
                     ,p_filename      in varchar2
@@ -168,6 +169,22 @@ create or replace package app_utl as
   function is_process_running
     (p_module_name in varchar2, p_action_name in varchar2)
   return boolean;
-   
+  
+  function b_open_file
+	(p_folder        in varchar2
+	,p_filename      in varchar2
+	,p_open_mode     in binary_integer default dbms_lob.lob_readonly) return bfile;
+	  
+  function b_readline
+	(p_handle      in out bfile
+	,p_filename    in varchar2) return raw;	  
+    
+  procedure b_close_file
+	(p_handle    in out bfile
+	,p_filename  in varchar2);
+	
+  function b_remove_bom 
+	(p_target in raw) return raw;	
+    
 end app_utl;
 /
