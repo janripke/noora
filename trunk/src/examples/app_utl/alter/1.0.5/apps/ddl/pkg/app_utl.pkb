@@ -294,35 +294,32 @@ create or replace package body app_utl as
   
  
 
-   function file_header_is_valid(p_job_name in varchar2
-                               ,p_folder in varchar2
-                               ,p_filename in varchar2
-                               ,p_file_header in varchar2) return boolean is
+  function file_header_is_valid
+    (p_job_name in varchar2
+    ,p_folder in varchar2
+    ,p_filename in varchar2
+    ,p_file_header in varchar2) return boolean is
 
-    l_handle utl_file.file_type;
-    l_line   varchar2(4000);
-    l_result boolean:=false;
+    l_handle 	bfile;
+    l_line   	varchar2(4000);
+    l_result 	boolean:=false;
     l_prc_name  varchar2(255):='file_header_is_valid';
 
   begin
     logger.debug(p_job_name,M_PACKAGE_NAME,l_prc_name,'file header in db:' || p_file_header);
-    l_handle:=app_utl.open_file(p_folder    => p_folder
-                               ,p_filename  => p_filename
-                               ,p_open_mode => 'r');
-    utl_file.get_line(l_handle,l_line);
-
-    -- l_line := rtrim(l_line, M_LF); -- MCP-96 : header validatie - strip newline characters uit fileheader
-    -- l_line := rtrim(l_line, M_CR); -- MCP-96 : header validatie - strip newline characters uit fileheader
-
-    l_line := replace(l_line,M_LF,''); -- MCP-96 : header validatie - strip newline characters uit fileheader
-    l_line := replace(l_line,M_CR,''); -- MCP-96 : header validatie - strip newline characters uit fileheader
-
+    l_handle:=app_utl.b_open_file
+  	  (p_folder        => p_folder
+      ,p_filename      => p_filename
+      ,p_open_mode     => dbms_lob.lob_readonly);
+      
+    l_line:=app_utl.b_readline(l_handle, p_filename);
+    l_line:=app_utl.b_remove_bom(l_line);
 
     logger.debug(p_job_name,M_PACKAGE_NAME,l_prc_name,'file header in file :'|| l_line);
-    if lower(l_line)=lower(p_file_header) then
+    if utl_raw.cast_to_varchar2(l_line)=(p_file_header) then
       l_result:=true;
     end if;
-    app_utl.close_file(l_handle,p_filename);
+    app_utl.b_close_file(l_handle, p_filename);
 
     return l_result;
 
@@ -920,6 +917,105 @@ create or replace package body app_utl as
     end if;
     return l_result;  
   end is_process_running;
-  	
+  
+  --Starts the procedure to remove BOM from file. Open the file in binary.
+	function b_open_file
+	  (p_folder        in varchar2
+	  ,p_filename      in varchar2
+	  ,p_open_mode     in binary_integer default dbms_lob.lob_readonly) return bfile is
+	  
+	  l_handle       BFILE;
+	         
+	begin
+	  l_handle := bfilename(p_folder,p_filename); 
+	  if dbms_lob.fileisopen(l_handle)=0 then
+	    dbms_lob.fileopen(l_handle, p_open_mode);
+	  end if;
+	  return l_handle;
+	
+	exception
+	  when utl_file.invalid_path then
+	    raise_application_error(-20999,'invalid folder (' || p_folder || ', ' || p_filename || ')');
+	  when utl_file.invalid_mode then
+	    raise_application_error(-20999,'invalid mode (' || p_open_mode || ', ' || p_filename || ')');
+	  when utl_file.invalid_filehandle then
+	    raise_application_error(-20999,'invalid handle (' || p_filename || ')');
+	  when utl_file.invalid_operation then
+	    raise_application_error(-20999,'invalid operation (' || p_folder || ', ' || p_filename || ')');
+	  when utl_file.read_error then
+	    raise_application_error(-20999,'read error (' || p_filename || ')');
+	  when utl_file.write_error then
+	    raise_application_error(-20999,'write error (' || p_filename || ')');
+	  when utl_file.internal_error then
+	    raise_application_error(-20999,'internal error (' || p_filename || ')');
+	  when others then
+	    raise_application_error(-20999,'unknown error (' || sqlcode || ', ' || p_filename || ', ' || sqlerrm || ')');
+	end;
+	
+	--Starts to read the first line, and changes the windows and apple marks into linux.
+	function b_readline
+	  (p_handle      in out bfile
+	  ,p_filename    in varchar2) return raw is
+	  
+	  l_substr       raw(4000); 
+	  l_count        number(12);
+	  l_target       raw(4000);
+	     
+	begin
+	  l_substr := dbms_lob.substr(p_handle, 4000);
+	  l_substr := replace(l_substr,'0D','0A'); 
+	  l_substr := replace(l_substr,'0A0A','0A');
+	    
+	  l_count:=dbms_lob.getlength(p_handle);
+	  for i in 0..l_count loop
+	    if dbms_lob.substr(p_handle,1,i)<>'0A' then
+	      l_target := l_target || dbms_lob.substr(p_handle,1,i);
+	    end if;
+	    
+	    if dbms_lob.substr(p_handle,1,i)='0A' then
+	      exit;
+	    end if;        
+	  end loop;
+	    
+	  l_target:=replace(l_target,'0D','');
+	  return l_target;
+	    
+	end;
+	
+	--Closes the binary file.
+	procedure b_close_file
+	  (p_handle    in out bfile
+	  ,p_filename  in varchar2) is
+	  
+	  l_target  varchar2(4000);
+	
+	begin
+	  if dbms_lob.fileisopen(p_handle)=1 then
+	    dbms_lob.fileclose(p_handle);
+	  end if;
+	    
+	exception
+	  when others then
+	    raise_application_error(-20999,'unknown error (' || sqlcode || ', ' || p_filename || ', ' || sqlerrm || ')');
+	end;
+	
+	--A procedure to remove the various BOMs
+	function b_remove_bom 
+	  (p_target in raw) return raw is
+	    
+	  l_target       raw(4000);
+	  l_count        number(12);
+	
+	begin
+	  l_target := p_target;
+	  l_count:=dbms_lob.getlength(l_target);
+	  l_target:=replace(l_target,'EFBBBF','');
+	  l_target:=replace(l_target,'0000FEFF','');
+	  l_target:=replace(l_target,'FFFF0000','');
+	  l_target:=replace(l_target,'FEFF','');
+	  l_target:=replace(l_target,'FFFE','');
+	  return l_target;
+  
+  	end;
 end app_utl;
 /
