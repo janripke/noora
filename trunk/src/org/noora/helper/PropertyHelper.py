@@ -1,10 +1,18 @@
 #!/usr/bin/env python
-
 class PropertyHelper:
 
   def __init__(self):
     pass
-  
+
+  @staticmethod
+  def getDatabaseFolder(database, folder_aliases):
+    if folder_aliases:
+      for folder_alias in folder_aliases:
+        alias = folder_alias[0]
+        if database == alias:
+          return folder_alias[1]
+    return database
+
   @staticmethod
   def getUser(users, host, database):
     for user in users:

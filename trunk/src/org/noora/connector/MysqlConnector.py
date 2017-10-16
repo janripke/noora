@@ -47,8 +47,8 @@ class MysqlConnector(Connector):
     feedback = File('feedback.log')
     feedbackWriter = FileWriter(feedback) 
     
-    startupInfo = StartupInfoFactory.newStartupInfo()      
-    
+    startupInfo = StartupInfoFactory.newStartupInfo()
+
     cp = Properties()
     cp.setProperty(Processor.STDERR, feedbackWriter)
     cp.setProperty(Processor.STDIN,scriptReader)
