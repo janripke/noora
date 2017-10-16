@@ -49,6 +49,9 @@ class Properties:
     return result
   
   def getPropertyValues(self, key):
-    return eval(self.getPropertyValue(key))
+    value = self.getPropertyValue(key)
+    if value:
+      return eval(self.getPropertyValue(key))
+    return None
 
 

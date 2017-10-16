@@ -39,7 +39,11 @@ class UpdatePlugin(Plugin):
     option = OptionFactory.newOption("-e", "--environment", True, False, "environment descriptor of the mysql-server.")
     option.setValues(properties.getPropertyValues('ENVIRONMENTS'))
     options.add(option)
-    
+
+    option = OptionFactory.newOption("-a", "--alias", True, False, "the name of the mysql database to install.")
+    option.setValues(properties.getPropertyValues('ALIASES'))
+    options.add(option)
+
     option = OptionFactory.newOption("-v", "--version", True, True, "version folder to install.")
     #option.setValues(properties.getPropertyValues('ENVIRONMENTS'))
     options.add(option)
@@ -101,8 +105,15 @@ class UpdatePlugin(Plugin):
     alterDir = properties.getPropertyValue('alter.dir')
     
     self.checkVersionFolder(version, properties)
-    
-    
+
+    alias = commandLine.getOptionValue('-a', None)
+    database_aliases = properties.getPropertyValues('DATABASE_ALIASES')
+
+    # if an alias is given, only this database will be installed, other databases will be ignored.
+    if alias:
+      print "using alias :" + alias
+      databases = [alias]
+
     connector = self.getConnector()    
 
     for database in databases:
@@ -117,7 +128,9 @@ class UpdatePlugin(Plugin):
       executor.setDatabase(database)
       executor.setIgnoreErrors(ignoreErrors)
       executor.setPassword(passwd)
-      executor.setUsername(user)        
+      executor.setUsername(user)
+
+      database_folder = PropertyHelper.getDatabaseFolder(database, database_aliases)
       
       if database == versionDatabase:
         self.checkEnvironment(connector, executor, environment, properties)
@@ -126,19 +139,19 @@ class UpdatePlugin(Plugin):
       for object in objects:  
 
         # global ddl objects
-        folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'ddl'+os.sep+object)
+        folder=File(alterDir+os.sep+version+os.sep+database_folder+os.sep+'ddl'+os.sep+object)
         ConnectionExecutor.execute(connector, executor, properties, folder)
 
         # environment specific ddl objects
-        folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'ddl'+os.sep+object+os.sep+environment)
+        folder=File(alterDir+os.sep+version+os.sep+database_folder+os.sep+'ddl'+os.sep+object+os.sep+environment)
         ConnectionExecutor.execute(connector, executor, properties, folder)
 
       # global dat objects
-      folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'dat')
+      folder=File(alterDir+os.sep+version+os.sep+database_folder+os.sep+'dat')
       ConnectionExecutor.execute(connector, executor, properties, folder)
 
       # environment specific dat objects
-      folder=File(alterDir+os.sep+version+os.sep+database+os.sep+'dat'+os.sep+environment)
+      folder=File(alterDir+os.sep+version+os.sep+database_folder+os.sep+'dat'+os.sep+environment)
       ConnectionExecutor.execute(connector, executor, properties, folder)
 
       print "database '"+database+"' updated."

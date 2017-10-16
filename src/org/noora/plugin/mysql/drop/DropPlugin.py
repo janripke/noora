@@ -40,7 +40,11 @@ class DropPlugin(Plugin):
     option = OptionFactory.newOption("-e", "--environment", True, False, "environment descriptor of the mysql-server.")
     option.setValues(properties.getPropertyValues('ENVIRONMENTS'))
     options.add(option)
-    
+
+    option = OptionFactory.newOption("-a", "--alias", True, False, "the name of the mysql database to install.")
+    option.setValues(properties.getPropertyValues('ALIASES'))
+    options.add(option)
+
 #    options.addOption("--no-compile", True, False, "disable the compilation of database objects.")
     options.addOption("-i", "--ignore-errors", True, False, "ignore errors.")
     return options
@@ -75,6 +79,12 @@ class DropPlugin(Plugin):
 
     objects = properties.getPropertyValues('DROP_OBJECTS')
 
+    alias = commandLine.getOptionValue('-a', None)
+
+    # if an alias is given, only the alias database will be installed, other databases will be ignored.
+    if alias:
+      print "using alias :" + alias
+      databases = [alias]
 
     for database in databases:
       print "dropping database '"+database+"' on host '"+host+"' using environment '"+environment+"'"
@@ -90,7 +100,7 @@ class DropPlugin(Plugin):
       executor.setDatabase(database)
       executor.setIgnoreErrors(ignoreErrors)
       executor.setPassword(passwd)
-      executor.setUsername(user)      
+      executor.setUsername(user)
 
       for object in objects:      
         folder=File(self.getDropDir(properties)+os.sep+object)
