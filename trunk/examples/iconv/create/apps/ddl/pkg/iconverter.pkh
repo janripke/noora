@@ -1,0 +1,21 @@
+create or replace package iconverter as
+
+  G_UTF8                 CONSTANT VARCHAR2(50) := 'UTF-8';
+  G_ISO88591             CONSTANT VARCHAR2(50) := 'ISO-8859-1';
+  G_WINDOWS_1252         CONSTANT VARCHAR2(50) := 'windows-1252';
+
+
+   procedure convert
+    (p_job_name       in varchar2
+    ,p_folder         in varchar2
+    ,p_filename       in varchar2
+    ,p_source_charset in varchar2
+    ,p_target_charset in varchar2);
+
+
+  procedure convert
+    (url                in varchar2
+    ,sourceCharset      in varchar2
+    ,targetCharset      in varchar2); 
+end;
+/ 
