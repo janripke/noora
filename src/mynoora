@@ -72,9 +72,6 @@ def getRevision(app):
   print "noora runtime (build " + app.getVersion()  + "_" + app.getRevision().split(":")[1].rstrip("$").strip() + ")"
 
 
-
-
-
 if __name__ == "__main__":
 
     properties = Properties()        

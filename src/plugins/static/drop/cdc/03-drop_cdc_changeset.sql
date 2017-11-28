@@ -2,7 +2,8 @@ declare
   cursor c_cdc_object is
     select *
     from all_change_sets
-    where set_name <> 'SYNC_SET'
+    where 1=1
+      and set_name <> 'SYNC_SET'
       and publisher = user 
     ;
 

@@ -3,7 +3,7 @@ declare
     select USER user_name
          , table_name  table_name
          , 'N' force_flag
-    from user_tables y
+    from user_tables
     where table_name like '%CDC%';
 
   statement     varchar2(1024);
