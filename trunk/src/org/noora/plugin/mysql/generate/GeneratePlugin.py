@@ -16,6 +16,7 @@ from org.noora.io.Properties import Properties
 from org.noora.io.PropertyLoader import PropertyLoader
 from org.noora.version.VersionGuesser import VersionGuesser
 
+
 class GeneratePlugin(Plugin):
   
   __revision__ = "$Revision$"
