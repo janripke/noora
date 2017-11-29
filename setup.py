@@ -48,38 +48,27 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
 
         # Indicate who your project is intended for
-        'Intended Audience :: Other Audience',
-        'Topic :: Other/Nonlisted Topic',
-        'Topic :: Internet :: WWW/HTTP :: WSGI :: Middleware',
-        'Topic :: Office/Business :: Scheduling',
-        'Topic :: Scientific/Engineering :: Artificial Intelligence',
-        'Topic :: Scientific/Engineering :: Information Analysis',
-        'Topic :: Software Development :: Libraries :: Application Frameworks',
-        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Intended Audience :: Developers',
+        'Topic :: Database :: Front-Ends',
 
         # Pick your license as you wish (should match "license" above)
-        'License :: Other/Proprietary License',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
     ],
-    keywords='sample setuptools development',
-    packages=find_packages(exclude=['doc', 'env', 'etc', 'ext', 'images', 'livy-scripts', 'opt', 'paprika-db', 'run', 'static', 'templates']),
-    # install_requires=['cx_oracle', 'mysql-python', 'paramiko', 'requests', 'suds', 'Flask', 'flask_restful', 'filemagic', 'pysmbclient', 'cloudpickle', 'requests-kerberos', 'flake8', 'flaky', 'pytest', 'numpy'],
-    install_requires=['cx_oracle', 'mysql-python', 'paramiko', 'requests', 'suds', 'flask', 'flask_restful', 'flask-cors', 'flask-login', 'filemagic', 'pysmbclient', 'hdfs', 'pyspark', 'cloudpickle', 'requests-kerberos', 'flake8', 'flaky', 'pytest', 'numpy'],
+    keywords='development database',
+    packages=find_packages(exclude=['doc', 'env', 'examples', 'sql', 'src', 'tests']),
+    install_requires=[''],
 
     entry_points={
         'console_scripts': [
-            'paprika-hook=paprika.paprika_hook:main',
-            'paprika-message=paprika.paprika_message:main',
-            'paprika-scanner=paprika.paprika_scanner:main',
-            'paprika-scheduler=paprika.paprika_scheduler:main',
-            'paprika-streamer=paprika.paprika_streamer:main',
+            'mynoora=noora.mynoora_cli:main',
         ],
     },
 )
