@@ -54,7 +54,7 @@ This action is seen as a administrator task and is done once.
 
 ```
 $ mysql --user=apps --password=[password]
-mysql> create database orcl;
+mysql> create database acme;
 ```
 
 ## Create the database project.
