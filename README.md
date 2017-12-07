@@ -12,18 +12,16 @@ Noora currently supports Python 2.x
 First, clone the repo on your machine and then install with `pip`:
 
 ```
-$ svn checkout https://svn.code.sf.net/p/noora/code/trunk noora-trunk
-$ mkdir noora
+$ git clone https://github.com/janripke/noora
 $ cd noora
 $ virtualenv env
 $ source env/bin/activate
-$ cd ../noora-trunk
 $ pip install .
 ```
 
 ## Check that the installation worked
 
-Simply run `noora -v`.
+Simply run `mynoora -r`.
 
 
 # License
