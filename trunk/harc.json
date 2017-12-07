@@ -1,0 +1,10 @@
+{
+  "projects": [
+    {
+      "name": "noora",
+      "repository": "svn+https://{0}:'{1}'svn.code.sf.net/p/noora/code",
+      "technology": "python"
+    }
+  ],
+}
+
