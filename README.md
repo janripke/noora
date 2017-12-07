@@ -31,8 +31,31 @@ https://github.com/janripke/noora
 
 # Create your first mysql database project
 
-In this example we assume that you have installed a mysql database server.
+In this example it is assumed that you have installed a mysql database server.
 You also have created the database acme, which is accessible by the user apps.
+
+## Create the mysql database user
+
+Enter the following commands to create the database user apps in the mysql server.
+This action is seen as a administrator task and is done once.
+
+```
+$ mysql --user=root --password=[password]
+mysql> CREATE USER 'apps'@'localhost' IDENTIFIED BY 'apps';
+mysql> GRANT ALL PRIVILEGES ON * . * TO 'apps'@'localhost'
+mysql> flush privileges;
+mysql> exit
+```
+
+## Create the mysql database
+
+Enter the following commands to create the database acme in the mysql server.
+This action is seen as a administrator task and is done once.
+
+```
+$ mysql --user=apps --password=[password]
+mysql> create database orcl;
+```
 
 ## Create the database project.
 
