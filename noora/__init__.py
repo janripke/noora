@@ -9,5 +9,5 @@ __author__ = 'Jan Ripke'
 __email__ = 'jan.ripke@oxyma.nl'
 
 __license__ = 'GNU General Public License v3 or later (GPLv3+)'
-__copyright__ = 'Copyleft (c) 2017 Jan Ripke'
+__copyright__ = 'Copyleft (l) 2017 Jan Ripke'
 

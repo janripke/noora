@@ -4,7 +4,7 @@ import os
 import re
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-META_PATH = os.path.join('paprika', '__init__.py')
+META_PATH = os.path.join('noora', '__init__.py')
 
 
 def read(*parts):
@@ -63,9 +63,9 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     keywords='development database',
-    packages=find_packages(exclude=['doc', 'env', 'examples', 'sql', 'src', 'tests']),
+    packages=find_packages(exclude=['doc', 'env', 'examples', 'releases', 'sql', 'src', 'test', 'tests']),
+    package_data={'noora': ['*.json', 'plugins/mysql/generate/templates/*.json', 'plugins/mysql/generate/templates/fct/*.sql', 'plugins/mysql/generate/templates/idx/*.sql', 'plugins/mysql/generate/templates/tab/*.sql', 'plugins/mysql/generate/templates/trg/*.sql']},
     install_requires=[''],
-
     entry_points={
         'console_scripts': [
             'mynoora=noora.mynoora_cli:main',
