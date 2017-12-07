@@ -21,7 +21,13 @@ $ pip install .
 
 ## Check that the installation worked
 
-Simply run `mynoora help`.
+Simply run : 
+```
+$ mynoora help
+NoOra a database deployment tool.
+https://github.com/janripke/noora
+1.0.5-SNAPSHOT
+```
 
 # Create your first mysql database project
 
