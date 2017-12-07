@@ -32,7 +32,6 @@ https://github.com/janripke/noora
 # Create your first mysql database project
 
 In this example it is assumed that you have installed a mysql database server.
-You also have created the database acme, which is accessible by the user apps.
 
 ## Create the mysql database user
 
