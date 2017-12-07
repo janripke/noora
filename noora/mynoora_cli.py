@@ -30,7 +30,7 @@ def main(args=None):
 
     # Instantiate the argument parser
     parser = argparse.ArgumentParser(description="mynoora, a mysql deployment tool", add_help=False)
-    parser.add_argument("commands", help="display a square of a given number", type=str, nargs='+', required=False)
+    parser.add_argument("commands", help="display a square of a given number", type=str, nargs='+')
     parser.add_argument('-r', action='store_true', help='show the revision')
     parser.add_argument('-v', type=str, help='version', required=False)
     parser.add_argument('-h', type=str, help='host', required=False)
