@@ -21,7 +21,7 @@ $ pip install .
 
 ## Check that the installation worked
 
-Simply run `mynoora -r`.
+Simply run `mynoora help`.
 
 
 # License
