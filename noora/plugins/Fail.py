@@ -1,5 +1,7 @@
 from noora.plugins.PluginException import PluginException
-
+from noora.version.Versions import Versions
+from noora.version.VersionLoader import VersionLoader
+from noora.version.Version import Version
 
 class Fail:
     def __init__(self):
@@ -52,3 +54,14 @@ class Fail:
             if alias not in aliasses:
                 message = "the given alias is not valid for this project"
                 raise PluginException(message)
+
+    @staticmethod
+    def fail_on_unknown_version(version, properties):
+        versions = Versions()
+        version_loader = VersionLoader(versions)
+        version_loader.load(properties)
+        versions.sort()
+
+        if not versions.exists(Version(version)):
+            message = "the given version is not valid for this project"
+            raise PluginException(message)

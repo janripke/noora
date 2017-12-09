@@ -18,6 +18,13 @@ class Versions:
         versions = self.__versions
         versions.append(version)
 
+    def exists(self, other):
+        versions = self.__versions
+        for version in versions:
+            if version == other:
+                return True
+        return False
+
     def list(self):
         return self.__versions
 
