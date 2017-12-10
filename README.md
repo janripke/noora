@@ -7,6 +7,14 @@ The supported database platforms are Oracle and Mysql.
 # Installation
 Noora currently supports Python 2.x
 
+## Install release
+Enter the following to install noora on your system.
+In this example noora version 1.0.5 is installed.
+
+```
+$ pip install git+https://github.com/janripke/noora.git@1.0.5#egg=noora --upgrade
+```
+
 ## Install from source using virtualenv
 
 First, clone the repo on your machine and then install with `pip`:
