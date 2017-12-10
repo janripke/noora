@@ -1,0 +1,2 @@
+ALTER TABLE sites ADD CONSTRAINT ste_delay_unit_fk FOREIGN KEY (delay_unit) REFERENCES delay_units (delay_unit);
+ALTER TABLE sites ADD CONSTRAINT ste_spe_id_fk FOREIGN KEY (spe_id) REFERENCES sitetypes (id);

@@ -63,7 +63,7 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     keywords='development database',
-    packages=find_packages(exclude=['doc', 'env', 'examples', 'releases', 'sql', 'src', 'test', 'tests']),
+    packages=find_packages(exclude=['doc', 'env', 'examples', 'releases', 'snippets', 'src', 'test', 'tests']),
     package_data={'noora': ['*.json', 'plugins/mysql/generate/templates/*.json', 'plugins/mysql/generate/templates/fct/*.sql', 'plugins/mysql/generate/templates/idx/*.sql', 'plugins/mysql/generate/templates/tab/*.sql', 'plugins/mysql/generate/templates/trg/*.sql', 'plugins/mysql/drop/fct/*.sql', 'plugins/mysql/drop/prc/*.sql', 'plugins/mysql/drop/tab/*.sql', 'plugins/mysql/drop/vw/*.sql']},
     install_requires=[''],
     entry_points={
