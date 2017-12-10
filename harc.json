@@ -2,9 +2,11 @@
   "projects": [
     {
       "name": "noora",
-      "repository": "svn+https://{0}:'{1}'svn.code.sf.net/p/noora/code",
+      "repository": "https://{0}:'{1}'@github.com/janripke/noora.git",
       "technology": "python"
     }
-  ],
+  ]
 }
+
+
 
