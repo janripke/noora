@@ -29,4 +29,8 @@ class App:
             if command.lower() == p.get_type().lower():
                 return p
 
-
+    @staticmethod
+    def build_dir(version, properties):
+        if version == properties.get_property("default_version"):
+            return properties.get_property("create.dir")
+        return os.path.join(properties.get_property("alter.dir"), version)
