@@ -1,1 +1,0 @@
-select value into @version from application_properties where name='{name}' and value='{previous}';

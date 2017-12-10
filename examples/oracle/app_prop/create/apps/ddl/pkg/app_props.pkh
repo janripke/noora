@@ -1,0 +1,46 @@
+create or replace package app_props as
+
+  /**************************************************************************
+  * Package         : app_props
+  * Author          : Frans Jacobs
+  * Create date     : 08-03-2010
+  * Purpose         : Convenience methods for properties.
+  * Version         : 1.0
+  **************************************************************************/
+
+  /**
+   * get a property from the APP_PROP table
+   * p_name the (key) name of the property
+   * p_default an optional default value,
+   * which is returned in case the property does not exist in the APP_PROP table
+   */
+  function get_property (p_name varchar2,
+                         p_default varchar2 default null)
+  return varchar2;
+  
+  /**
+   * toggle the value of a boolean property
+   * when the value the APP_PROP table is equal to 'FALSE' or 'NO' the
+   * value is changed to 'TRUE' resp. 'FALSE'
+   * p_name the (key) name of the property
+   * p_value the value after the toggle
+   * Setting is performed in an autonomous transaction
+   */
+  procedure toggleValue(p_name in varchar2,
+                        p_value out boolean);
+
+  /**
+   * Change an existing property
+   * This procedue is NOT met to insert new properties
+   * when trying to update a not existing property the procedure
+   * will thow an application exception!
+   * p_name the (key) name of the property
+   * p_value the new value
+   * Toggle is performed in an autonomous transaction
+   */
+  procedure set_property(p_name in varchar2,
+                        p_value in varchar2);
+
+
+end;
+/

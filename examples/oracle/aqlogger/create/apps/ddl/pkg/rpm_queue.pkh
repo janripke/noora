@@ -1,0 +1,35 @@
+create or replace package rpm_queue as
+
+   G_EXPORT_QUEUE    constant varchar2(50) := 'RPM_OWNER.RPM_EXPORT_MSG';
+   G_IMPORT_QUEUE    constant varchar2(50) := 'RPM_OWNER.RPM_IMPORT_MSG';
+   G_RESULTAAT_QUEUE constant varchar2(50) := 'RPM_OWNER.RPM_RESULTAAT_MSG';
+   
+   procedure create_agent(p_agent    user_aq_agent_privs.agent_name%type);
+                         
+   procedure drop_agent(p_agent user_aq_agent_privs.agent_name%type);
+
+   procedure subscribe(p_queue        varchar2
+                      ,p_agent        user_aq_agent_privs.agent_name%type
+                      ,p_Selector     in varchar2 DEFAULT NULL);
+                      
+   procedure unsubscribe(p_queue        varchar2
+                       , p_agent        user_aq_agent_privs.agent_name%type);
+
+   procedure register(p_package_name varchar2
+                    , p_queue        varchar2
+                    , p_agent        user_aq_agent_privs.agent_name%type);
+                    
+   procedure unregister(p_package_name varchar2
+                      , p_queue        varchar2
+                      , p_agent        user_aq_agent_privs.agent_name%type);
+
+   procedure create_consumer(p_package_name varchar2
+                           , p_queue        varchar2
+                           , p_agent        user_aq_agent_privs.agent_name%type
+                           , p_Selector     in varchar2);
+
+   procedure remove_consumer(p_package_name varchar2
+                           , p_queue        varchar2
+                           , p_agent        user_aq_agent_privs.agent_name%type);
+end rpm_queue;
+/

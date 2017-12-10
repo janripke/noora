@@ -1,0 +1,71 @@
+create or replace package stager as
+
+  G_TYPE_ERROR       constant varchar2(50):='ERROR';
+  G_TYPE_NI          constant varchar2(50):='NI';
+
+  function stage
+    (p_job_name          in varchar2
+    ,p_file_id           in number
+    ,p_table_name        in varchar2
+    ,p_stage_table_name  in varchar2
+    ,p_field_list        in app_utl.t_field_list) return number;
+
+  function prepare_error_records
+    (p_job_name          in varchar2
+    ,p_err_table_name    in varchar2
+    ,p_stage_table_name  in varchar2
+    ,p_field_list        in app_utl.t_field_list
+    ,p_type              in varchar2 default G_TYPE_ERROR) return number;    
+
+  function prepare_ni_records
+    (p_job_name          in varchar2
+    ,p_err_table_name    in varchar2
+    ,p_stage_table_name  in varchar2
+    ,p_field_list        in app_utl.t_field_list
+    ,p_type              in varchar2 default G_TYPE_NI) return number;
+
+  function prepare_error_records
+    (p_job_name          in varchar2
+    ,p_stage_table_name  in varchar2
+    ,p_field_list        in app_utl.t_field_list) return number;
+
+  function prepare_ni_records
+    (p_job_name          in varchar2
+    ,p_stage_table_name  in varchar2
+    ,p_field_list        in app_utl.t_field_list
+    ,p_type              in varchar2 default G_TYPE_NI) return number;
+    
+  procedure log_error_records
+    (p_job_name in varchar2
+    ,p_type     in varchar2 default G_TYPE_ERROR);    
+
+  procedure create_log_file
+    (p_job_name    in varchar2
+    ,p_folder      in varchar2
+    ,p_filename    in varchar2);
+    
+  procedure create_ni_file
+    (p_job_name    in varchar2
+    ,p_folder      in varchar2
+    ,p_filename    in varchar2
+    ,p_file_header in varchar2 default null
+    ,p_type        in varchar2 default G_TYPE_NI);    
+
+  function prepare_error_records
+    (p_job_name          in varchar2
+    ,p_table_name        in varchar2
+    ,p_err_table_name    in varchar2) return number;
+    
+    
+  function prepare_error_records
+    (p_job_name          in varchar2
+    ,p_err_table_name    in varchar2) return number;
+
+  function prepare_dbl_error_records
+    (p_job_name          in varchar2
+    ,p_table_name        in varchar2
+    ,p_dblink            in varchar2
+    ,p_err_table_name    in varchar2) return number;    
+
+end stager;
+/

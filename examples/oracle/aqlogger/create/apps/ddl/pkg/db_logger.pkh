@@ -1,0 +1,17 @@
+create or replace package db_logger as  
+
+  procedure action
+    (context   raw
+    ,reginfo   sys.aq$_reg_info
+    ,descr     sys.aq$_descriptor
+    ,payload   varchar2
+    ,payloadl  number);
+
+
+  procedure create_consumer
+    (p_selector in varchar2 default null);
+  
+             
+
+  end db_logger;
+/

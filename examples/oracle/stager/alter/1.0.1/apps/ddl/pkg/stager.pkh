@@ -1,0 +1,29 @@
+create or replace package stager as
+
+  function stage
+    (p_job_name          in varchar2
+    ,p_file_id           in number
+    ,p_table_name        in varchar2
+    ,p_stage_table_name  in varchar2
+    ,p_field_list        in app_utl.t_field_list) return number;
+    
+  procedure create_log_file
+    (p_job_name    in varchar2
+    ,p_folder      in varchar2
+    ,p_filename    in varchar2);  
+    
+  procedure create_ni_file
+    (p_job_name    in varchar2
+    ,p_folder      in varchar2
+    ,p_filename    in varchar2
+    ,p_file_header in varchar2 default null
+    ,p_table_name  in varchar2
+    ,p_field_list  in app_utl.t_field_list
+    ,p_delimiter   in varchar2);
+
+  function errors
+    (p_job_name   in varchar2
+    ,p_table_name in varchar2) return number; 
+
+end stager;
+/

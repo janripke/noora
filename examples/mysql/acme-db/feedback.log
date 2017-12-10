@@ -1,4 +1,0 @@
-Warning (Code 1364): Field 'created_at' doesn't have a default value
-Warning (Code 1364): Field 'created_by' doesn't have a default value
-Warning (Code 1364): Field 'updated_at' doesn't have a default value
-Warning (Code 1364): Field 'updated_by' doesn't have a default value

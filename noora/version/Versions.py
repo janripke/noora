@@ -33,6 +33,8 @@ class Versions:
         i = 0
         for version in versions:
             if version == other:
+                if i == 0:
+                    return version
                 return versions[i - 1]
             i = i + 1
 
