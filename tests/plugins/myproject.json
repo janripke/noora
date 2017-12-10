@@ -69,5 +69,8 @@
   ],
   "component_name": "app_prop",
   "component_target_folder": "target",
-  "component_excluded_files": ["version.sql"]
+  "component_excluded_files": ["version.sql"],
+  "component_update_statement" : "update application_properties set value='<version>' where name='<name>';",
+  "component_insert_statement" : "insert into application_properties(id,name,value) values (application_properties_s.nextval,'<name>','<version>');",
+  "component_select_statement" : "select value into @version from application_properties where name='<name>' and value='<previous>';"
 }

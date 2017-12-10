@@ -16,11 +16,36 @@ class TestShell(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testProcessor(self):
-        script = File("drop_tables.sql")
+    # def testDropTables(self):
+    #     script = File("drop_tables.sql")
+    #
+    #     properties = Properties()
+    #     properties.set_property('database', 'acme')
+    #
+    #     stream = PreProcessor.parse(script, properties)
+    #     tmp = File("tmp.sql")
+    #     f = open(tmp.get_url(), 'w')
+    #     f.write(stream)
+    #     f.close()
+    #
+    #     script_reader = open(tmp.get_url())
+    #
+    #     feedback = File('feedback.log')
+    #     feedback_writer = open(feedback.get_url(), 'w')
+    #
+    #     statement = "mysql --host=localhost --user=apps --password=apps acme"
+    #     call = CallFactory.new_call(statement)
+    #     call['stdin'] = script_reader
+    #     call['stdout'] = feedback_writer
+    #     call['stderr'] = feedback_writer
+    #     result = Shell.execute(call)
+
+    def testCheckVersion(self):
+        script = File("checkversion.sql")
 
         properties = Properties()
-        properties.set_property('database', 'acme')
+        properties.set_property('name', 'app_prop')
+        properties.set_property('previous', '1.0.0')
 
         stream = PreProcessor.parse(script, properties)
         tmp = File("tmp.sql")
@@ -33,13 +58,13 @@ class TestShell(unittest.TestCase):
         feedback = File('feedback.log')
         feedback_writer = open(feedback.get_url(), 'w')
 
-        statement = "mysql --host=localhost --user=apps --password=apps acme"
+        statement = "mysql --show-warnings --host=localhost --user=apps --password=apps acme"
         call = CallFactory.new_call(statement)
         call['stdin'] = script_reader
         call['stdout'] = feedback_writer
         call['stderr'] = feedback_writer
         result = Shell.execute(call)
-
+        print "result", result
 
 
 if __name__ == '__main__':
