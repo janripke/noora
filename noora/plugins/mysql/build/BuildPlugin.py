@@ -17,7 +17,7 @@ from zipfile import ZIP_DEFLATED
 
 class BuildPlugin(Plugin):
     def __init__(self):
-        Plugin.__init__(self, "generate", None)
+        Plugin.__init__(self, "build", None)
 
     def version_statement(self, version, properties):
         if version == properties.get_property("default_version"):
