@@ -43,7 +43,7 @@ class TestBase(unittest.TestCase):
         parser.add_argument('-e', type=str, help='environment', required=False)
         parser.add_argument('-a', type=str, help='alias', required=False)
 
-        arguments = parser.parse_args(['update', '-h=localhost', '-v=1.0.1'])
+        arguments = parser.parse_args(['build', '-v=1.0.1'])
 
         plugin = BuildPlugin()
         plugin.execute(arguments, properties)
