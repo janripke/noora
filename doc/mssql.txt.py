@@ -1,0 +1,19 @@
+USE tempdb
+GO
+CREATE LOGIN u1 WITH PASSWORD = '<password>'
+CREATE USER u1 WITH DEFAULT_SCHEMA = u1
+GO
+GRANT CREATE TABLE to u1
+GO
+CREATE SCHEMA sch1
+GO
+CREATE SCHEMA u1 AUTHORIZATION u1
+GO
+EXECUTE AS user = 'u1'
+GO
+CREATE TABLE t1(c1 int)
+GO
+revert
+GO
+SELECT user_name(uid) , * FROM sysobjects WHERE name = 't1'
+GO

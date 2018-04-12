@@ -1,0 +1,1 @@
+drop function dbo.app_prop__get_property

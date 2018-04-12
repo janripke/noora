@@ -1,0 +1,1 @@
+drop sequence application_properties_s;
