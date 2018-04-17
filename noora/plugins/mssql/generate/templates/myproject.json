@@ -1,24 +1,24 @@
 {
-  "database" : "ElsevierDB",
+  "database" : "{database}",
   "schemes": [
-    "dbo"
+    "{schema}"
   ],
   "aliasses": [],
   "database_aliases" : [],
   "mssql_users": [
     [
-      "elsevierdb4.c07v9zv3jhxs.eu-west-1.rds.amazonaws.com,1433",
-      "dbo",
-      "Elsevier",
-      "Elsevier144"
+      "{host}",
+      "{schema}",
+      "{username}",
+      "{password}"
     ]
   ],
   "default_environment": "dev",
   "mssql_hosts": [
-    "elsevierdb4.c07v9zv3jhxs.eu-west-1.rds.amazonaws.com,1433"
+    "{host}"
   ],
   "blocked_hosts": [],
-  "version_schema": "dbo",
+  "version_schema": "{schema}",
   "excluded_extensions": [
     "bak",
     "~",
@@ -68,6 +68,7 @@
     "gra"
   ],
   "plugins": [
+    "noora.plugins.mssql.generate.GeneratePlugin.GeneratePlugin",
     "noora.plugins.mssql.drop.DropPlugin.DropPlugin",
     "noora.plugins.mssql.create.CreatePlugin.CreatePlugin",
     "noora.plugins.mssql.update.UpdatePlugin.UpdatePlugin",

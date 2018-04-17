@@ -1,0 +1,1 @@
+CREATE INDEX apy_name_idx ON application_properties(name);

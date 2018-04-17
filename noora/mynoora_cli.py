@@ -29,7 +29,7 @@ def main(args=None):
         properties.set_property(key, data[key])
 
     # Instantiate the argument parser
-    parser = argparse.ArgumentParser(description="mynoora, a mysql deployment tool", add_help=False)
+    parser = argparse.ArgumentParser(description="mynoora, a sql deployment tool", add_help=False)
     parser.add_argument("commands", help="display a square of a given number", type=str, nargs='+')
     parser.add_argument('-r', action='store_true', help='show the revision')
     parser.add_argument('-v', type=str, help='version', required=False)
@@ -37,6 +37,7 @@ def main(args=None):
     parser.add_argument('-d', type=str, help='database', required=False)
     parser.add_argument('-e', type=str, help='environment', required=False)
     parser.add_argument('-a', type=str, help='alias', required=False)
+    parser.add_argument('-t', type=str, help='technology', required=False)
 
     args = parser.parse_args(args)
 

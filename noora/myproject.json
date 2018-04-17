@@ -17,7 +17,7 @@
     "idx"
   ],
   "plugins": [
-    "noora.plugins.mysql.generate.GeneratePlugin.GeneratePlugin",
+    "noora.plugins.GeneratePlugin.GeneratePlugin",
     "noora.plugins.mysql.help.HelpPlugin.HelpPlugin"
   ]
 }
