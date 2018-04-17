@@ -1,8 +1,1 @@
-delete 
-  from mysql.proc 
- where name in 
-   (select routine_name 
-      from information_schema.routines 
-     where routine_schema = 'acme'
-       and routine_type   = 'FUNCTION'
-     );
+insert into application_properties(name,value) values ('application.environment','dev');
