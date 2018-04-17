@@ -22,7 +22,8 @@ class MssqlConnector(Connector):
 
         cp = Properties()
         cp.set_property('database', executable['database'])
-
+        if 'schema' in executable.keys():
+            cp.set_property('schema', executable['schema'])
         if 'environment' in properties.keys():
             cp.set_property('environment', properties.get_property('environment'))
         if 'previous' in properties.keys():
@@ -39,8 +40,7 @@ class MssqlConnector(Connector):
 
         feedback = File('feedback.log')
         feedback_writer = open(feedback.get_url(), 'w')
-        statement = "sqlcmd -S " + executable['host'] + " -U " + executable['user'] + ' -P ' + executable['password'] + " -d " + executable['database'] + " -i " + tmp.get_url()
-        print statement
+        statement = "sqlcmd -b -S " + executable['host'] + " -U " + executable['username'] + ' -P ' + executable['password'] + " -d " + executable['database'] + " -i " + tmp.get_url()
 
         call = CallFactory.new_call(statement)
         call['stdout'] = feedback_writer

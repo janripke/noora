@@ -17,3 +17,9 @@ revert
 GO
 SELECT user_name(uid) , * FROM sysobjects WHERE name = 't1'
 GO
+
+set permissions, like in oracle
+https://docs.microsoft.com/en-us/sql/t-sql/statements/grant-database-permissions-transact-sql
+
+todo: host, alias support
+

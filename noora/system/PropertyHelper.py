@@ -12,6 +12,20 @@ class PropertyHelper:
         return database
 
     @staticmethod
+    def get_mssql_user(users, host, schema):
+        for user in users:
+            if user[0].lower() == host.lower() and user[1].lower() == schema.lower():
+                return user[2]
+        return None
+
+    @staticmethod
+    def get_mssql_password(users, host, schema):
+        for user in users:
+            if user[0].lower() == host.lower() and user[1].lower() == schema.lower():
+                return user[3]
+        return None
+
+    @staticmethod
     def get_mysql_user(users, host, database):
         for user in users:
             if user[0].lower() == host.lower() and user[1].lower() == database.lower():

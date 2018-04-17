@@ -16,6 +16,24 @@ class TestConnector(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def testEnvironment(self):
+        noora_dir = os.path.dirname(noora.__file__)
+        current_dir = os.path.abspath('.')
+
+        properties = Properties()
+        properties.set_property("noora.dir", noora_dir)
+        properties.set_property("current.dir", current_dir)
+
+        executable = {}
+        executable['script'] = File("exec_get_environment.sql")
+        executable['host'] = "elsevierdb4.c07v9zv3jhxs.eu-west-1.rds.amazonaws.com,1433"
+        executable['user'] = "Elsevier"
+        executable['password'] = "Elsevier144"
+        executable['database'] = "ElsevierDB"
+
+        connector = MssqlConnector()
+        connector.execute(executable, properties)
+
     def testMssqlConnector(self):
         noora_dir = os.path.dirname(noora.__file__)
         current_dir = os.path.abspath('.')

@@ -1,0 +1,2 @@
+print "client"
+print "$(USERNAME)"

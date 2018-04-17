@@ -40,6 +40,14 @@ class Fail:
                 raise PluginException(message)
 
     @staticmethod
+    def fail_on_invalid_schema(schema, properties):
+        if schema:
+            schemes = properties.get_property('schemes')
+            if schema not in schemes:
+                message = "the given schema is not valid for this project"
+                raise PluginException(message)
+
+    @staticmethod
     def fail_on_invalid_environment(environment, properties):
         if environment:
             environments = properties.get_property('environments')
