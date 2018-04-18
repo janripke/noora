@@ -37,6 +37,7 @@ def main(args=None):
     parser.add_argument('-d', type=str, help='database', required=False)
     parser.add_argument('-e', type=str, help='environment', required=False)
     parser.add_argument('-a', type=str, help='alias', required=False)
+    parser.add_argument('-s', type=str, help='schema', required=False)
     parser.add_argument('-t', type=str, help='technology', required=False)
 
     args = parser.parse_args(args)
