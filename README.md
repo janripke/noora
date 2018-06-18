@@ -68,7 +68,7 @@ mysql> create database acme;
 Execute the following commands to create a new database project.
 
 ```
-$ mynoora generate
+$ mynoora generate -t=mysql
 database : acme
 host [localhost] :
 username : apps
