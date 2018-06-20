@@ -1,5 +1,7 @@
 # ![noora logo](https://a.fsdn.com/allura/p/noora/icon)
 
+[![Join the chat at https://gitter.im/noora_cli/Lobby](https://badges.gitter.im/noora_cli/Lobby.svg)](https://gitter.im/noora_cli/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 NoOra is a database deployment tool which can be used to automate the database deployment cycle and is designed for agile and or devops teams.
 The supported database platforms are Oracle and Mysql.
 
