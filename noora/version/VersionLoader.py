@@ -12,6 +12,7 @@ class VersionLoader:
         if alter.exists():
             files = Files()
             for version in files.list(alter):
+                print "version", version.tail()
                 self.__versions.add(Version(version.tail()))
 
         create = File(properties.get_property("create.dir"))

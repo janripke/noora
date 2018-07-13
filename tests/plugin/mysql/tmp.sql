@@ -1,8 +1,1 @@
-delete 
-  from mysql.proc 
- where name in 
-   (select routine_name 
-      from information_schema.routines 
-     where routine_schema = 'acme'
-       and routine_type   = 'FUNCTION'
-     );
+update application_properties set value='1.0.3.2' where name='application.version';

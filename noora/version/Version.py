@@ -5,7 +5,7 @@ class Version:
         i = 0
         result = 0
         for item in value.split('.'):
-            result = result + int(item) * 1000 ^ i
+            result = result + float(item) / 1000**i
             i = i + 1
         self.__weight = result
 
