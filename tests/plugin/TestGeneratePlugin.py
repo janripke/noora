@@ -7,6 +7,7 @@ import json
 from noora.plugins.GeneratePlugin import GeneratePlugin
 from noora.system.Properties import Properties
 from noora.system.App import App
+import noora
 
 
 class TestBase(unittest.TestCase):
@@ -16,14 +17,11 @@ class TestBase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testDropPass(self):
-        NOORA_DIR = os.path.dirname(noora.__file__)
-        CURRENT_DIR = os.path.abspath('.')
-
+    def testGeneratePass(self):
         properties = Properties()
-        properties.set_property("noora.dir", NOORA_DIR)
-        properties.set_property("current.dir", CURRENT_DIR)
-        properties.set_property("plugin.dir", os.path.join(NOORA_DIR, 'plugins'))
+        properties.set_property("noora.dir", noora.__file__)
+        properties.set_property("current.dir", os.path.abspath('.'))
+        properties.set_property("plugin.dir", os.path.join(properties.get('noora.dir'), 'plugins'))
         properties.set_property("project.file", "myproject.json")
 
         app = App()
