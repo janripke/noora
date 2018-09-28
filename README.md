@@ -8,10 +8,10 @@ Noora currently supports Python 2.x
 
 ## Install from a release
 Enter the following to install noora on your system.
-In this example noora version 1.0.11 is installed.
+In this example noora version 1.0.12 is installed.
 
 ```
-$ pip install git+https://github.com/janripke/noora.git@1.0.11#egg=noora-1.0.11 --upgrade
+$ pip install git+https://github.com/janripke/noora.git@1.0.12#egg=noora-1.0.12 --upgrade
 ```
 
 ## Install from source using virtualenv
