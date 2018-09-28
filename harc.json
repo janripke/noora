@@ -2,11 +2,8 @@
   "projects": [
     {
       "name": "noora",
-      "repository": "https://{0}:'{1}'@github.com/janripke/noora.git",
+      "repository": "https://github.com/janripke/noora.git",
       "technology": "python"
     }
   ]
 }
-
-
-
