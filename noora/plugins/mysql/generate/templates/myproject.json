@@ -65,6 +65,7 @@
     "noora.plugins.mysql.help.HelpPlugin.HelpPlugin",
     "noora.plugins.mysql.drop.DropPlugin.DropPlugin",
     "noora.plugins.mysql.create.CreatePlugin.CreatePlugin",
-    "noora.plugins.mysql.update.UpdatePlugin.UpdatePlugin"
+    "noora.plugins.mysql.update.UpdatePlugin.UpdatePlugin",
+    "noora.plugins.mysql.recreate.RecreatePlugin.RecreatePlugin"
   ]
 }
