@@ -19,14 +19,14 @@ class UpdatePlugin(Plugin):
         Plugin.__init__(self, "update", MysqlConnector())
 
     def fail_on_unknown_version(self, version, properties):
-        alter_dir = properties.get_property('alter.dir')
+        alter_dir = properties.get('alter.dir')
         version_dir = File(os.path.join(alter_dir, version))
         if not version_dir.exists():
             raise UnknownVersionException("unknown version folder", version)
 
     def fail_on_invalid_environment(self, connector, executor, environment, properties):
-        plugin_dir = properties.get_property('plugin.dir')
-        properties.set_property('environment', environment)
+        plugin_dir = properties.get('plugin.dir')
+        properties['environment'] = environment
         script = File(os.path.join(plugin_dir, 'mysql', 'update', 'checkenvironment.sql'))
         executor['script'] = script
         connector.execute(executor, properties)
@@ -34,7 +34,7 @@ class UpdatePlugin(Plugin):
             raise InvalidEnvironmentException("invalid environment", environment)
 
     def fail_on_invalid_version(self, connector, executor, version, properties):
-        plugin_dir = properties.get_property('plugin.dir')
+        plugin_dir = properties.get('plugin.dir')
 
         versions = Versions()
         version_loader = VersionLoader(versions)
@@ -43,7 +43,7 @@ class UpdatePlugin(Plugin):
         v = Version(version)
         previous = versions.previous(v).get_value()
 
-        properties.set_property('previous', previous)
+        properties['previous'] = previous
         script = File(os.path.join(plugin_dir, 'mysql', 'update', 'checkversion.sql'))
         executor['script'] = script
         connector.execute(executor, properties)
@@ -51,8 +51,8 @@ class UpdatePlugin(Plugin):
             raise InvalidVersionException("invalid version", previous)
 
     def execute(self, arguments, properties):
-        properties.set_property('create.dir', os.path.join(properties.get_property('current.dir'), 'create'))
-        properties.set_property('alter.dir', os.path.join(properties.get_property('current.dir'), 'alter'))
+        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
+        properties['alter.dir'] = os.path.join(properties.get('current.dir'), 'alter')
 
         host = arguments.h
         Fail.fail_on_no_host(host)
@@ -60,24 +60,24 @@ class UpdatePlugin(Plugin):
         version = arguments.v
         Fail.fail_on_no_version(version)
 
-        default_databases = properties.get_property('databases')
+        default_databases = properties.get('databases')
         databases = Ora.nvl(arguments.d, default_databases)
         Fail.fail_on_invalid_database(arguments.d, properties)
 
-        default_environment = properties.get_property('default_environment')
+        default_environment = properties.get('default_environment')
         environment = Ora.nvl(arguments.e, default_environment)
         Fail.fail_on_invalid_environment(arguments.e, properties)
 
-        objects = properties.get_property('create_objects')
+        objects = properties.get('create_objects')
 
-        version_database = properties.get_property('version_database')
+        version_database = properties.get('version_database')
 
-        alter_dir = properties.get_property('alter.dir')
+        alter_dir = properties.get('alter.dir')
 
         self.fail_on_unknown_version(version, properties)
 
         alias = arguments.a
-        database_aliases = properties.get_property('database_aliases')
+        database_aliases = properties.get('database_aliases')
         Fail.fail_on_invalid_alias(alias, properties)
 
         # if an alias is given, only this database will be installed, other databases will be ignored.
@@ -85,16 +85,25 @@ class UpdatePlugin(Plugin):
             print "using alias :" + alias
             databases = [alias]
 
+        # retrieve the user credentials for this database project.
+        users = properties.get('mysql_users')
+
+        # try to retrieve the users from the credentials file, when no users are configured in myproject.json.
+        if not users:
+            # retrieve the name of this database project, introduced in version 1.0.12
+            profile = PropertyHelper.get_profile(properties)
+            if profile:
+                users = profile.get('mysql_users')
+
         connector = self.get_connector()
 
         for database in databases:
             print "updating database '" + database + "' on host '" + host + "' using environment '" + environment + "'"
 
-            users = properties.get_property('mysql_users')
             username = PropertyHelper.get_mysql_user(users, host, database)
             password = PropertyHelper.get_mysql_passwd(users, host, database)
 
-            executor = {}
+            executor = dict()
             executor['host'] = host
             executor['database'] = database
             executor['username'] = username

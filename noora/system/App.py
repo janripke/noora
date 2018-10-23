@@ -10,20 +10,20 @@ class App:
 
     @staticmethod
     def get_config_file(properties):
-        current_dir = properties.get_property("current.dir")
-        project_file = properties.get_property("project.file")
+        current_dir = properties.get("current.dir")
+        project_file = properties.get("project.file")
 
         f = File(os.path.join(current_dir, project_file))
         if f.exists():
             return f
 
-        noora_dir = properties.get_property("noora.dir")
+        noora_dir = properties.get("noora.dir")
         f = File(os.path.join(noora_dir, project_file))
         return f
 
     @staticmethod
     def find_plugin(command, properties):
-        plugins = properties.get_property('plugins')
+        plugins = properties.get('plugins')
         for plugin in plugins:
             p = ClassLoader.find(plugin)
             if command.lower() == p.get_type().lower():
@@ -31,6 +31,6 @@ class App:
 
     @staticmethod
     def build_dir(version, properties):
-        if version == properties.get_property("default_version"):
-            return properties.get_property("create.dir")
-        return os.path.join(properties.get_property("alter.dir"), version)
+        if version == properties.get("default_version"):
+            return properties.get("create.dir")
+        return os.path.join(properties.get("alter.dir"), version)

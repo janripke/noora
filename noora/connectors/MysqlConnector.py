@@ -1,5 +1,4 @@
 from noora.connectors.Connector import Connector
-from noora.system.Properties import Properties
 from noora.processor.PreProcessor import PreProcessor
 from noora.io.File import File
 from noora.shell.Shell import Shell
@@ -20,13 +19,13 @@ class MysqlConnector(Connector):
     def execute(self, executable, properties):
         script = executable['script']
 
-        cp = Properties()
-        cp.set_property('database', executable['database'])
+        cp = dict()
+        cp['database'] = executable['database']
 
         if 'environment' in properties.keys():
-            cp.set_property('environment', properties.get_property('environment'))
+            cp['environment'] = properties.get('environment')
         if 'previous' in properties.keys():
-            cp.set_property('previous', properties.get_property('previous'))
+            cp['previous'] = properties.get('previous')
 
         stream = PreProcessor.parse(script, cp)
 

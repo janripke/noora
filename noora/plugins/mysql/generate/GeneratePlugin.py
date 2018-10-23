@@ -22,8 +22,8 @@ class GeneratePlugin(Plugin):
         if arguments.v:
             version = arguments.v
 
-        current_dir = properties.get_property('current.dir')
-        project_file = properties.get_property('project.file')
+        current_dir = properties.get('current.dir')
+        project_file = properties.get('project.file')
         config_file = File(os.path.join(current_dir, project_file))
         if not config_file.exists():
             database = raw_input('database : ')
@@ -36,14 +36,15 @@ class GeneratePlugin(Plugin):
             version = Ora.nvl(version, "1.0.0")
 
             os.mkdir(project)
-            template_dir = os.path.join(properties.get_property('plugin.dir'), 'mysql', 'generate', 'templates')
+            template_dir = os.path.join(properties.get('plugin.dir'), 'mysql', 'generate', 'templates')
             template_file = os.path.join(template_dir, project_file)
 
             f = open(template_file)
             stream = f.read()
             f.close()
-            stream = stream.replace('{host}', host)
+            stream = stream.replace('{project}', project)
             stream = stream.replace('{database}', database)
+            stream = stream.replace('{host}', host)
             stream = stream.replace('{username}', username)
             stream = stream.replace('{password}', password)
             stream = stream.replace('{version}', version)
@@ -53,14 +54,14 @@ class GeneratePlugin(Plugin):
             f.write(stream)
             f.close()
 
-        properties.set_property('alter.dir', os.path.join(current_dir, project, 'alter'))
-        properties.set_property('create.dir', os.path.join(current_dir, project, 'create'))
+        properties['alter.dir'] = os.path.join(current_dir, project, 'alter')
+        properties['create.dir'] = os.path.join(current_dir, project, 'create')
 
         config_file = os.path.join(current_dir, project, project_file)
         f = open(config_file)
         data = json.load(f)
         for key in data.keys():
-            properties.set_property(key, data[key])
+            properties[key] = data[key]
         f.close()
 
         versions = Versions()
@@ -74,11 +75,11 @@ class GeneratePlugin(Plugin):
         # create the version folder
         os.makedirs(version_dir)
 
-        databases = properties.get_property('databases')
-        version_database = properties.get_property('version_database')
-        default_version = properties.get_property('default_version')
-        environments = properties.get_property('environments')
-        objects = properties.get_property('create_objects')
+        databases = properties.get('databases')
+        version_database = properties.get('version_database')
+        default_version = properties.get('default_version')
+        environments = properties.get('environments')
+        objects = properties.get('create_objects')
 
         for database in databases:
 
@@ -96,9 +97,9 @@ class GeneratePlugin(Plugin):
                 f = open(version_file, 'w')
 
                 if next_version == default_version:
-                    stream = properties.get_property('version_insert_statement')
+                    stream = properties.get('version_insert_statement')
                 else:
-                    stream = properties.get_property('version_update_statement')
+                    stream = properties.get('version_update_statement')
 
                 stream = stream.replace('<version>', next_version)
                 f.write(stream)
@@ -117,7 +118,7 @@ class GeneratePlugin(Plugin):
                     environment_file = os.path.join(dat_dir, environment, 'environment.sql')
 
                     f = open(environment_file, 'w')
-                    stream = properties.get_property('environment_insert_statement')
+                    stream = properties.get('environment_insert_statement')
                     stream = stream.replace('<environment>', environment)
                     f.write(stream)
                     f.close()

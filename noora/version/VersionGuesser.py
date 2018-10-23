@@ -14,10 +14,10 @@ class VersionGuesser:
             return Version(version)
         if versions.next():
             return versions.next()
-        return Version(properties.get_property("default_version"))
+        return Version(properties.get("default_version"))
 
     def to_folder(self, version):
         properties = self.__properties
-        if version == properties.get_property("default_version"):
-            return properties.get_property("create.dir")
-        return os.path.join(properties.get_property("alter.dir"), version)
+        if version == properties.get("default_version"):
+            return properties.get("create.dir")
+        return os.path.join(properties.get("alter.dir"), version)

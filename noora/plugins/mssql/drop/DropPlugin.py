@@ -16,10 +16,10 @@ class DropPlugin(Plugin):
         Plugin.__init__(self, "drop", MssqlConnector())
 
     def get_drop_dir(self, properties):
-        return os.path.join(properties.get_property('plugin.dir'), 'mssql', 'drop')
+        return os.path.join(properties.get('plugin.dir'), 'mssql', 'drop')
 
     def fail_on_blocked_hosts(self, host, properties):
-        blocked_hosts = properties.get_property('blocked_hosts')
+        blocked_hosts = properties.get('blocked_hosts')
         if host in blocked_hosts:
             message = "block host " + host
             raise BlockedHostException(message)
@@ -29,35 +29,36 @@ class DropPlugin(Plugin):
         Fail.fail_on_no_host(host)
         self.fail_on_blocked_hosts(host, properties)
 
-        default_schemes = properties.get_property('schemes')
+        default_schemes = properties.get('schemes')
         schemes = Ora.nvl(arguments.s, default_schemes)
         Fail.fail_on_invalid_schema(arguments.s, properties)
 
-        default_environment = properties.get_property('default_environment')
+        default_environment = properties.get('default_environment')
         environment = Ora.nvl(arguments.e, default_environment)
         Fail.fail_on_invalid_environment(arguments.e, properties)
 
-        database = properties.get_property('database')
-        objects = properties.get_property('drop_objects')
+        database = properties.get('database')
+        objects = properties.get('drop_objects')
 
-        # alias = arguments.a
-        # Fail.fail_on_invalid_alias(arguments.a, properties)
-        #
-        # # if an alias is given, only the alias database will be installed, other databases will be ignored.
-        # if alias:
-        #     print "using alias :" + alias
-        #     databases = [alias]
+        # retrieve the user credentials for this database project.
+        users = properties.get('mssql_users')
+
+        # try to retrieve the users from the credentials file, when no users are configured in myproject.json.
+        if not users:
+            # retrieve the name of this database project, introduced in version 1.0.12
+            profile = PropertyHelper.get_profile(properties)
+            if profile:
+                users = profile.get('mssql_users')
 
         for schema in schemes:
             print "dropping schema '" + schema + "' in database '" + database + "on host '" + host + "' using environment '" + environment + "'"
 
-            users = properties.get_property('mssql_users')
             username = PropertyHelper.get_mssql_user(users, host, schema)
             password = PropertyHelper.get_mssql_password(users, host, schema)
 
             connector = self.get_connector()
 
-            executor = {}
+            executor = dict()
             executor['host'] = host
             executor['database'] = database
             executor['schema'] = schema

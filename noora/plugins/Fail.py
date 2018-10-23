@@ -34,7 +34,7 @@ class Fail:
     @staticmethod
     def fail_on_invalid_database(database, properties):
         if database:
-            databases = properties.get_property('databases')
+            databases = properties.get('databases')
             if database not in databases:
                 message = "the given database is not valid for this project"
                 raise PluginException(message)
@@ -42,7 +42,7 @@ class Fail:
     @staticmethod
     def fail_on_invalid_schema(schema, properties):
         if schema:
-            schemes = properties.get_property('schemes')
+            schemes = properties.get('schemes')
             if schema not in schemes:
                 message = "the given schema is not valid for this project"
                 raise PluginException(message)
@@ -50,7 +50,7 @@ class Fail:
     @staticmethod
     def fail_on_invalid_environment(environment, properties):
         if environment:
-            environments = properties.get_property('environments')
+            environments = properties.get('environments')
             if environment not in environments:
                 message = "the given environment is not valid for this project"
                 raise PluginException(message)
@@ -58,7 +58,7 @@ class Fail:
     @staticmethod
     def fail_on_invalid_alias(alias, properties):
         if alias:
-            aliasses = properties.get_property('aliasses')
+            aliasses = properties.get('aliasses')
             if alias not in aliasses:
                 message = "the given alias is not valid for this project"
                 raise PluginException(message)

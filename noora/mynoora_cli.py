@@ -3,21 +3,17 @@ import noora
 import argparse
 import os
 import json
-from noora.system.Properties import Properties
 from noora.system.App import App
-from noora.system.ClassLoader import ClassLoader
 from noora.plugins.Fail import Fail
-
-NOORA_DIR = os.path.dirname(__file__)
-CURRENT_DIR = os.path.abspath('.')
+import noora
 
 
 def main(args=None):
-    properties = Properties()
-    properties.set_property("noora.dir", NOORA_DIR)
-    properties.set_property("current.dir", CURRENT_DIR)
-    properties.set_property("plugin.dir", os.path.join(NOORA_DIR, 'plugins'))
-    properties.set_property("project.file", "myproject.json")
+    properties = dict()
+    properties["noora.dir"] = os.path.dirname(noora.__file__)
+    properties["current.dir"] = os.path.abspath('.')
+    properties["plugin.dir"] = os.path.join(properties.get('noora.dir'), 'plugins')
+    properties["project.file"] = "myproject.json"
 
     # find the project config file myproject.json, in the current folder or in the noora folder
     app = App()
@@ -26,19 +22,19 @@ def main(args=None):
 
     data = json.load(f)
     for key in data.keys():
-        properties.set_property(key, data[key])
+        properties[key] = data[key]
 
-    # Instantiate the argument parser
+    # Instantiate the argument parser.
     parser = argparse.ArgumentParser(description="mynoora, a sql deployment tool", add_help=False)
-    parser.add_argument("commands", help="display a square of a given number", type=str, nargs='+')
-    parser.add_argument('-r', action='store_true', help='show the revision')
+    parser.add_argument("commands", help="command to execute", type=str, nargs='+')
+    parser.add_argument('-r', action='store_true', help='show the revision', required=False)
     parser.add_argument('-v', type=str, help='version', required=False)
     parser.add_argument('-h', type=str, help='host', required=False)
     parser.add_argument('-d', type=str, help='database', required=False)
     parser.add_argument('-e', type=str, help='environment', required=False)
     parser.add_argument('-a', type=str, help='alias', required=False)
     parser.add_argument('-s', type=str, help='schema', required=False)
-    parser.add_argument('-t', type=str, help='technology', required=False)
+    parser.add_argument('-t', type=str, help='technology, [mysql|mssql]', required=False)
 
     args = parser.parse_args(args)
 

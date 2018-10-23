@@ -1,3 +1,7 @@
+import os
+import json
+
+
 class PropertyHelper:
     def __init__(self):
         pass
@@ -59,3 +63,20 @@ class PropertyHelper:
             if user[0].lower() == sid.lower() and user[1].lower() == scheme.lower():
                 return user[3]
         return None
+
+    @staticmethod
+    def get_profile(properties):
+        # retrieve the profile of database project
+        profile = None
+        project = properties.get('project')
+        if project:
+            # load the users from the credentials file, if present
+            home_dir = properties.get('home.dir')
+            credentials_file = os.path.join(home_dir, '.noora', 'credentials.json')
+            if os.path.isfile(credentials_file):
+                f = open(credentials_file, 'r')
+                credentials = json.load(f)
+                f.close()
+
+                profile = credentials.get(project)
+        return profile

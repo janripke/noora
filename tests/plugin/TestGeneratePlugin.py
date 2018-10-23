@@ -5,7 +5,6 @@ import noora
 import argparse
 import json
 from noora.plugins.GeneratePlugin import GeneratePlugin
-from noora.system.Properties import Properties
 from noora.system.App import App
 import noora
 
@@ -18,11 +17,11 @@ class TestBase(unittest.TestCase):
         pass
 
     def testGeneratePass(self):
-        properties = Properties()
-        properties.set_property("noora.dir", noora.__file__)
-        properties.set_property("current.dir", os.path.abspath('.'))
-        properties.set_property("plugin.dir", os.path.join(properties.get('noora.dir'), 'plugins'))
-        properties.set_property("project.file", "myproject.json")
+        properties = dict()
+        properties["noora.dir"] = noora.__file__
+        properties["current.dir"]  = os.path.abspath('.')
+        properties["plugin.dir"] = os.path.join(properties.get('noora.dir'), 'plugins')
+        properties["project.file"] = "myproject.json"
 
         app = App()
         f = app.get_config_file(properties)
@@ -30,14 +29,14 @@ class TestBase(unittest.TestCase):
 
         data = json.load(f)
         for key in data.keys():
-            properties.set_property(key, data[key])
+            properties[key] = data[key]
 
         parser = argparse.ArgumentParser(description="mynoora, a sql deployment tool", add_help=False)
         parser.add_argument("commands", help="display a square of a given number", type=str, nargs='+')
         parser.add_argument('-r', action='store_true', help='show the revision')
         parser.add_argument('-t', type=str, help='version', required=False)
 
-        arguments = parser.parse_args(['generate', '-t=mssql'])
+        arguments = parser.parse_args(['generate', '-t=mysql'])
 
         plugin = GeneratePlugin()
         plugin.execute(arguments, properties)

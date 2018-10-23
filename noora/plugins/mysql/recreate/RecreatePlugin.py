@@ -12,15 +12,15 @@ class RecreatePlugin(Plugin):
         Plugin.__init__(self, "recreate", MysqlConnector())
 
     def find_plugin(self, properties, name):
-        plugins = properties.get_property('plugins')
+        plugins = properties.get('plugins')
         for plugin in plugins:
             p = ClassLoader.find(plugin)
             if name.lower() == p.get_type().lower():
                 return p
 
     def execute(self, arguments, properties):
-        properties.set_property('create.dir', os.path.join(properties.get_property('current.dir'), 'create'))
-        properties.set_property('alter.dir', os.path.join(properties.get_property('current.dir'), 'alter'))
+        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
+        properties['alter.dir'] = os.path.join(properties.get('current.dir'), 'alter')
 
         # find the drop plugin.
         plugin = self.find_plugin(properties, 'drop')
@@ -83,7 +83,7 @@ class RecreatePlugin(Plugin):
         # by doing so, this reflects the present alters in the project folder
         alter_versions = []
         for version in versions.list():
-            if version.get_value() != properties.get_property('default_version'):
+            if version.get_value() != properties.get('default_version'):
                 alter_versions.append(version.get_value())
 
         # create a list of versions up to the given version

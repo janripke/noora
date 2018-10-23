@@ -8,12 +8,12 @@ class VersionLoader:
         self.__versions = versions
 
     def load(self, properties):
-        alter = File(properties.get_property("alter.dir"))
+        alter = File(properties.get("alter.dir"))
         if alter.exists():
             files = Files()
             for version in files.list(alter):
                 self.__versions.add(Version(version.tail()))
 
-        create = File(properties.get_property("create.dir"))
+        create = File(properties.get("create.dir"))
         if create.exists():
-            self.__versions.add(Version(properties.get_property("default_version")))
+            self.__versions.add(Version(properties.get("default_version")))

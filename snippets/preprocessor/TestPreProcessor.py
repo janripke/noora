@@ -3,7 +3,6 @@ import unittest
 
 from noora.io.File import File
 from noora.processor.PreProcessor import PreProcessor
-from noora.system.Properties import Properties
 
 
 class TestPreProcessor(unittest.TestCase):
@@ -16,8 +15,8 @@ class TestPreProcessor(unittest.TestCase):
     def testProcessor(self):
         script = File("drop_tables.sql")
 
-        properties = Properties()
-        properties.set_property('database', 'orcl')
+        properties = dict()
+        properties['database'] = 'orcl'
 
         stream = PreProcessor.parse(script, properties)
         self.assertEqual(stream, 'orcl', "invalid transformation")

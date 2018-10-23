@@ -16,6 +16,7 @@ from org.noora.io.Properties import Properties
 from org.noora.io.PropertyLoader import PropertyLoader
 from org.noora.io.FileReader import FileReader
 
+
 class TestConnector(unittest.TestCase):
 
     def setUp(self):
@@ -45,10 +46,6 @@ class TestConnector(unittest.TestCase):
       
       connector.execute(execute, properties)
  
-            
-  
-      
-
 
 if __name__ == '__main__':
     unittest.main()

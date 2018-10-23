@@ -1,4 +1,4 @@
 import os
 from noora import mynoora_cli
 
-mynoora_cli.main(['generate'])
+mynoora_cli.main(['-r', 'help'])

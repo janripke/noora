@@ -15,19 +15,19 @@ class Files:
         filters = Filters()
         results = []
 
-        excluded_folders = properties.get_property('excluded_folders')
+        excluded_folders = properties.get('excluded_folders')
         for excluded_folder in excluded_folders:
             ef = File(excluded_folder)
             ff = FileFolderFilter(ef)
             filters.add(ff)
 
-        excluded_extensions = properties.get_property('excluded_extensions')
+        excluded_extensions = properties.get('excluded_extensions')
         for excluded_extension in excluded_extensions:
             ef = File("*." + excluded_extension)
             ff = FileExtensionFilter(ef)
             filters.add(ff)
 
-        excluded_files = properties.get_property('excluded_files')
+        excluded_files = properties.get('excluded_files')
         for excluded_file in excluded_files:
             ef = File(excluded_file)
             ff = FileFilter(ef)

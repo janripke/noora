@@ -9,6 +9,7 @@ class PreProcessor:
         f.close()
 
         for key in properties.keys():
-            if properties.get_property(key):
-                stream = stream.replace("{" + key + "}", properties.get_property(key))
+            if properties.get(key):
+                stream = stream.replace("{" + key + "}", properties.get(key))
+
         return stream

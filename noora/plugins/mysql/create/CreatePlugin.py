@@ -13,23 +13,23 @@ class CreatePlugin(Plugin):
         Plugin.__init__(self, "create", MysqlConnector())
 
     def execute(self, arguments, properties):
-        properties.set_property('create.dir', os.path.join(properties.get_property('current.dir'), 'create'))
+        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
 
         host = arguments.h
         Fail.fail_on_no_host(host)
 
-        default_databases = properties.get_property('databases')
+        default_databases = properties.get('databases')
         databases = Ora.nvl(arguments.d, default_databases)
         Fail.fail_on_invalid_database(arguments.d, properties)
 
-        default_environment = properties.get_property('default_environment')
+        default_environment = properties.get('default_environment')
         environment = Ora.nvl(arguments.e, default_environment)
         Fail.fail_on_invalid_environment(arguments.e, properties)
 
-        objects = properties.get_property('create_objects')
+        objects = properties.get('create_objects')
 
         alias = arguments.a
-        database_aliases = properties.get_property('database_aliases')
+        database_aliases = properties.get('database_aliases')
         Fail.fail_on_invalid_alias(alias, properties)
 
         # if an alias is given, only this database will be installed, other databases will be ignored.
@@ -37,17 +37,26 @@ class CreatePlugin(Plugin):
             print "using alias :" + alias
             databases = [alias]
 
+        # retrieve the user credentials for this database project.
+        users = properties.get('mysql_users')
+
+        # try to retrieve the users from the credentials file, when no users are configured in myproject.json.
+        if not users:
+            # retrieve the name of this database project, introduced in version 1.0.12
+            profile = PropertyHelper.get_profile(properties)
+            if profile:
+                users = profile.get('mysql_users')
+
         connector = self.get_connector()
-        create_dir = properties.get_property('create.dir')
+        create_dir = properties.get('create.dir')
 
         for database in databases:
             print "creating database '" + database + "' on host '" + host + "' using environment '" + environment + "'"
 
-            users = properties.get_property('mysql_users')
             username = PropertyHelper.get_mysql_user(users, host, database)
             password = PropertyHelper.get_mysql_passwd(users, host, database)
 
-            executor = {}
+            executor = dict()
             executor['host'] = host
             executor['database'] = database
             executor['username'] = username

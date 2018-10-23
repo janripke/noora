@@ -33,7 +33,7 @@ Simply run :
 $ mynoora help
 NoOra a database deployment tool.
 https://github.com/janripke/noora
-1.0.11
+1.0.12
 ```
 
 # Create your first mysql database project

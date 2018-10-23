@@ -20,34 +20,34 @@ class BuildPlugin(Plugin):
         Plugin.__init__(self, "build", None)
 
     def version_statement(self, version, properties):
-        if version == properties.get_property("default_version"):
-            return properties.get_property("component_insert_statement")
-        return properties.get_property("component_update_statement")
+        if version == properties.get("default_version"):
+            return properties.get("component_insert_statement")
+        return properties.get("component_update_statement")
 
     def execute(self, arguments, properties):
 
-        properties.set_property('create.dir', os.path.join(properties.get_property('current.dir'), 'create'))
-        properties.set_property('alter.dir', os.path.join(properties.get_property('current.dir'), 'alter'))
+        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
+        properties['alter.dir'] = os.path.join(properties.get('current.dir'), 'alter')
 
         version = arguments.v
         Fail.fail_on_no_version(version)
         Fail.fail_on_unknown_version(version, properties)
 
-        default_databases = properties.get_property('databases')
+        default_databases = properties.get('databases')
         databases = Ora.nvl(arguments.d, default_databases)
         Fail.fail_on_invalid_database(arguments.d, properties)
 
-        current_dir = properties.get_property('current.dir')
-        component_name = properties.get_property('component_name')
-        target_dir = os.path.join(current_dir, properties.get_property('component_target_folder'))
+        current_dir = properties.get('current.dir')
+        component_name = properties.get('component_name')
+        target_dir = os.path.join(current_dir, properties.get('component_target_folder'))
 
-        objects = properties.get_property('create_objects')
+        objects = properties.get('create_objects')
 
         build_dir = App.build_dir(version, properties)
 
         # exclude the file 'version.sql', this file is excluded from the dat listing below.
-        component_excluded_files = properties.get_property('component_excluded_files')
-        excluded_files = properties.get_property('excluded_files')
+        component_excluded_files = properties.get('component_excluded_files')
+        excluded_files = properties.get('excluded_files')
         excluded_files.extend(component_excluded_files)
 
         # create the target folder, if not present.
@@ -108,7 +108,7 @@ class BuildPlugin(Plugin):
         versions.sort()
         previous = versions.previous(Version(version))
 
-        component_select_statement = properties.get_property("component_select_statement")
+        component_select_statement = properties.get("component_select_statement")
         component_select_statement = component_select_statement.replace('<name>', component_name)
         component_select_statement = component_select_statement.replace('<previous>', previous.get_value())
         print component_select_statement

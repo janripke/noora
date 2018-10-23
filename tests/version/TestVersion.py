@@ -1,15 +1,8 @@
 #!/usr/bin/env python
 
 import unittest
-
-from noora.io.File import File
-from noora.processor.PreProcessor import PreProcessor
-from noora.shell.CallFactory import CallFactory
-from noora.shell.Shell import Shell
-from noora.system.Properties import Properties
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
-from noora.version.VersionGuesser import VersionGuesser
 from noora.version.Version import Version
 import os
 
@@ -23,11 +16,11 @@ class TestVersion(unittest.TestCase):
 
     def testCheckVersion(self):
 
-        properties = Properties()
-        properties.set_property("current.dir", os.path.abspath('.'))
-        properties.set_property('create.dir', os.path.join(properties.get_property('current.dir'), 'create'))
-        properties.set_property('alter.dir', os.path.join(properties.get_property('current.dir'), 'alter'))
-        properties.set_property('default_version', '1.0.0')
+        properties = dict()
+        properties["current.dir"] = os.path.abspath('.')
+        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
+        properties['alter.dir'] = os.path.join(properties.get('current.dir'), 'alter')
+        properties['default_version'] = '1.0.0'
 
         versions = Versions()
         version_loader = VersionLoader(versions)

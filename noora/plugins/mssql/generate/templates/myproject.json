@@ -1,4 +1,5 @@
 {
+  "project" : "{project}",
   "database" : "{database}",
   "schemes": [
     "{schema}"
