@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-import noora
 import argparse
 import os
 import json
 from noora.system.App import App
 from noora.plugins.Fail import Fail
+from os.path import expanduser
 import noora
 
 
@@ -14,6 +14,7 @@ def main(args=None):
     properties["current.dir"] = os.path.abspath('.')
     properties["plugin.dir"] = os.path.join(properties.get('noora.dir'), 'plugins')
     properties["project.file"] = "myproject.json"
+    properties['home.dir'] = expanduser('~')
 
     # find the project config file myproject.json, in the current folder or in the noora folder
     app = App()
@@ -28,29 +29,22 @@ def main(args=None):
     parser = argparse.ArgumentParser(description="mynoora, a sql deployment tool", add_help=False)
     parser.add_argument("commands", help="command to execute", type=str, nargs='+')
     parser.add_argument('-r', action='store_true', help='show the revision', required=False)
-    parser.add_argument('-v', type=str, help='version', required=False)
-    parser.add_argument('-h', type=str, help='host', required=False)
-    parser.add_argument('-d', type=str, help='database', required=False)
-    parser.add_argument('-e', type=str, help='environment', required=False)
-    parser.add_argument('-a', type=str, help='alias', required=False)
-    parser.add_argument('-s', type=str, help='schema', required=False)
-    parser.add_argument('-t', type=str, help='technology, [mysql|mssql]', required=False)
-
-    args = parser.parse_args(args)
+    arguments, unknown = parser.parse_known_args(args)
 
     # show the revision
-    if args.r:
+    if arguments.r:
         print noora.__title__ + " version " + noora.__version__
         exit(0)
 
     # execute the given commands
-    commands = args.commands
+    commands = arguments.commands
     Fail.fail_on_no_command(commands)
 
     for command in commands:
         plugin = App.find_plugin(command, properties)
         Fail.fail_on_invalid_plugin(plugin)
-        plugin.execute(args, properties)
+        arguments = plugin.parse_args(parser, args)
+        plugin.execute(arguments, properties)
 
 
 if __name__ == "__main__":

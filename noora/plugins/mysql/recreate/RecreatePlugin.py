@@ -11,6 +11,14 @@ class RecreatePlugin(Plugin):
     def __init__(self):
         Plugin.__init__(self, "recreate", MysqlConnector())
 
+    def parse_args(self, parser, args):
+        parser.add_argument('-h', type=str, help='host', required=False)
+        parser.add_argument('-d', type=str, help='database', required=False)
+        parser.add_argument('-e', type=str, help='environment', required=False)
+        parser.add_argument('-a', type=str, help='alias', required=False)
+        parser.add_argument('-v', type=str, help='version', required=False)
+        return parser.parse_args(args)
+
     def find_plugin(self, properties, name):
         plugins = properties.get('plugins')
         for plugin in plugins:
@@ -27,10 +35,12 @@ class RecreatePlugin(Plugin):
 
         # create the drop arguments and execute the plugin
         parser = argparse.ArgumentParser(add_help=False)
-        parser.add_argument('-h', type=str, help='host', required=False)
+        parser.add_argument('-h', type=str, help='host', required=True)
         parser.add_argument('-d', type=str, help='database', required=False)
         parser.add_argument('-e', type=str, help='environment', required=False)
         parser.add_argument('-a', type=str, help='alias', required=False)
+
+        print "execute", arguments
 
         commands = []
         if arguments.h:
@@ -53,7 +63,7 @@ class RecreatePlugin(Plugin):
 
         # create the drop arguments and execute the plugin
         parser = argparse.ArgumentParser(add_help=False)
-        parser.add_argument('-h', type=str, help='host', required=False)
+        parser.add_argument('-h', type=str, help='host', required=True)
         parser.add_argument('-d', type=str, help='database', required=False)
         parser.add_argument('-e', type=str, help='environment', required=False)
         parser.add_argument('-a', type=str, help='alias', required=False)
@@ -103,11 +113,11 @@ class RecreatePlugin(Plugin):
         # create the arguments and execute the plugin
         for version in alter_versions:
             parser = argparse.ArgumentParser(add_help=False)
-            parser.add_argument('-h', type=str, help='host', required=False)
+            parser.add_argument('-h', type=str, help='host', required=True)
             parser.add_argument('-d', type=str, help='database', required=False)
             parser.add_argument('-e', type=str, help='environment', required=False)
             parser.add_argument('-a', type=str, help='alias', required=False)
-            parser.add_argument('-v', type=str, help='version', required=False)
+            parser.add_argument('-v', type=str, help='version', required=True)
 
             commands = []
             if arguments.h:

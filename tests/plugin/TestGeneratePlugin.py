@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import unittest
 import os
-import noora
 import argparse
 import json
 from noora.plugins.GeneratePlugin import GeneratePlugin

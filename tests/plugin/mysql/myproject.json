@@ -1,17 +1,10 @@
 {
+  "project": "acme-db",
   "databases": [
     "acme"
   ],
   "aliasses": [],
   "database_aliases" : [],
-  "mysql_users": [
-    [
-      "localhost",
-      "acme",
-      "apps",
-      "apps"
-    ]
-  ],
   "default_environment": "dev",
   "mysql_hosts": [
     "localhost"
@@ -65,7 +58,9 @@
     "noora.plugins.mysql.build.BuildPlugin.BuildPlugin",
     "noora.plugins.mysql.drop.DropPlugin.DropPlugin",
     "noora.plugins.mysql.create.CreatePlugin.CreatePlugin",
-    "noora.plugins.mysql.update.UpdatePlugin.UpdatePlugin"
+    "noora.plugins.mysql.update.UpdatePlugin.UpdatePlugin",
+    "noora.plugins.mysql.recreate.RecreatePlugin.RecreatePlugin",
+    "noora.plugins.mysql.help.HelpPlugin.HelpPlugin"
   ],
   "component_name": "app_prop",
   "component_target_folder": "target",

@@ -19,6 +19,12 @@ class BuildPlugin(Plugin):
     def __init__(self):
         Plugin.__init__(self, "build", None)
 
+    def parse_args(self, parser, args):
+        parser.add_argument('-v', type=str, help='version', required=True)
+        parser.add_argument('-d', type=str, help='database', required=False)
+
+        return parser.parse_args(args)
+
     def version_statement(self, version, properties):
         if version == properties.get("default_version"):
             return properties.get("component_insert_statement")
