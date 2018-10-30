@@ -7,6 +7,10 @@ class GeneratePlugin(Plugin):
     def __init__(self):
         Plugin.__init__(self, "generate", None)
 
+    def parse_args(self, parser, args):
+        parser.add_argument('-t', type=str, help='technology', required=True)
+        return parser.parse_args(args)
+
     def execute(self, arguments, properties):
         # todo: fail on no technology
         # todo:fail on invalid technology
