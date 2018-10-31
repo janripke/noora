@@ -1,3 +1,4 @@
+set @@group_concat_max_len = 100000;
 select concat('drop view ',group_concat(table_name)) into @var_table_name from information_schema.views where table_schema='{database}';
 select @var_table_name;
 select if(@var_table_name is NULL,'select "no views" from dual',@var_table_name) into @var_table_name;

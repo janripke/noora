@@ -1,3 +1,4 @@
+set @@group_concat_max_len = 100000;
 set foreign_key_checks = 0;
 select concat('drop table ',group_concat(table_name)) into @var_table_name from information_schema.tables where table_schema='{database}';
 select @var_table_name;
