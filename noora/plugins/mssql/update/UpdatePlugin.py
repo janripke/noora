@@ -18,6 +18,14 @@ class UpdatePlugin(Plugin):
     def __init__(self):
         Plugin.__init__(self, "update", MssqlConnector())
 
+    def parse_args(self, parser, args):
+        parser.add_argument('-v', type=str, help='version', required=True)
+        parser.add_argument('-h', type=str, help='host', required=True)
+        parser.add_argument('-s', type=str, help='schema', required=False)
+        parser.add_argument('-e', type=str, help='environment', required=False)
+
+        return parser.parse_args(args)
+
     def fail_on_unknown_version(self, version, properties):
         alter_dir = properties.get('alter.dir')
         version_dir = File(os.path.join(alter_dir, version))

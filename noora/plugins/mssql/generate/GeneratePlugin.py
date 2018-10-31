@@ -15,6 +15,10 @@ class GeneratePlugin(Plugin):
     def __init__(self):
         Plugin.__init__(self, "generate", None)
 
+    def parse_args(self, parser, args):
+        parser.add_argument('-v', type=str, help='version', required=False)
+        return parser.parse_args(args)
+
     def execute(self, arguments, properties):
         project = ''
         version = None

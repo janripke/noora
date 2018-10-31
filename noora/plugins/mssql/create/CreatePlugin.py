@@ -12,6 +12,12 @@ class CreatePlugin(Plugin):
     def __init__(self):
         Plugin.__init__(self, "create", MssqlConnector())
 
+    def parse_args(self, parser, args):
+        parser.add_argument('-h', type=str, help='host', required=True)
+        parser.add_argument('-s', type=str, help='schema', required=False)
+        parser.add_argument('-e', type=str, help='environment', required=False)
+        return parser.parse_args(args)
+
     def execute(self, arguments, properties):
         properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
 
