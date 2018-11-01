@@ -40,7 +40,7 @@ class TestBase(unittest.TestCase):
 
     #connectable=MysqlConnector()
     createPlugin = CreatePlugin()
-    print createPlugin.getRevision()
+    print(createPlugin.getRevision())
     options = createPlugin.getOptions(properties)
 
     arguments = ['-h=localhost','-e=dev']

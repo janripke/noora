@@ -40,7 +40,7 @@ class RecreatePlugin(Plugin):
         parser.add_argument('-e', type=str, help='environment', required=False)
         parser.add_argument('-a', type=str, help='alias', required=False)
 
-        print "execute", arguments
+        print("execute", arguments)
 
         commands = []
         if arguments.h:

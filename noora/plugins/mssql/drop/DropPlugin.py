@@ -57,7 +57,7 @@ class DropPlugin(Plugin):
                 users = profile.get('mssql_users')
 
         for schema in schemes:
-            print "dropping schema '" + schema + "' in database '" + database + "on host '" + host + "' using environment '" + environment + "'"
+            print("dropping schema '" + schema + "' in database '" + database + "on host '" + host + "' using environment '" + environment + "'")
 
             username = PropertyHelper.get_mssql_user(users, host, schema)
             password = PropertyHelper.get_mssql_password(users, host, schema)
@@ -75,4 +75,4 @@ class DropPlugin(Plugin):
                 folder = File(os.path.join(self.get_drop_dir(properties), object))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print "schema '" + schema + "' dropped."
+            print("schema '" + schema + "' dropped.")

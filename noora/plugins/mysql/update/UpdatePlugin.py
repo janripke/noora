@@ -91,7 +91,7 @@ class UpdatePlugin(Plugin):
 
         # if an alias is given, only this database will be installed, other databases will be ignored.
         if alias:
-            print "using alias :" + alias
+            print("using alias :" + alias)
             databases = [alias]
 
         # retrieve the user credentials for this database project.
@@ -107,7 +107,7 @@ class UpdatePlugin(Plugin):
         connector = self.get_connector()
 
         for database in databases:
-            print "updating database '" + database + "' on host '" + host + "' using environment '" + environment + "'"
+            print("updating database '" + database + "' on host '" + host + "' using environment '" + environment + "'")
 
             username = PropertyHelper.get_mysql_user(users, host, database)
             password = PropertyHelper.get_mysql_passwd(users, host, database)
@@ -141,4 +141,4 @@ class UpdatePlugin(Plugin):
             folder = File(os.path.join(alter_dir, version, database_folder, 'dat', environment))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print "database '" + database + "' updated."
+            print("database '" + database + "' updated.")

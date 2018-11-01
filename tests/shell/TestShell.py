@@ -39,7 +39,7 @@ class TestShell(unittest.TestCase):
         call['stdout'] = feedback_writer
         call['stderr'] = feedback_writer
         result = Shell.execute(call)
-        print "result", result
+        print("result", result)
 
 
 if __name__ == '__main__':

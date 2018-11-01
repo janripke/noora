@@ -146,4 +146,4 @@ class GeneratePlugin(Plugin):
                         for file in files:
                             shutil.copyfile(file.get_url(), os.path.join(ddl_dir, object, file.tail()))
 
-        print "version " + next_version + " created."
+        print("version " + next_version + " created.")

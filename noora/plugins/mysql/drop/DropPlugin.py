@@ -52,7 +52,7 @@ class DropPlugin(Plugin):
 
         # if an alias is given, only the alias database will be installed, other databases will be ignored.
         if alias:
-            print "using alias :" + alias
+            print("using alias :" + alias)
             databases = [alias]
 
         # retrieve the user credentials for this database project.
@@ -66,7 +66,7 @@ class DropPlugin(Plugin):
                 users = profile.get('mysql_users')
 
         for database in databases:
-            print "dropping database '" + database + "' on host '" + host + "' using environment '" + environment + "'"
+            print("dropping database '" + database + "' on host '" + host + "' using environment '" + environment + "'")
 
             username = PropertyHelper.get_mysql_user(users, host, database)
             password = PropertyHelper.get_mysql_passwd(users, host, database)
@@ -83,4 +83,4 @@ class DropPlugin(Plugin):
                 folder = File(os.path.join(self.get_drop_dir(properties), object))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print "database '" + database + "' dropped."
+            print("database '" + database + "' dropped.")

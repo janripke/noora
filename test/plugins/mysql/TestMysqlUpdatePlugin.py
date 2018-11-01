@@ -45,7 +45,7 @@ class TestBase(unittest.TestCase):
 
     #connectable=MysqlConnector()
     updatePlugin = UpdatePlugin()
-    print updatePlugin.getRevision()
+    print(updatePlugin.getRevision())
     options = updatePlugin.getOptions(properties)
 
     arguments = ['-h=localhost','-e=dev','-v=1.0.1']

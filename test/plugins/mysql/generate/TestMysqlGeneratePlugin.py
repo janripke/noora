@@ -42,7 +42,7 @@ class TestBase(unittest.TestCase):
 
     #connectable=MysqlConnector()
     generatePlugin = GeneratePlugin()
-    print generatePlugin.getRevision()
+    print(generatePlugin.getRevision())
     options = generatePlugin.getOptions(properties)
 
     arguments = ['-pr=example','-h=localhost','-d=orcl','-u=apps','-p=apps','-v=1.0.0']
@@ -66,7 +66,7 @@ class TestBase(unittest.TestCase):
 
     #connectable=MysqlConnector()
     generatePlugin = GeneratePlugin()
-    print generatePlugin.getRevision()
+    print(generatePlugin.getRevision())
     options = generatePlugin.getOptions(properties)
 
     arguments = ['-v=1.0.6']
@@ -89,7 +89,7 @@ class TestBase(unittest.TestCase):
 
     #connectable=MysqlConnector()
     generatePlugin = GeneratePlugin()
-    print generatePlugin.getRevision()
+    print(generatePlugin.getRevision())
     options = generatePlugin.getOptions(properties)
 
     arguments = []

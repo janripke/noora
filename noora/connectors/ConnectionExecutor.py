@@ -38,6 +38,6 @@ class ConnectionExecutor:
             for file in files:
                 if not filters.accept(file) and not file.is_dir():
                     url = file.get_url()
-                    print url
+                    print(url)
                     executor['script'] = file
                     connector.execute(executor, properties)

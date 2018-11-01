@@ -46,7 +46,7 @@ class TestBase(unittest.TestCase):
 
     #connectable=MysqlConnector()
     recreatePlugin = RecreatePlugin()
-    print recreatePlugin.getRevision()
+    print(recreatePlugin.getRevision())
     options = recreatePlugin.getOptions(properties)
 
     arguments = ['-h=localhost','-e=dev','-v=1.0.1']

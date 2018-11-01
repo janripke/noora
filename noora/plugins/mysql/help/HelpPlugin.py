@@ -10,6 +10,6 @@ class HelpPlugin(Plugin):
         return parser.parse_args(args)
 
     def execute(self, arguments, properties):
-        print noora.__description__
-        print noora.__uri__
-        print noora.__version__
+        print(noora.__description__)
+        print(noora.__uri__)
+        print(noora.__version__)

@@ -27,13 +27,11 @@ class TestBase(unittest.TestCase):
     groups = []
     if environmentGroups:
       for environmentGroup in environmentGroups:
-        # print environmentGroup
         group = environmentGroup[0]
         environments = environmentGroup[1]
-        # print group, environments
         if environment.lower() in environments:
           groups.append(group)
-    print groups 
+    print(groups)
 
 if __name__=='__main__':
     unittest.main()

@@ -26,12 +26,10 @@ class TestConfigReader(unittest.TestCase):
   def testConfigReaderPass(self):
     projectHelper = ProjectHelper.ProjectHelper("")
     projectHelper.setNooraDir(NOORA_DIR)
-    print projectHelper.findTemplateFile('project.conf')
-    print sys.argv[0]
-    print os.path.abspath(os.path.dirname(sys.argv[0]))
+    print(projectHelper.findTemplateFile('project.conf'))
+    print(sys.argv[0])
+    print(os.path.abspath(os.path.dirname(sys.argv[0])))
     config = ConfigReader.ConfigReader(projectHelper.findTemplateFile('project.conf'))
-  
-
 
 if __name__ == '__main__':
     unittest.main()

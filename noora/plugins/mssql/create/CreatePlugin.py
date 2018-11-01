@@ -48,7 +48,7 @@ class CreatePlugin(Plugin):
         connector = self.get_connector()
         create_dir = properties.get('create.dir')
         for schema in schemes:
-            print "creating schema '" + schema + "' in database '" + database + "' on host '" + host + "' using environment '" + environment + "'"
+            print("creating schema '" + schema + "' in database '" + database + "' on host '" + host + "' using environment '" + environment + "'")
 
             username = PropertyHelper.get_mssql_user(users, host, schema)
             password = PropertyHelper.get_mssql_password(users, host, schema)
@@ -79,4 +79,4 @@ class CreatePlugin(Plugin):
             folder = File(os.path.join(create_dir, schema, 'dat', environment))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print "schema '" + schema + "' created."
+            print("schema '" + schema + "' created.")

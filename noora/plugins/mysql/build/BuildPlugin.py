@@ -60,7 +60,7 @@ class BuildPlugin(Plugin):
         if not File(target_dir).exists():
             os.makedirs(target_dir)
 
-        print "building component with version '" + version + "'"
+        print("building component with version '" + version + "'")
 
         zip_file = os.path.join(target_dir, component_name + '_' + version + '.zip')
         zip_handle = ZipFile(zip_file, 'w')
@@ -76,7 +76,7 @@ class BuildPlugin(Plugin):
 
                     files = Files.list_filtered(folder, properties)
                     for file in files:
-                        print file.get_url()
+                        print(file.get_url())
                         target_file = File(os.path.join(zip_dir.get_url(), file.tail()))
                         zip_handle.write(file.get_url(), target_file.get_url(), ZIP_DEFLATED)
 
@@ -86,7 +86,7 @@ class BuildPlugin(Plugin):
 
             files = Files.list_filtered(folder, properties)
             for file in files:
-                print file.get_url()
+                print(file.get_url())
                 target_file = File(os.path.join(zip_dir.get_url(), file.tail()))
                 zip_handle.write(file.get_url(), target_file.get_url(), ZIP_DEFLATED)
 
@@ -117,7 +117,7 @@ class BuildPlugin(Plugin):
         component_select_statement = properties.get("component_select_statement")
         component_select_statement = component_select_statement.replace('<name>', component_name)
         component_select_statement = component_select_statement.replace('<previous>', previous.get_value())
-        print component_select_statement
+        print(component_select_statement)
 
         f = open('checkversion.sql', 'w')
         f.write(component_select_statement)
@@ -132,5 +132,5 @@ class BuildPlugin(Plugin):
 
         zip_handle.close()
 
-        print "component with version " + version + " created."
+        print("component with version " + version + " created.")
 

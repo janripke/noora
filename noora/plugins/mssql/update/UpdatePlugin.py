@@ -54,7 +54,7 @@ class UpdatePlugin(Plugin):
         properties['previous'] = previous
         script = File(os.path.join(plugin_dir, 'mssql', 'update', 'checkversion.sql'))
         executor['script'] = script
-        print executor
+        print(executor)
         connector.execute(executor, properties)
         # if "(Code 1329)" in connector.get_result():
         #     raise InvalidVersionException("invalid version", previous)
@@ -99,7 +99,7 @@ class UpdatePlugin(Plugin):
         connector = self.get_connector()
 
         for schema in schemes:
-            print "updating schema '" + schema + "' in database '" + database + "' on host '" + host + "' using environment '" + environment + "'"
+            print("updating schema '" + schema + "' in database '" + database + "' on host '" + host + "' using environment '" + environment + "'")
 
             username = PropertyHelper.get_mssql_user(users, host, schema)
             password = PropertyHelper.get_mssql_password(users, host, schema)
@@ -133,4 +133,4 @@ class UpdatePlugin(Plugin):
             folder = File(os.path.join(alter_dir, version, schema, 'dat', environment))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print "database '" + database + "' updated."
+            print("database '" + database + "' updated.")

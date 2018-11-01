@@ -33,7 +33,7 @@ def main(args=None):
 
     # show the revision
     if arguments.r:
-        print noora.__title__ + " version " + noora.__version__
+        print(noora.__title__ + " version " + noora.__version__)
         exit(0)
 
     # execute the given commands

@@ -9,17 +9,15 @@ NOORA_DIR = BASE_DIR.split('test')[0] + "src"
 
 sys.path.append(NOORA_DIR)
 
-from org.noora.io.Properties import Properties
-from org.noora.io.Property import Property
-from org.noora.io.File import File
-from org.noora.io.FileReader import FileReader
-from org.noora.io.XmlFileReader import XmlFileReader
-from org.noora.io.PropertyLoader import PropertyLoader
+from src.org.noora.io.Properties import Properties
+from src.org.noora.io.Property import Property
+from src.org.noora.io.File import File
+from src.org.noora.io.FileReader import FileReader
+from src.org.noora.io.XmlFileReader import XmlFileReader
+from src.org.noora.io.PropertyLoader import PropertyLoader
 
 
 class TestXmlProperties(unittest.TestCase):
-
-      
     def getFileReader(self, fileName):
         file = File(pathName=fileName)
         fileReader = FileReader(file)
@@ -50,8 +48,7 @@ class TestXmlProperties(unittest.TestCase):
       if len!=0:
         for index in range(len):
           child = element.__getitem__(index)
-         
-          #print parent
+
           tag = child.tag
           text = child.text
           if child.text!=None:
@@ -81,7 +78,7 @@ class TestXmlProperties(unittest.TestCase):
           property.setValue(value+','+str(element[1]))
         else:
           properties.setProperty(element[0], str(element[1]))
-        print element
+        print(element)
       #for index in range(root.__len__()):
       #  print root.__getitem__(index)
         
@@ -91,7 +88,7 @@ class TestXmlProperties(unittest.TestCase):
       #    for index in range(element.__len__()):
       #      print element.__getitem__(index)
       
-      print "------------------"
+      print("------------------")
       #for element in stream.iter():  
         
               
@@ -103,9 +100,9 @@ class TestXmlProperties(unittest.TestCase):
       #      pass
             #print element.tag
       fileReader.close()
-      print "properties.size:",properties.size()
+      print("properties.size:",properties.size())
       for property in properties.list():
-        print property.getKey(),"-->",property.getValue()
+        print(property.getKey(),"-->",property.getValue())
  
         
     def testPropertyLoader(self):
