@@ -30,14 +30,14 @@ class GeneratePlugin(Plugin):
         project_file = properties.get('project.file')
         config_file = File(os.path.join(current_dir, project_file))
         if not config_file.exists():
-            host = raw_input('host [localhost] : ')
+            host = input('host [localhost] : ')
             host = Ora.nvl(host, "localhost")
-            database = raw_input('database : ')
+            database = input('database : ')
             project = database + "-db"
-            schema = raw_input('schema : ')
-            username = raw_input('username : ')
-            password = raw_input('password : ')
-            version = raw_input('version [1.0.0]: ')
+            schema = input('schema : ')
+            username = input('username : ')
+            password = input('password : ')
+            version = input('version [1.0.0]: ')
             version = Ora.nvl(version, "1.0.0")
 
             os.mkdir(project)

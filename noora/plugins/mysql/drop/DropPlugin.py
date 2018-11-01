@@ -65,6 +65,9 @@ class DropPlugin(Plugin):
             if profile:
                 users = profile.get('mysql_users')
 
+        # fail when no users are found. This means that they are not set in myproject.json or credentials.json
+        Fail.fail_on_no_users(users)
+
         for database in databases:
             print("dropping database '" + database + "' on host '" + host + "' using environment '" + environment + "'")
 

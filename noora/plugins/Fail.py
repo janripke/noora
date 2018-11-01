@@ -26,6 +26,13 @@ class Fail:
             raise PluginException(message)
 
     @staticmethod
+    def fail_on_no_users(users):
+        if not users:
+            message = "no users found"
+            raise PluginException(message)
+
+
+    @staticmethod
     def fail_on_invalid_plugin(plugin):
         if not plugin:
             message = "the given plugin is not valid for this project"

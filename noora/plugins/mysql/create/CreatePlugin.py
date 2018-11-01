@@ -55,6 +55,9 @@ class CreatePlugin(Plugin):
             if profile:
                 users = profile.get('mysql_users')
 
+        # fail when no users are found. This means that they are not set in myproject.json or credentials.json
+        Fail.fail_on_no_users(users)
+
         connector = self.get_connector()
         create_dir = properties.get('create.dir')
 
