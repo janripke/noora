@@ -89,29 +89,24 @@ class RecreatePlugin(Plugin):
         version_loader.load(properties)
         versions.sort()
 
-        # remove the default_version from the version list
-        # by doing so, this reflects the present alters in the project folder
-        alter_versions = []
+        # retrieve the update versions
+        default_version = properties.get('default_version')
+        update_versions = []
         for version in versions.list():
-            if version.get_value() != properties.get('default_version'):
-                alter_versions.append(version.get_value())
+            if version.get_value() == default_version and arguments.v == version.get_value():
+                break
+            if version.get_value() == arguments.v:
+                update_versions.append(version.get_value())
+                break
 
-        # create a list of versions up to the given version
-        # if no version is given, the last available version in the project folder is assumed.
-        if arguments.v:
-            update_versions = []
-            for version in alter_versions:
-                update_versions.append(version)
-                if version == arguments.v:
-                    break
-
-            alter_versions = update_versions
+            if version.get_value() != default_version:
+                update_versions.append(version.get_value())
 
         # find the update plugin.
         plugin = self.find_plugin(properties, 'update')
 
         # create the arguments and execute the plugin
-        for version in alter_versions:
+        for version in update_versions:
             parser = argparse.ArgumentParser(add_help=False)
             parser.add_argument('-h', type=str, help='host', required=True)
             parser.add_argument('-d', type=str, help='database', required=False)
