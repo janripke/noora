@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 import unittest
 from noora.mynoora_cli import main
+from noora.plugins.mysql.drop.DropPlugin import DropPlugin
+from noora.plugins.mysql.create.CreatePlugin import CreatePlugin
+from noora.connectors.MysqlConnectorStub import MysqlConnectorStub
+from noora.system.App import App
 
 
 class TestBase(unittest.TestCase):
@@ -10,7 +14,7 @@ class TestBase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test(self):
+    def testCommandLinePass(self):
         # assuming using host = localhost, user = apps , database = acme
 
         # # drop the acme database
@@ -36,6 +40,38 @@ class TestBase(unittest.TestCase):
         # show help
         args = ['help']
         main(args)
+
+    def testDropPass(self):
+        # retrieve the basic properties.
+        properties = App.properties()
+
+        # load the properties from the myproject.json file.
+        App.load_properties(properties)
+
+        # retrieve the basic mynoora parser.
+        parser = App.get_parser()
+        args = ['drop', '-h', 'localhost']
+
+        plugin = DropPlugin()
+        arguments = plugin.parse_args(parser, args)
+        plugin.set_connector(MysqlConnectorStub())
+        plugin.execute(arguments, properties)
+
+    def testCreatePass(self):
+        # retrieve the basic properties.
+        properties = App.properties()
+
+        # load the properties from the myproject.json file.
+        App.load_properties(properties)
+
+        # retrieve the basic mynoora parser.
+        parser = App.get_parser()
+        args = ['create', '-h', 'localhost']
+
+        plugin = CreatePlugin()
+        arguments = plugin.parse_args(parser, args)
+        plugin.set_connector(MysqlConnectorStub())
+        plugin.execute(arguments, properties)
 
 
 if __name__ == '__main__':
