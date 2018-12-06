@@ -8,10 +8,10 @@ Noora currently supports Python 2.x
 
 ## Install from a release
 Enter the following to install noora on your system.
-In this example noora version 1.0.12 is installed.
+In this example noora version 1.0.13 is installed.
 
 ```
-$ pip install git+https://github.com/janripke/noora.git@1.0.12#egg=noora-1.0.12 --upgrade
+$ pip install git+https://github.com/janripke/noora.git@1.0.13#egg=noora-1.0.13 --upgrade
 ```
 
 ## Install from source using virtualenv
@@ -30,10 +30,10 @@ $ pip install .
 
 Simply run : 
 ```
-$ mynoora help
+$ mynoora -r help
 NoOra a database deployment tool.
 https://github.com/janripke/noora
-1.0.12
+1.0.13
 ```
 
 # Create your first mysql database project
