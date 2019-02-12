@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-from noora.plugins.Plugin import Plugin
 import argparse
+
+from noora.plugins.Plugin import Plugin
 
 
 class GeneratePlugin(Plugin):
@@ -12,8 +13,8 @@ class GeneratePlugin(Plugin):
         return parser.parse_args(args)
 
     def execute(self, arguments, properties):
-        # todo: fail on no technology
-        # todo:fail on invalid technology
+        # TODO: fail on no technology
+        # TODO: fail on invalid technology
 
         # resolve the generate plugin to execute based on the given technology
         technology = arguments.t

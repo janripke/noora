@@ -3,10 +3,8 @@ from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.Version import Version
 
-class Fail:
-    def __init__(self):
-        pass
 
+class Fail(object):
     @staticmethod
     def fail_on_no_host(host):
         if not host:
@@ -30,7 +28,6 @@ class Fail:
         if not users:
             message = "no users found"
             raise PluginException(message)
-
 
     @staticmethod
     def fail_on_invalid_plugin(plugin):
