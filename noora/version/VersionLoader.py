@@ -3,7 +3,7 @@ from noora.io.Files import Files
 from noora.version.Version import Version
 
 
-class VersionLoader:
+class VersionLoader(object):
     def __init__(self, versions):
         self.__versions = versions
 
