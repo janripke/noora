@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-import os
+import noora
+
 from noora.system.App import App
 from noora.plugins.Fail import Fail
-from os.path import expanduser
-import noora
 
 
 def main(args=None):
@@ -35,5 +34,3 @@ def main(args=None):
 
 if __name__ == "__main__":
     main(args=None)
-
-
