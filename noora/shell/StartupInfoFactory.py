@@ -2,10 +2,7 @@ import os
 import subprocess
 
 
-class StartupInfoFactory:
-    def __init__(self):
-        pass
-
+class StartupInfoFactory(object):
     @staticmethod
     def new_startup_info():
         startup_info = None
