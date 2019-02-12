@@ -1,8 +1,9 @@
 import os
+
 from noora.version.Version import Version
 
 
-class VersionGuesser:
+class VersionGuesser(object):
     def __init__(self, properties, versions):
         self.__properties = properties
         self.__versions = versions

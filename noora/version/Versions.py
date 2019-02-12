@@ -1,7 +1,7 @@
 from noora.version.Version import Version
 
 
-class Versions:
+class Versions(object):
     def __init__(self):
         self.__versions = []
 
@@ -40,7 +40,7 @@ class Versions:
 
     def get_part(self, version):
         result = 0
-        if version.has_mayor():
+        if version.has_major():
             result = result + 1
         if version.has_minor():
             result = result + 1
@@ -54,12 +54,12 @@ class Versions:
         last = self.last()
         if last:
             level = self.get_part(last)
-            mayor = last.get_mayor()
+            major = last.get_major()
             minor = last.get_minor()
             revision = last.get_revision()
             patch = last.get_patch()
             if level == 1:
-                mayor = str(int(mayor) + 1)
+                major = str(int(major) + 1)
             if level == 2:
                 minor = str(int(minor) + 1)
             if level == 3:
@@ -68,13 +68,13 @@ class Versions:
                 patch = str(int(patch) + 1)
 
             if level == 1:
-                version = mayor
+                version = major
             if level == 2:
-                version = mayor + "." + minor
+                version = major + "." + minor
             if level == 3:
-                version = mayor + "." + minor + "." + revision
+                version = major + "." + minor + "." + revision
             if level == 4:
-                version = mayor + "." + minor + "." + revision + "." + revision
+                version = major + "." + minor + "." + revision + "." + revision
 
             return Version(version)
 
