@@ -1,7 +1,4 @@
-class PreProcessor:
-    def __init__(self):
-        pass
-
+class PreProcessor(object):
     @staticmethod
     def parse(file, properties):
         f = open(file.get_url())
