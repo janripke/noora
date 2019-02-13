@@ -2,13 +2,16 @@
 import os
 import json
 import shutil
-from noora.plugins.Plugin import Plugin
-from noora.io.File import File
-from noora.io.Files import Files
-from noora.system.Ora import Ora
+
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.VersionGuesser import VersionGuesser
+
+from noora.system.Ora import Ora
+from noora.io.File import File
+from noora.io.Files import Files
+
+from noora.plugins.Plugin import Plugin
 
 
 class GeneratePlugin(Plugin):
@@ -36,11 +39,13 @@ class GeneratePlugin(Plugin):
             host = Ora.nvl(host, "localhost")
             username = input('username : ')
             password = input('password : ')
+            # FIXME: this plugin version is embedded pretty deep in the code
             version = input('version [1.0.0]: ')
             version = Ora.nvl(version, "1.0.0")
 
             os.mkdir(project)
-            template_dir = os.path.join(properties.get('plugin.dir'), 'mysql', 'generate', 'templates')
+            template_dir = os.path.join(
+                properties.get('plugin.dir'), 'mysql', 'generate', 'templates')
             template_file = os.path.join(template_dir, project_file)
 
             f = open(template_file)
@@ -132,16 +137,18 @@ class GeneratePlugin(Plugin):
             os.mkdir(ddl_dir)
 
             # create the object folders in the ddl folder
-            for object in objects:
-                os.mkdir(os.path.join(ddl_dir, object))
+            for obj in objects:
+                os.mkdir(os.path.join(ddl_dir, obj))
 
             # create the template code on create.
             if database == version_database and next_version == default_version:
-                for object in objects:
-                    object_dir = os.path.join(template_dir, object)
+                for obj in objects:
+                    # FIXME: template_dir may be unassigned
+                    object_dir = os.path.join(template_dir, obj)
                     if os.path.exists(object_dir):
                         files = Files.list(File(object_dir))
                         for file in files:
-                            shutil.copyfile(file.get_url(), os.path.join(ddl_dir, object, file.tail()))
+                            shutil.copyfile(
+                                file.get_url(), os.path.join(ddl_dir, obj, file.tail()))
 
         print("version " + next_version + " created.")
