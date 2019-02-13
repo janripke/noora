@@ -1,5 +1,6 @@
-from noora.plugins.Plugin import Plugin
 import noora
+
+from noora.plugins.Plugin import Plugin
 
 
 class HelpPlugin(Plugin):
