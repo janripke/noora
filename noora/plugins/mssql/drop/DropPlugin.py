@@ -1,17 +1,19 @@
 #!/usr/bin/env python
+import os
+
+from noora.system.Ora import Ora
+from noora.system.PropertyHelper import PropertyHelper
+from noora.io.File import File
+
 from noora.plugins.Plugin import Plugin
 from noora.plugins.Fail import Fail
 from noora.plugins.mysql.drop.BlockedHostException import BlockedHostException
-from noora.system.PropertyHelper import PropertyHelper
-from noora.system.Ora import Ora
+
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 from noora.connectors.MssqlConnector import MssqlConnector
-from noora.io.File import File
-import os
 
 
 class DropPlugin(Plugin):
-
     def __init__(self):
         Plugin.__init__(self, "drop", MssqlConnector())
 
@@ -49,7 +51,8 @@ class DropPlugin(Plugin):
         # retrieve the user credentials for this database project.
         users = properties.get('mssql_users')
 
-        # try to retrieve the users from the credentials file, when no users are configured in myproject.json.
+        # try to retrieve the users from the credentials file, when no users are configured in
+        # myproject.json.
         if not users:
             # retrieve the name of this database project, introduced in version 1.0.12
             profile = PropertyHelper.get_profile(properties)
@@ -57,22 +60,27 @@ class DropPlugin(Plugin):
                 users = profile.get('mssql_users')
 
         for schema in schemes:
-            print("dropping schema '" + schema + "' in database '" + database + "on host '" + host + "' using environment '" + environment + "'")
+            # FIXME: use format
+            print("dropping schema '" + schema +
+                  "' in database '" + database +
+                  "' on host '" + host +
+                  "' using environment '" + environment + "'")
 
             username = PropertyHelper.get_mssql_user(users, host, schema)
             password = PropertyHelper.get_mssql_password(users, host, schema)
 
             connector = self.get_connector()
 
-            executor = dict()
-            executor['host'] = host
-            executor['database'] = database
-            executor['schema'] = schema
-            executor['username'] = username
-            executor['password'] = password
+            executor = {
+                'host': host,
+                'database': database,
+                'schema':  schema,
+                'username': username,
+                'password': password,
+            }
 
-            for object in objects:
-                folder = File(os.path.join(self.get_drop_dir(properties), object))
+            for obj in objects:
+                folder = File(os.path.join(self.get_drop_dir(properties), obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
             print("schema '" + schema + "' dropped.")
