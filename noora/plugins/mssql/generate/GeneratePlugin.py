@@ -2,13 +2,16 @@
 import os
 import json
 import shutil
-from noora.plugins.Plugin import Plugin
-from noora.io.File import File
-from noora.io.Files import Files
-from noora.system.Ora import Ora
+
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.VersionGuesser import VersionGuesser
+
+from noora.system.Ora import Ora
+from noora.io.File import File
+from noora.io.Files import Files
+
+from noora.plugins.Plugin import Plugin
 
 
 class GeneratePlugin(Plugin):
@@ -41,7 +44,8 @@ class GeneratePlugin(Plugin):
             version = Ora.nvl(version, "1.0.0")
 
             os.mkdir(project)
-            template_dir = os.path.join(properties.get('plugin.dir'), 'mssql', 'generate', 'templates')
+            template_dir = os.path.join(
+                properties.get('plugin.dir'), 'mssql', 'generate', 'templates')
             template_file = os.path.join(template_dir, project_file)
 
             f = open(template_file)
@@ -88,7 +92,6 @@ class GeneratePlugin(Plugin):
         objects = properties.get('create_objects')
 
         for schema in schemes:
-
             # create the scheme folder
             schema_dir = os.path.join(version_dir, schema)
             os.mkdir(schema_dir)
@@ -111,12 +114,12 @@ class GeneratePlugin(Plugin):
                 f.write(stream)
                 f.close()
 
+                # FIXME: remove?
                 # sqlScript=self.getSqlVersionStatement(versions, version)
                 # projectHelper.writeFile(datFolder+os.sep+'version.sql', sqlScript)
 
             # create the environment folders in the dat folder
             for environment in environments:
-
                 os.mkdir(os.path.join(dat_dir, environment))
 
                 # create the environment script in the dat folder.
@@ -144,6 +147,7 @@ class GeneratePlugin(Plugin):
                     if os.path.exists(object_dir):
                         files = Files.list(File(object_dir))
                         for file in files:
-                            shutil.copyfile(file.get_url(), os.path.join(ddl_dir, object, file.tail()))
+                            shutil.copyfile(
+                                file.get_url(), os.path.join(ddl_dir, object, file.tail()))
 
         print("version " + next_version + " created.")
