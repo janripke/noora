@@ -1,13 +1,15 @@
-from noora.connectors.Connector import Connector
-from noora.processor.PreProcessor import PreProcessor
 from noora.io.File import File
 from noora.shell.Shell import Shell
 from noora.shell.CallFactory import CallFactory
+
+from noora.connectors.Connector import Connector
+from noora.processor.PreProcessor import PreProcessor
 
 
 class MysqlConnector(Connector):
     def __init__(self):
         Connector.__init__(self)
+        # FIXME: implement this upstream? MssqlConnector also uses it
         self.__result = None
 
     def get_result(self):
@@ -19,8 +21,9 @@ class MysqlConnector(Connector):
     def execute(self, executable, properties):
         script = executable['script']
 
-        cp = dict()
-        cp['database'] = executable['database']
+        cp = {
+            'database': executable['database'],
+        }
 
         if 'environment' in properties.keys():
             cp['environment'] = properties.get('environment')
@@ -39,7 +42,13 @@ class MysqlConnector(Connector):
         feedback = File('feedback.log')
         feedback_writer = open(feedback.get_url(), 'w')
 
-        statement = "mysql --show-warnings --host=" + executable['host'] + " --user=" + executable['username'] + " --password=" + executable['password'] + " " + executable['database']
+        statement = \
+            "mysql --show-warnings --host={host} --user={user} --password={passwd} {db}".format(
+                host=executable['host'],
+                user=executable['username'],
+                passwd=executable['password'],
+                db=executable['database'],
+            )
         call = CallFactory.new_call(statement)
         call['stdin'] = script_reader
         call['stdout'] = feedback_writer
