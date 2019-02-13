@@ -1,4 +1,5 @@
 import os
+
 from noora.io.Filters import Filters
 from noora.io.File import File
 from noora.io.Files import Files
@@ -7,10 +8,7 @@ from noora.io.FileExtensionFilter import FileExtensionFilter
 from noora.io.FileFilter import FileFilter
 
 
-class ConnectionExecutor:
-    def __init__(self):
-        pass
-
+class ConnectionExecutor(object):
     @staticmethod
     def execute(connector, executor, properties, folder):
         filters = Filters()

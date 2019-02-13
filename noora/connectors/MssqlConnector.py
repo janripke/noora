@@ -1,13 +1,15 @@
-from noora.connectors.Connector import Connector
-from noora.processor.PreProcessor import PreProcessor
 from noora.io.File import File
 from noora.shell.Shell import Shell
 from noora.shell.CallFactory import CallFactory
+
+from noora.processor.PreProcessor import PreProcessor
+from noora.connectors.Connector import Connector
 
 
 class MssqlConnector(Connector):
     def __init__(self):
         Connector.__init__(self)
+        # FIXME: implement this upstream? MysqlConnector also uses it
         self.__result = None
 
     def get_result(self):
@@ -35,11 +37,19 @@ class MssqlConnector(Connector):
         f.write(stream)
         f.close()
 
+        # FIXME: remove?
         #script_reader = open(tmp.get_url())
 
         feedback = File('feedback.log')
         feedback_writer = open(feedback.get_url(), 'w')
-        statement = "sqlcmd -b -S " + executable['host'] + " -U " + executable['username'] + ' -P ' + executable['password'] + " -d " + executable['database'] + " -i " + tmp.get_url()
+        # FIXME: rewrite with format
+        statement = "sqlcmd -b -S {host} -U {user} -P {passwd} -d {db} -i {url}".format(
+            host=executable['host'],
+            user=executable['username'],
+            passwd=executable['password'],
+            db=executable['database'],
+            url=tmp.get_url(),
+        )
 
         call = CallFactory.new_call(statement)
         call['stdout'] = feedback_writer
