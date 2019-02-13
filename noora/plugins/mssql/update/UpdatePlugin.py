@@ -1,16 +1,19 @@
 import os
-from noora.plugins.Plugin import Plugin
-from noora.plugins.Fail import Fail
-from noora.connectors.MssqlConnector import MssqlConnector
-from noora.io.File import File
-from noora.plugins.mysql.update.UnknownVersionException import UnknownVersionException
-from noora.plugins.mysql.update.InvalidEnvironmentException import InvalidEnvironmentException
-from noora.plugins.mysql.update.InvalidVersionException import InvalidVersionException
-from noora.system.Ora import Ora
-from noora.system.PropertyHelper import PropertyHelper
+
 from noora.version.Version import Version
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
+
+from noora.system.Ora import Ora
+from noora.system.PropertyHelper import PropertyHelper
+from noora.io.File import File
+
+from noora.plugins.Plugin import Plugin
+from noora.plugins.Fail import Fail
+# FIXME: importing something from another plugin!?
+from noora.plugins.mysql.update.UnknownVersionException import UnknownVersionException
+
+from noora.connectors.MssqlConnector import MssqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
@@ -37,6 +40,7 @@ class UpdatePlugin(Plugin):
         properties['environment'] = environment
         script = File(os.path.join(plugin_dir, 'mssql', 'update', 'checkenvironment.sql'))
         executor['script'] = script
+        # FIXME: remove?
         # connector.execute(executor, properties)
         # if "(Code 1329)" in connector.get_result():
         #     raise InvalidEnvironmentException("invalid environment", environment)
@@ -89,7 +93,8 @@ class UpdatePlugin(Plugin):
         # retrieve the user credentials for this database project.
         users = properties.get('mssql_users')
 
-        # try to retrieve the users from the credentials file, when no users are configured in myproject.json.
+        # try to retrieve the users from the credentials file, when no users are configured in
+        # myproject.json.
         if not users:
             # retrieve the name of this database project, introduced in version 1.0.12
             profile = PropertyHelper.get_profile(properties)
@@ -99,16 +104,20 @@ class UpdatePlugin(Plugin):
         connector = self.get_connector()
 
         for schema in schemes:
-            print("updating schema '" + schema + "' in database '" + database + "' on host '" + host + "' using environment '" + environment + "'")
+            print("updating schema '" + schema +
+                  "' in database '" + database +
+                  "' on host '" + host +
+                  "' using environment '" + environment + "'")
 
             username = PropertyHelper.get_mssql_user(users, host, schema)
             password = PropertyHelper.get_mssql_password(users, host, schema)
 
-            executor = dict()
-            executor['host'] = host
-            executor['database'] = database
-            executor['username'] = username
-            executor['password'] = password
+            executor = {
+                'host': host,
+                'database': database,
+                'username': username,
+                'password': password,
+            }
 
             # database_folder = PropertyHelper.get_database_folder(database, database_aliases)
 
@@ -116,13 +125,13 @@ class UpdatePlugin(Plugin):
                 self.fail_on_invalid_environment(connector, executor, environment, properties)
                 self.fail_on_invalid_version(connector, executor, version, properties)
 
-            for object in objects:
+            for obj in objects:
                 # global ddl objects
-                folder = File(os.path.join(alter_dir, version, schema, 'ddl', object))
+                folder = File(os.path.join(alter_dir, version, schema, 'ddl', obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
                 # environment specific ddl objects
-                folder = File(os.path.join(alter_dir, version, schema, 'ddl', object, environment))
+                folder = File(os.path.join(alter_dir, version, schema, 'ddl', obj, environment))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
             # global dat objects
