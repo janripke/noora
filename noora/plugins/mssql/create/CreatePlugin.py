@@ -1,9 +1,12 @@
 import os
-from noora.plugins.Plugin import Plugin
-from noora.plugins.Fail import Fail
+
 from noora.system.PropertyHelper import PropertyHelper
 from noora.system.Ora import Ora
 from noora.io.File import File
+
+from noora.plugins.Plugin import Plugin
+from noora.plugins.Fail import Fail
+
 from noora.connectors.MssqlConnector import MssqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
@@ -38,7 +41,8 @@ class CreatePlugin(Plugin):
         # retrieve the user credentials for this database project.
         users = properties.get('mssql_users')
 
-        # try to retrieve the users from the credentials file, when no users are configured in myproject.json.
+        # try to retrieve the users from the credentials file, when no users are configured in
+        # myproject.json.
         if not users:
             # retrieve the name of this database project, introduced in version 1.0.12
             profile = PropertyHelper.get_profile(properties)
@@ -48,27 +52,32 @@ class CreatePlugin(Plugin):
         connector = self.get_connector()
         create_dir = properties.get('create.dir')
         for schema in schemes:
-            print("creating schema '" + schema + "' in database '" + database + "' on host '" + host + "' using environment '" + environment + "'")
+            print(
+                "creating schema '" + schema +
+                "' in database '" + database +
+                "' on host '" + host +
+                "' using environment '" + environment + "'")
 
             username = PropertyHelper.get_mssql_user(users, host, schema)
             password = PropertyHelper.get_mssql_password(users, host, schema)
 
-            executor = dict()
-            executor['host'] = host
-            executor['database'] = database
-            executor['username'] = username
-            executor['password'] = password
+            executor = {
+                'host': host,
+                'database': database,
+                'username': username,
+                'password': password,
+            }
 
+            # FIXME: remove?
             # database_folder = PropertyHelper.get_database_folder(database, database_aliases)
 
-            for object in objects:
+            for obj in objects:
                 # global ddl objects
-
-                folder = File(os.path.join(create_dir, schema, 'ddl', object))
+                folder = File(os.path.join(create_dir, schema, 'ddl', obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
                 # environment specific ddl objects
-                folder = File(os.path.join(create_dir, schema, 'ddl', object, environment))
+                folder = File(os.path.join(create_dir, schema, 'ddl', obj, environment))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
             # global dat objects
