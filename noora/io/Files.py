@@ -1,15 +1,13 @@
+import os
+
 from noora.io.File import File
 from noora.io.Filters import Filters
 from noora.io.FileFolderFilter import FileFolderFilter
 from noora.io.FileExtensionFilter import FileExtensionFilter
 from noora.io.FileFilter import FileFilter
-import os
 
 
-class Files:
-    def __init__(self):
-        pass
-
+class Files(object):
     @staticmethod
     def list_filtered(folder, properties):
         filters = Filters()
