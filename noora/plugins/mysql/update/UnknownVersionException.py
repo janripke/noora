@@ -1,3 +1,4 @@
+# TODO: is it necessary to explicitly implement __str__? I don't think so.
 class UnknownVersionException(Exception):
     def __init__(self, message, version):
         Exception.__init__(self)
