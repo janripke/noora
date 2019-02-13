@@ -1,4 +1,4 @@
-class Filters:
+class Filters(object):
     def __init__(self):
         self.__filters = []
 
