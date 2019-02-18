@@ -1,16 +1,15 @@
-#!/usr/bin/env python
-
-import core.ProjectHelper         as ProjectHelper
-import core.ConfigReader          as ConfigReader
-import core.ParameterDefinition   as ParameterDefinition
-import connectors.OracleConnector as OracleConnector
 import os
 import sys
 
+import core.ProjectHelper as ProjectHelper
+import core.ConfigReader as ConfigReader
+import core.ParameterDefinition as ParameterDefinition
+import connectors.OracleConnector as OracleConnector
+
 __revision__ = "$Revision: $"
 
-class Plugin:
 
+class Plugin(object):
   def __init__(self):
     configReader=ConfigReader.ConfigReader('project.conf')
     self.setConfigReader(configReader)
@@ -92,4 +91,3 @@ class Plugin:
       if parameterDefinition.getKey().lower()==key.lower():
         return parameterDefinition
     return None
-    

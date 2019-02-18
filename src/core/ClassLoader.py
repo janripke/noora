@@ -1,10 +1,4 @@
-#!/usr/bin/env python
-
 class ClassLoader:
-    
-    def __init__(self):
-        pass
-    
     def find(self, moduleName,className):
         mod = __import__(moduleName ,globals(), locals(), [''])
         
@@ -19,7 +13,3 @@ class ClassLoader:
         className=patternList[listLength-1]
         moduleName=".".join(patternList[0:listLength-1])
         return self.find(moduleName, className)
-
-    
-   
-        

@@ -1,11 +1,10 @@
-#!/usr/bin/env python
 import core.StreamHelper as StreamHelper
 import core.NooraException as NooraException
 
 M_LF = chr(10)
 
-class ConfigReader:
 
+class ConfigReader(object):
   def __init__(self, filename=None):
     self.__lines = []
     self.__message = None
@@ -53,7 +52,6 @@ class ConfigReader:
         newLine = keyword + '=' + str(value)
         lines[lines.index(line)] = newLine
 
-
   def hasValue(self, keyword, value):
     values = self.getValue(keyword)
     if values != None:
@@ -80,9 +78,8 @@ class ConfigReader:
 
   def failOnConfigNotLoaded(self):
     if self.getMessage() != None:
-      print self.getMessage()
+      print(self.getMessage())
       exit(1)
-
 
   def setMessage(self, message):
     self.__message = message

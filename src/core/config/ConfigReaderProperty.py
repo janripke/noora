@@ -1,15 +1,14 @@
-
 import core.config.ConfigReader
 import core.NooraException as NooraException
 import core.StreamHelper as StreamHelper
 
 M_LF = chr(10)
 
+
 class ConfigReaderProperty(core.config.ConfigReader):
     '''
     The original config (property based) reader
     '''
-
     def __init__(self, filename):
         core.config.ConfigReader.ConfigReader.__init__(self, filename)
 
@@ -85,9 +84,8 @@ class ConfigReaderProperty(core.config.ConfigReader):
 
     def failOnConfigNotLoaded(self):
         if self.getMessage() != None:
-            print self.getMessage()
+            print(self.getMessage())
             exit(1)
-
 
     def setMessage(self, message):
         self.__message = message
@@ -100,4 +98,3 @@ class ConfigReaderProperty(core.config.ConfigReader):
 
     def getFilename(self):
         return self.__filename
-

@@ -1,8 +1,4 @@
-#!/usr/bin/env python
-
-
-class VersionHelper:
-
+class VersionHelper(object):
   def __init__(self, versions):
     self.__versions=self.getWeightList(versions)
 
@@ -58,5 +54,3 @@ class VersionHelper:
     for version in versions:
       items.append(version[1])
     return items
-
-

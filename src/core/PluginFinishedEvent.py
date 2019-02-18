@@ -1,11 +1,12 @@
 import wx
+
 import gui.Settings as Settings
+
 
 class PluginFinishedEvent(wx.PyEvent):
   """
     Open project event.
   """
-  
   def getDirectory(self):
     return self.__directory
   
