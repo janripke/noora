@@ -1,14 +1,9 @@
-#!/usr/bin/env python
 from org.noora.connector.ConnectorException import ConnectorException
 
 __revision__ = "$Revision: $"
 
 
-class Executable:
-
-  def __init__(self):
-    pass
-    
+class Executable(object):
   def setIgnoreErrors(self, ignoreErrors):
     raise ConnectorException("method not implemented")        
 

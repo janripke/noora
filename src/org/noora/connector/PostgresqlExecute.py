@@ -1,11 +1,9 @@
-#!/usr/bin/env python
 from org.noora.connector.Execute import Execute
 
 __revision__ = "$Revision: $"
 
 
 class PostgresqlExecute(Execute):
-
   def __init__(self):
     Execute.__init__(self)
     self.__host = None
@@ -43,7 +41,3 @@ class PostgresqlExecute(Execute):
 
   def getPassword(self):
     return self.__password    
-
-    
-    
-
