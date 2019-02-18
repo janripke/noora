@@ -21,3 +21,6 @@ noora.egg-info/
 *.iml
 out
 gen
+
+# Logfiles
+*.log
