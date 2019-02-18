@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-
 class UnrecognizedOptionException(Exception):
-    
   def __init__(self, message, unrecognizedOptions):
     Exception.__init__(self)
             

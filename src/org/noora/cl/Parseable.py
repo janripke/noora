@@ -1,10 +1,7 @@
-#!/usr/bin/env python
 from org.noora.cl.ParseException import ParseException
 
-class Parseable:
-  def __init__(self):
-    pass
-  
+
+class Parseable(object):
   def checkRequiredOptions(self):
     raise ParseException("method not implemented")
     

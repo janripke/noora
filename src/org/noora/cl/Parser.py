@@ -1,10 +1,10 @@
-#!/usr/bin/env python
 from org.noora.cl.Parseable import Parseable
 from org.noora.cl.CommandLine import CommandLine
 from org.noora.cl.MissingOptionException import MissingOptionException
 from org.noora.cl.MissingArgumentException import MissingArgumentException
 from org.noora.cl.UnrecognizedOptionException import UnrecognizedOptionException
 from org.noora.cl.UnrecognizedArgumentException import UnrecognizedArgumentException
+
 
 class Parser(Parseable):
   def __init__(self):
@@ -36,14 +36,11 @@ class Parser(Parseable):
     if missingOptions:   
       raise MissingOptionException('missing option',missingOptions)
 
-    
   def checkRequiredArguments(self):
-    
     missingArguments = self.__commandLine.getRequiredArguments()
     if missingArguments:
       raise MissingArgumentException('missing argument in option',missingArguments)
-    
-      
+
   def parse(self, options=None, arguments=None, stopAtNonRecognizedOption=False):
     self.__options = options
     self.__arguments = arguments
@@ -65,5 +62,4 @@ class Parser(Parseable):
         if stopAtNonRecognizedOption:
           raise UnrecognizedOptionException('unrecognized option',values[0])
           
-        
     return self.__commandLine
