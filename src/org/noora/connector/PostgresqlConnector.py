@@ -1,19 +1,15 @@
-#!/usr/bin/env python
 import logging
 
 from org.noora.connector.Connector import Connector
 from org.noora.io.File import File
-from org.noora.io.FileReader import FileReader
 from org.noora.io.Properties import Properties
-from org.noora.parser.Parser import Parser
-from org.noora.parser.PreProcessor import PreProcessor
 from org.noora.io.FileWriter import FileWriter
 from org.noora.processor.StartupInfoFactory import StartupInfoFactory
 from org.noora.processor.Processor import Processor
 from org.noora.processor.Call import Call
 
+
 class PostgresqlConnector(Connector):
-  
   def __init__(self):
     Connector.__init__(self)
     self.__processorResult = None
@@ -25,8 +21,6 @@ class PostgresqlConnector(Connector):
     return self.__processorResult    
   
   def execute(self, executable, properties):
-    
-      
     cp = Properties()
     cp.setProperty('database', executable.getDatabase())
     cp.setProperty('environment', properties.getPropertyValue('environment'))    
@@ -58,4 +52,3 @@ class PostgresqlConnector(Connector):
          
     logger = logging.getLogger('NoOraLogger')
     logger.info(executable.getScript())
-

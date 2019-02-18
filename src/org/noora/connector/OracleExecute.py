@@ -1,11 +1,9 @@
-#!/usr/bin/env python
 from org.noora.connector.Execute import Execute
 
 __revision__ = "$Revision: $"
 
 
 class OracleExecute(Execute):
-
   def __init__(self):
     Execute.__init__(self)
     self.__host = None
@@ -29,4 +27,3 @@ class OracleExecute(Execute):
 
   def getPassword(self):
     return self.__password
-  
