@@ -1,16 +1,15 @@
-#!/usr/bin/env python
-
-import core.ProjectHelper         as ProjectHelper
-import core.ConfigReader          as ConfigReader
-import core.ParameterDefinition   as ParameterDefinition
-import connectors.MysqlConnector  as MysqlConnector
 import os
 import sys
 
+import core.ProjectHelper as ProjectHelper
+import core.ConfigReader as ConfigReader
+import core.ParameterDefinition as ParameterDefinition
+import connectors.MysqlConnector as MysqlConnector
+
 __revision__ = "$Revision: $"
 
-class MysqlPlugin:
 
+class MysqlPlugin(object):
   def __init__(self):
     configReader=ConfigReader.ConfigReader('project.conf')
     self.setConfigReader(configReader)
@@ -91,4 +90,3 @@ class MysqlPlugin:
       if parameterDefinition.getKey().lower()==key.lower():
         return parameterDefinition
     return None
-    
