@@ -1,17 +1,13 @@
-#!/usr/bin/env python
+import os
+import logging
+import subprocess
+from subprocess import Popen, PIPE
 
 import core.Connector as Connector
-import os
-import subprocess
 import core.NooraException as NooraException
-import logging
-from subprocess import Popen, PIPE
 
 
 class LoadJavaConnector(Connector.Connector):
-  def __init__(self):
-    Connector.Connector.__init__(self)
-
   def getScriptDir(self):
     return self.getNooraDir() + os.sep + 'scripts'
 
@@ -29,7 +25,7 @@ class LoadJavaConnector(Connector.Connector):
     projectHelper = self.getProjectHelper()
     url = os.getenv('TNS_ADMIN') + os.sep + "tnsnames.ora"
     stream = projectHelper.readFile(url)
-    print stream
+    print(stream)
 
   def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB, ignoreErrors):
     try:

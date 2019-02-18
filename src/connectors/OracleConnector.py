@@ -1,16 +1,12 @@
-#!/usr/bin/env python
-
-import core.Connector as Connector
 import os
 import subprocess
-import core.NooraException as NooraException
 import logging
 
+import core.Connector as Connector
+import core.NooraException as NooraException
+
+
 class OracleConnector(Connector.Connector):
-  
-  def __init__(self):
-    Connector.Connector.__init__(self)
-  
   def getScriptDir(self):
     return self.getNooraDir()+os.sep+'scripts'
 
@@ -28,9 +24,8 @@ class OracleConnector(Connector.Connector):
     projectHelper=self.getProjectHelper()
     url=os.getenv('TNS_ADMIN')+os.sep+"tnsnames.ora"
     stream=projectHelper.readFile(url)
-    print stream
-    
-  
+    print(stream)
+
   def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB, ignoreErrors):
     try:
       startupInfo=self.getStartupInfo()
