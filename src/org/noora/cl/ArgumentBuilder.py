@@ -1,9 +1,4 @@
-#!/usr/bin/env python
-
-class ArgumentBuilder():
-  def __init__(self):
-    pass
-  
+class ArgumentBuilder(object):
   @staticmethod
   def build(*args):
     result = []

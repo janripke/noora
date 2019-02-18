@@ -1,23 +1,18 @@
-#!/usr/bin/env python
-
-from org.noora.app.Appable import Appable
-from org.noora.io.File import File
 import logging
 import os
 
+from org.noora.app.Appable import Appable
+from org.noora.io.File import File
+
 
 class NoOraApp(Appable):
-  
   logger = logging.getLogger("NoOraLogger")
   
   __revision__ = "$Revision$"
   __version__  = "1.0.2"
   __name__     = "noora"
   
-  def __init__(self):
-    Appable.__init__(self)
-
-  def getRevision(self):  
+  def getRevision(self):
     return self.__revision__
 
   def getVersion(self):
@@ -37,6 +32,3 @@ class NoOraApp(Appable):
     nooraDir = properties.getPropertyValue("noora.dir")
     file = File(nooraDir + os.sep + projectFile)
     return file
-
-
-    

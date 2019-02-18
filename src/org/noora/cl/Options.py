@@ -1,9 +1,7 @@
-#!/usr/bin/env python
 from org.noora.cl.OptionFactory import OptionFactory
 
 
-class Options:
-  
+class Options(object):
   def __init__(self):
     self.__options=[]
        
@@ -53,6 +51,3 @@ class Options:
   def size(self):
     options = self.__options
     return len(options)
-  
-
-

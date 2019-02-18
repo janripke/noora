@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-
 class MissingArgumentException(Exception):
-    
   def __init__(self, message, missingArguments):
     Exception.__init__(self)
             

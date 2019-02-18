@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-
-class Option:
-  
+class Option(object):
   def __init__(self, type=None, longType=None, hasArguments=False, required=False, description=None):
     self.__type = type
     self.__longType = longType
@@ -57,5 +54,3 @@ class Option:
     
   def isRequired(self):
     return self.__required
-    
-
