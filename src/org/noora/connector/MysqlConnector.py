@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import logging
 
 from org.noora.connector.Connector import Connector
@@ -11,8 +12,8 @@ from org.noora.processor.StartupInfoFactory import StartupInfoFactory
 from org.noora.processor.Processor import Processor
 from org.noora.processor.Call import Call
 
-
 class MysqlConnector(Connector):
+  
   def __init__(self):
     Connector.__init__(self)
     self.__processorResult = None
@@ -63,3 +64,9 @@ class MysqlConnector(Connector):
          
     logger = logging.getLogger('NoOraLogger')
     logger.info(executable.getScript())
+
+      
+
+
+
+

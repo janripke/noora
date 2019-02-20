@@ -1,4 +1,7 @@
-class ConnectorFactory(object):
+class ConnectorFactory:
+  def __init__(self):
+    pass
+  
   @staticmethod
   def newMysqlConnector():
     from org.noora.connector.MysqlConnector import MysqlConnector

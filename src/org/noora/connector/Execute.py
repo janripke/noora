@@ -1,9 +1,11 @@
+#!/usr/bin/env python
 from org.noora.connector.Executable import Executable
 
 __revision__ = "$Revision: $"
 
 
 class Execute(Executable):
+
   def __init__(self):
     Executable.__init__(self)
     self.__ignoreErrors=False
