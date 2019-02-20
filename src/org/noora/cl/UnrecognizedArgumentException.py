@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+
 class UnrecognizedArgumentException(Exception):
+    
   def __init__(self, message, unrecognizedArgument):
     Exception.__init__(self)            
     self.__unrecognizedArgument=unrecognizedArgument    

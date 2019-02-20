@@ -1,7 +1,9 @@
+#!/usr/bin/env python
+
 from org.noora.cl.Options import Options
 
-
-class CommandLine(object):
+class CommandLine:
+  
   def __init__(self):
     self.__options=Options()
     
@@ -37,3 +39,6 @@ class CommandLine(object):
       
   def getOptions(self):
     return self.__options
+  
+  
+
