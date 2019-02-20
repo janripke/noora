@@ -1,14 +1,17 @@
+import logging
+import sys
 from suds.client import Client
 from suds.multipart import MultipartFilter
+from suds.plugin import MessagePlugin
 from suds.sax.element import Element
 from suds import WebFault
-from suds.sax.text import Text
 
 #logging.basicConfig(level=logging.INFO)
 #logging.getLogger('suds.client').setLevel(logging.DEBUG)
 #logging.getLogger('suds.transport').setLevel(logging.DEBUG)
 #logging.getLogger('suds.xsd.schema').setLevel(logging.DEBUG)
 #logging.getLogger('suds.wsdl').setLevel(logging.DEBUG)
+from suds.sax.text import Text
 
 
 class Tripoli2ApiException(Exception):
@@ -16,10 +19,9 @@ class Tripoli2ApiException(Exception):
         self.message = message
 
     def __str__(self):
-        print("\r\n" + self.message)
+        print "\r\n" + self.message
 
-
-class AuthInfo(object):
+class AuthInfo:
     def __init__(self, client, username, password):
         tns = ('tns', 'http://services.tripolis.com/')
         self.__auth_info = Element('authInfo', ns=tns)
@@ -33,8 +35,7 @@ class AuthInfo(object):
     def get(self):
         return self.__auth_info
 
-
-class WorkspaceService(object):
+class WorkspaceService:
     def __init__(self, auth_info):
         self.__url = 'https://td41.tripolis.com/api2/soap/WorkspaceService?wsdl'
         self.__client = Client(self.__url, plugins = [MultipartFilter()])
@@ -78,7 +79,7 @@ class WorkspaceService(object):
 #print WorkspaceService().getByField('name', 'kpncompleetdev')
 
 
-class DirectEmailTypeService(object):
+class DirectEmailTypeService:
     def __init__(self, auth_info):
         self.__url = 'https://td41.tripolis.com/api2/soap/DirectEmailTypeService?wsdl'
         self.__client = Client(self.__url, plugins = [MultipartFilter()])
@@ -129,8 +130,7 @@ class DirectEmailTypeService(object):
 
 #print DirectEmailTypeService().getByWorkspaceId('qvo8NMAolbA_3AFrodmdgQ')
 
-
-class DirectEmailService(object):
+class DirectEmailService:
     def __init__(self, auth_info):
         self.__url = 'https://td41.tripolis.com/api2/soap/DirectEmailService?wsdl'
         self.__client = Client(self.__url, plugins = [MultipartFilter()])
@@ -187,15 +187,16 @@ class DirectEmailService(object):
             raise Tripoli2ApiException(e.fault.detail.errorResponse.errors.error.message)
 
     def update(self, direct_email_for_listing, tripolis_direct_email):
+
         request = self.__client.factory.create('UpdateDirectEmailRequest')
         request.id = direct_email_for_listing.id
         request.label = tripolis_direct_email.getLabel()
         request.name = tripolis_direct_email.getName()
-        request.subject = tripolis_direct_email.getSubject()
+        request.subject = unicode(tripolis_direct_email.getSubject(), encoding='utf-8')
         request.description = tripolis_direct_email.getDescription()
-        request.htmlSource = tripolis_direct_email.getHtml()
-        request.textSource = tripolis_direct_email.getText()
-        request.fromName = tripolis_direct_email.getFromName()
+        request.htmlSource = unicode(tripolis_direct_email.getHtml(), encoding='utf-8')
+        request.textSource = unicode(tripolis_direct_email.getText(), encoding='utf-8')
+        request.fromName = unicode(tripolis_direct_email.getFromName(), encoding='utf-8')
         request.fromAddress = tripolis_direct_email.getFromAddress()
         request.replyToAddress = tripolis_direct_email.getReplyTo()
 
@@ -205,15 +206,16 @@ class DirectEmailService(object):
             raise Tripoli2ApiException(e.fault.detail.errorResponse.errors.error.message)
 
     def create(self, direct_email_type_id, tripolis_direct_email):
+
         request = self.__client.factory.create('CreateDirectEmailRequest')
         request.directEmailTypeId = direct_email_type_id
         request.label = tripolis_direct_email.getLabel()
         request.name = tripolis_direct_email.getName()
-        request.subject = tripolis_direct_email.getSubject()
+        request.subject = unicode(tripolis_direct_email.getSubject(), encoding='utf-8')
         request.description = tripolis_direct_email.getDescription()
-        request.htmlSource = tripolis_direct_email.getHtml()
-        request.textSource = tripolis_direct_email.getText()
-        request.fromName = tripolis_direct_email.getFromName()
+        request.htmlSource = unicode(tripolis_direct_email.getHtml(), encoding='utf-8')
+        request.textSource = unicode(tripolis_direct_email.getText(), encoding='utf-8')
+        request.fromName = unicode(tripolis_direct_email.getFromName(), encoding='utf-8')
         request.fromAddress = tripolis_direct_email.getFromAddress()
         request.replyToAddress = tripolis_direct_email.getReplyTo()
 
