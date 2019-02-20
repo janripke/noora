@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+
 class MissingOptionException(Exception):
+    
   def __init__(self, message, missingOptions):
     Exception.__init__(self)
             

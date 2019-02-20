@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+
 class CommandLineException(Exception):
+    
   def __init__(self, message):
     Exception.__init__(self)
     self.__message=message
