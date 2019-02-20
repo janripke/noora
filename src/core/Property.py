@@ -1,8 +1,8 @@
+#!/usr/bin/env python
 import core.ApplicationException  as ApplicationException
 import os.path
 
-
-class Fileable(object):
+class Fileable:
   def __init__(self, pathName=None):
     pass
     
@@ -36,7 +36,6 @@ class Fileable(object):
   
   def delete(self,recursive=False):
     raise ApplicationException.ApplicationException("method not implemented")
-
 
 class File(Fileable):
   def __init__(self, pathName=None):
@@ -94,8 +93,13 @@ class File(Fileable):
       os.rmdir(pathName)
 
 
-class Readable(object):
-  def read(self):
+
+class Readable:
+  
+  def __init__(self):
+    pass
+  
+  def read(self):  
     raise ApplicationException.ApplicationException("method not implemented")
   
   def close(self):
@@ -123,9 +127,15 @@ class FileReader(Readable):
     handle = self.__handle
     handle.close()
     
-
-class Writeable(object):
-  def write(self, buffer):
+    
+    
+    
+class Writeable:
+  
+  def __init__(self):
+    pass
+  
+  def write(self, buffer):  
     raise ApplicationException.ApplicationException("method not implemented")
   
   def close(self):
@@ -148,7 +158,10 @@ class FileWriter(Writeable):
     handle.close()
     
     
-class Files(object):
+class Files:
+  def __init__(self):
+    pass
+  
   def copy(self, fileReader, fileWriter):
     stream = fileReader.read()
     fileReader.close()
@@ -202,10 +215,10 @@ class Files(object):
       for foundDirectory in foundDirectories:
         foundDirectory.delete()
 
-      file.delete()
+      file.delete()    
 
-
-class Property(object):
+class Property:
+  
   def __init__(self, key, value):
     self.__key = key
     self.__value = value
@@ -220,11 +233,13 @@ class Property(object):
     self.__value = value
 
 
-class Loadable(object):
-  def load(self, fileReader = None):
+class Loadable:  
+  def __init__(self):
+    pass
+  
+  def load(self, fileReader = None):  
     raise ApplicationException.ApplicationException("method not implemented")
-
-
+  
 class NoOraPropertyLoader(Loadable):
   def __init__(self, properties):
     Loadable.__init__(self)
@@ -232,7 +247,8 @@ class NoOraPropertyLoader(Loadable):
 
   def getProperties(self):
     return self.__properties
-
+    
+    
   def load(self, fileReader = None):
     properties = self.getProperties()
     
@@ -256,14 +272,16 @@ class NoOraPropertyLoader(Loadable):
         value = property.getValue() + pairs[0].strip()
         property = properties.setProperty(key, value)
     return properties
+  
+class Properties:
 
-
-class Properties(object):
   def __init__(self):
     self.__properties = []
 
   def clear(self):
     self.__properties = []
+    
+
 
   def containsProperty(self, key):
     result = True
@@ -271,6 +289,7 @@ class Properties(object):
     if property == None:
       result = False
     return result
+    
 
   def setProperty(self, key, value):
     properties = self.__properties
@@ -295,3 +314,6 @@ class Properties(object):
       if property.getKey() == key:
         result = property
     return result
+       
+
+

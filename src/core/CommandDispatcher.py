@@ -1,15 +1,14 @@
 import wx
 import os
+import core.ClassLoader         as ClassLoader
+import core.NooraException      as NooraException
+import core.ParameterHelper     as ParameterHelper
+import core.PluginFinishedEvent as PluginFinishedEvent
+import core.PluginManager       as PluginManager
 from threading import Thread
 
-import core.ClassLoader as ClassLoader
-import core.NooraException as NooraException
-import core.ParameterHelper as ParameterHelper
-import core.PluginFinishedEvent as PluginFinishedEvent
-import core.PluginManager as PluginManager
-
-
-class PluginExecutionContext(object):
+class PluginExecutionContext:
+  
   def __init__(self, parent, id, plugin):
     self.__command = plugin.getType() 
     self.__plugin = plugin
@@ -37,8 +36,8 @@ class PluginExecutionContext(object):
         if parameterDefinition.getKey()==parameter:
           parameters.append(parameterDefinition.getFirstParameter()+"="+value)
 
-
 class ExecuteThread(Thread):
+
   def __init__(self, executionContext):
     Thread.__init__(self)
     self.__executionContext=executionContext
@@ -57,11 +56,11 @@ class ExecuteThread(Thread):
       filename=plugin.getConfigReader().getFilename()
       wx.PostEvent(None, PluginFinishedEvent.PluginFinishedEvent(id, os.path.abspath('.'), filename))
     except NooraException.NooraException as e:      
-      print(e.getMessage())
+      print e.getMessage()
       exit(1)
 
 
-class CommandDispatcher(object):
+class CommandDispatcher:
   '''
   This class will invoke the specified command. It will read the project configuration and
   use the specified arguments to execute the correct plugin.
@@ -133,3 +132,10 @@ class CommandDispatcher(object):
   
   def execute(self, executionContext):
     ExecuteThread(executionContext)
+  
+
+            
+
+    
+
+        

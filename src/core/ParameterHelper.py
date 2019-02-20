@@ -1,7 +1,9 @@
+#!/usr/bin/env python
+
 import sys
 
-
-class ParameterHelper(object):
+class ParameterHelper:
+  
   def __init__(self):
     self.__parameters=[]
     self.appendParameters(sys.argv)
@@ -50,3 +52,9 @@ class ParameterHelper(object):
       return defaultValue
 
     return result
+
+
+
+
+
+

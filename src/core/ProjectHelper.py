@@ -1,16 +1,17 @@
+#!/usr/bin/env python
+
 import os
 import sys
 import zipfile
 import platform
 import subprocess
-
 import core.NooraException as NooraException
 
 # 'constant' to determine if we're on the cyswin platform
-ON_CYGWIN=platform.system().lower().find("cygwin") == -1
+ON_CYGWIN=platform.system().lower().find("cygwin") == -1;
 
+class ProjectHelper:
 
-class ProjectHelper(object):
   def __init__(self, configReader):
     self.__configReader=configReader
     self.setBaseDir(os.path.abspath('.'))
@@ -34,10 +35,12 @@ class ProjectHelper(object):
   def getScriptDir(self):
     return self.getNooraDir()+os.sep+'scripts'
 
+
   def fileNotPresent(self, url):
     if os.path.isfile(url):
       return False
     return True
+
 
   def folderNotPresent(self, folder):
     if os.path.isdir(folder):
@@ -48,6 +51,7 @@ class ProjectHelper(object):
     if os.path.isdir(folder):
       return True
     return False
+
 
   def findTemplateFile(self, filename):
     baseDir=self.getBaseDir()
@@ -138,12 +142,16 @@ class ProjectHelper(object):
         return user[2]
     return None
 
+
+
+
   def getOraclePasswd(self, oracleSid, scheme):
     users=self.__configReader.getValue('ORACLE_USERS')
     for user in users:
       if user[0].lower()==oracleSid.lower() and user[1].lower()==scheme.lower():
         return user[3]
     return None
+
 
   def getEnvironmentGroups(self, environment):
     environmentGroups=self.__configReader.getValue('ENVIRONMENT_GROUPS')
@@ -162,20 +170,24 @@ class ProjectHelper(object):
               groups.append(group)
     return groups
 
+
   def readFile(self, filename):
     handle=open(filename,'rb')
     stream=handle.read()
     handle.close()
     return stream
 
+
   def writeFile(self, filename,stream):
     handle=open(filename,'wb')
     handle.write(stream)
     handle.close()
 
+
   def copyFile(self, fromUrl, toUrl):
     stream=self.readFile(fromUrl)
     self.writeFile(toUrl,stream)
+
 
   def extractFile(self, url, subFolder=None):
     folder=self.getFolder(url)
@@ -190,9 +202,11 @@ class ProjectHelper(object):
         os.makedirs(extractFolder)
       self.writeFile(extractUrl,stream)
 
+
   def getFilename(self, url):
     folder,filename=os.path.split(url)
     return filename
+
 
   def getFileExtension(self, url):
     root,ext=os.path.splitext(url)
@@ -205,6 +219,7 @@ class ProjectHelper(object):
   def getFolder(self, url):
     folder,filename=os.path.split(url)
     return folder
+
 
   def isFileExcluded(self, url):
     excludedFiles=self.__configReader.getValue('EXCLUDED_FILES')
@@ -220,6 +235,7 @@ class ProjectHelper(object):
         return True
     return False
 
+
   def findFiles(self, folder):
     result=[]
     if os.path.isdir(folder):
@@ -231,6 +247,7 @@ class ProjectHelper(object):
             result.append(file)
       result.sort()
     return result
+
 
   def findFilesRecursive(self, folder):
     result=[]
@@ -245,12 +262,14 @@ class ProjectHelper(object):
         result.append(url)
     return result
 
+
   def isFolderExcluded(self, folder):
     excludedFolders=self.__configReader.getValue('EXCLUDED_FOLDERS')
     for excludedFolder in excludedFolders:
       if folder.lower()==excludedFolder.lower():
         return True
     return False
+
 
   def findFolders(self, folder):
     result=[]
@@ -273,6 +292,7 @@ class ProjectHelper(object):
           result.append(subFolder)
     return result
 
+
   def removeFolderRecursive(self, path):
     files=self.findFilesRecursive(path)
     for file in files:
@@ -292,8 +312,13 @@ class ProjectHelper(object):
     if ON_CYGWIN:
       return path
     else:
-      proc = subprocess.Popen(["cygpath -wa "+ path], stdout=subprocess.PIPE, shell=True)
-      (out, err) = proc.communicate()
-      result = out.rstrip()
+      proc = subprocess.Popen(["cygpath -wa "+ path], stdout=subprocess.PIPE, shell=True);
+      (out, err) = proc.communicate();
+      result = out.rstrip();
 
-    return result
+    return result;
+
+
+
+
+

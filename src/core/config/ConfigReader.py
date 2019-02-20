@@ -1,9 +1,11 @@
+
 CR_STATUS_NOT_LOADED = 1
 CR_STATUS_LOADED = 2
 CR_STATUS_ERROR = 3
 
+class ConfigReader:
 
-class ConfigReader(object):
+
     def __init__(self, filename):
         self.__filename = filename
         self.__status = CR_STATUS_NOT_LOADED

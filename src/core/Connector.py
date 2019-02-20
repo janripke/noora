@@ -1,13 +1,14 @@
-import os
-import sys
+#!/usr/bin/env python
 
 import core.ProjectHelper as ProjectHelper
 import core.ConfigReader  as ConfigReader
+import os
+import sys
 
 __revision__ = "$Revision: $"
 
+class Connector:
 
-class Connector(object):
   def __init__(self):
     configReader=ConfigReader.ConfigReader('project.conf')
     self.setConfigReader(configReader)
@@ -37,3 +38,4 @@ class Connector(object):
   
   def execute(self, oracleSid, oracleUser, oraclePasswd, oracleScript, paramA, paramB):
     pass
+    
