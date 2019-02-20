@@ -1,12 +1,16 @@
-import logging
-import os
-import subprocess
+#!/usr/bin/env python
 
 import core.Connector as Connector
+import os
+import subprocess
 import core.NooraException as NooraException
-
+import logging
 
 class SqlLoaderConnector(Connector.Connector):
+  
+  def __init__(self):
+    Connector.Connector.__init__(self)
+  
   def getScriptDir(self):
     return self.getNooraDir()+os.sep+'scripts'
 
@@ -24,8 +28,9 @@ class SqlLoaderConnector(Connector.Connector):
     projectHelper=self.getProjectHelper()
     url=os.getenv('TNS_ADMIN')+os.sep+"tnsnames.ora"
     stream=projectHelper.readFile(url)
-    print(stream)
-
+    print stream
+    
+  
   def execute(self, oracleSid, oracleUser, oraclePasswd, ctlFile, dataFile, ignoreErrors):
     try:
       startupInfo=self.getStartupInfo()
@@ -37,6 +42,7 @@ class SqlLoaderConnector(Connector.Connector):
       result=subprocess.call(['sqlldr',connectString , controlString, dataString],shell=False,stdout=handle,stderr=handle,startupinfo=startupInfo)
       stream=projectHelper.readFile('feedback.log')
      
+      
       logger = logging.getLogger('NoOraLogger')
       logger.info(dataFile)
       if result!=0:  
@@ -49,3 +55,7 @@ class SqlLoaderConnector(Connector.Connector):
         logger.info(stream)
     except OSError:
       raise NooraException.NooraException("Could not execute sqlldr. Is it installed and in your path?")
+
+
+
+
