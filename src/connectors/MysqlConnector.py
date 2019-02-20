@@ -1,6 +1,8 @@
-import logging
+#!/usr/bin/env python
 
 import core.Connector as Connector
+import logging
+
 
 from org.noora.io.File import File
 from org.noora.io.FileReader import FileReader
@@ -14,8 +16,13 @@ from org.noora.processor.Call import Call
 
 
 class MysqlConnector(Connector.Connector):
+  
+  def __init__(self):
+    Connector.Connector.__init__(self)
+  
   def execute(self, mysqlHost, mysqlDatabase, mysqlUser, mysqlPasswd, mysqlScript, paramA, paramB, ignoreErrors):
     #try:
+      
       script = File(mysqlScript)
       scriptReader = FileReader(script) 
       
@@ -61,3 +68,4 @@ class MysqlConnector(Connector.Connector):
     #    logger.error(message)
     #    raise NooraException.NooraException(message)
     #  logger.info(stream)
+      
