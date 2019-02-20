@@ -1,4 +1,7 @@
-class PluginManager(object):
+#!/usr/bin/env python
+
+class PluginManager:
+  
   def __init__(self):
     self.__plugins=[]
 
@@ -14,3 +17,4 @@ class PluginManager(object):
       if plugin.getType().lower()==type.lower():
         return plugin
     return None
+    

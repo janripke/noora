@@ -1,7 +1,9 @@
+#!/usr/bin/env python
+
 __revision__ = "$Revision: $"
 
+class ParameterDefinition:
 
-class ParameterDefinition(object):
   def __init__(self, key, parameters):
     self.__key=key
     self.__parameters=parameters

@@ -3,7 +3,6 @@ import os.path
 import core.config.ConfigReaderXML
 import core.config.ConfigReaderProperty
 
-
 CONFIG_TYPE_UNKNOWN = 1
 CONFIG_TYPE_PROPERTY = 2
 CONFIG_TYPE_XML = 3
@@ -21,8 +20,8 @@ CONFIG_POLICY_UPGRADE = 2
 # downgrade project-config.xml to project.conf
 CONFIG_POLICY_DOWNGRADE = 3
 
+class Config:
 
-class Config(object):
     def __init__(self, projectdir):
         self.__projectdir = projectdir
         self.__configFile, self.__configType = self.__getConfigFileInfo()

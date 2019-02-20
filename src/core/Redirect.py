@@ -1,7 +1,6 @@
 import wx
 
-
-class Redirect(object):
+class Redirect:
   def __init__(self, control):
     self.out=control
 
