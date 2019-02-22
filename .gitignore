@@ -24,3 +24,6 @@ gen
 
 # Logfiles
 *.log
+
+# Documentation build
+docs/build
