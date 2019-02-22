@@ -109,6 +109,15 @@ Documentation
    getting_started
    plugin_reference
 
+Misscelaneous
+=============
+
+.. toctree::
+   :maxdepth: 2
+
+   authors
+   license.md
+
 Indices and tables
 ==================
 
