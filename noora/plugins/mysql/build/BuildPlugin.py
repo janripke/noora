@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import os
 from zipfile import ZipFile
 from zipfile import ZIP_DEFLATED
