@@ -14,7 +14,7 @@ env.bak/
 venv.bak/
 
 # Distribution / packaging
-noora.egg-info/
+*.egg-info/
 
 # IntelliJ project files
 .idea
