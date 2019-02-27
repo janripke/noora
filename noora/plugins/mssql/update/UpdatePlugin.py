@@ -3,6 +3,7 @@ import os
 from noora.version.Version import Version
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
+from noora.version.UnknownVersionException import UnknownVersionException
 
 from noora.system.Ora import Ora
 from noora.system.PropertyHelper import PropertyHelper
@@ -10,8 +11,6 @@ from noora.io.File import File
 
 from noora.plugins.Plugin import Plugin
 from noora.plugins.Fail import Fail
-# FIXME: importing something from another plugin!?
-from noora.plugins.mysql.update.UnknownVersionException import UnknownVersionException
 
 from noora.connectors.MssqlConnector import MssqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
@@ -33,7 +32,7 @@ class UpdatePlugin(Plugin):
         alter_dir = properties.get('alter.dir')
         version_dir = File(os.path.join(alter_dir, version))
         if not version_dir.exists():
-            raise UnknownVersionException("unknown version folder", version)
+            raise UnknownVersionException("unknown version folder: {}".format(version))
 
     def fail_on_invalid_environment(self, connector, executor, environment, properties):
         plugin_dir = properties.get('plugin.dir')
