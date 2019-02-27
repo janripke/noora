@@ -3,7 +3,7 @@ import os
 from noora.version.Version import Version
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
-from noora.version.UnknownVersionException import UnknownVersionException
+from noora.exceptions.UnknownVersionException import UnknownVersionException
 
 from noora.system.Ora import Ora
 from noora.system.PropertyHelper import PropertyHelper
@@ -11,8 +11,8 @@ from noora.io.File import File
 
 from noora.plugins.Plugin import Plugin
 from noora.plugins.Fail import Fail
-from noora.plugins.mysql.update.InvalidEnvironmentException import InvalidEnvironmentException
-from noora.plugins.mysql.update.InvalidVersionException import InvalidVersionException
+from noora.exceptions.InvalidEnvironmentException import InvalidEnvironmentException
+from noora.exceptions.InvalidVersionException import InvalidVersionException
 
 from noora.connectors.MysqlConnector import MysqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
@@ -44,7 +44,7 @@ class UpdatePlugin(Plugin):
         executor['script'] = script
         connector.execute(executor, properties)
         if "(Code 1329)" in connector.get_result():
-            raise InvalidEnvironmentException("invalid environment", environment)
+            raise InvalidEnvironmentException("invalid environment: {}".format(environment))
 
     def fail_on_invalid_version(self, connector, executor, version, properties):
         plugin_dir = properties.get('plugin.dir')
@@ -61,7 +61,7 @@ class UpdatePlugin(Plugin):
         executor['script'] = script
         connector.execute(executor, properties)
         if "(Code 1329)" in connector.get_result():
-            raise InvalidVersionException("invalid version", previous)
+            raise InvalidVersionException("invalid version: {}".format(previous))
 
     def execute(self, arguments, properties):
         properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')

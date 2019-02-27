@@ -1,4 +1,4 @@
-from noora.connectors.ConnectorException import ConnectorException
+from noora.exceptions.ConnectorException import ConnectorException
 
 
 class Connectable(object):

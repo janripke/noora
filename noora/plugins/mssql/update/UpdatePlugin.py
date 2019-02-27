@@ -3,7 +3,7 @@ import os
 from noora.version.Version import Version
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
-from noora.version.UnknownVersionException import UnknownVersionException
+from noora.exceptions.UnknownVersionException import UnknownVersionException
 
 from noora.system.Ora import Ora
 from noora.system.PropertyHelper import PropertyHelper

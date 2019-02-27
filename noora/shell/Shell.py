@@ -1,6 +1,6 @@
 import subprocess
 
-from noora.plugins.PluginException import PluginException
+from noora.exceptions.PluginException import PluginException
 
 
 class Shell(object):

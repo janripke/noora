@@ -1,4 +1,4 @@
-from noora.plugins.PluginException import PluginException
+from noora.exceptions.PluginException import PluginException
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.Version import Version
