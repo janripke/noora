@@ -6,7 +6,7 @@ from noora.io.File import File
 
 from noora.plugins.Plugin import Plugin
 from noora.plugins.Fail import Fail
-from noora.plugins.mysql.drop.BlockedHostException import BlockedHostException
+from noora.exceptions.BlockedHostException import BlockedHostException
 
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 from noora.connectors.MysqlConnector import MysqlConnector

@@ -1,4 +1,4 @@
-from noora.io.IOException import IOException
+from noora.exceptions.IOException import IOException
 
 
 class Filterable(object):
