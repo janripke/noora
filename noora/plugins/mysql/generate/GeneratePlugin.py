@@ -31,6 +31,8 @@ class GeneratePlugin(Plugin):
         current_dir = properties.get('current.dir')
         project_file = properties.get('project.file')
         config_file = File(os.path.join(current_dir, project_file))
+        template_dir = os.path.join(
+            properties.get('plugin.dir'), 'mysql', 'generate', 'templates')
         if not config_file.exists():
             database = input('database : ')
             project = database + "-db"
@@ -42,8 +44,6 @@ class GeneratePlugin(Plugin):
             version = Ora.nvl(version, "1.0.0")
 
             os.mkdir(project)
-            template_dir = os.path.join(
-                properties.get('plugin.dir'), 'mysql', 'generate', 'templates')
             template_file = os.path.join(template_dir, project_file)
 
             f = open(template_file)
@@ -141,7 +141,6 @@ class GeneratePlugin(Plugin):
             # create the template code on create.
             if database == version_database and next_version == default_version:
                 for obj in objects:
-                    # FIXME: template_dir may be unassigned
                     object_dir = os.path.join(template_dir, obj)
                     if os.path.exists(object_dir):
                         files = Files.list(File(object_dir))

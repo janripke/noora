@@ -31,6 +31,8 @@ class GeneratePlugin(Plugin):
         current_dir = properties.get('current.dir')
         project_file = properties.get('project.file')
         config_file = File(os.path.join(current_dir, project_file))
+        template_dir = os.path.join(
+            properties.get('plugin.dir'), 'mssql', 'generate', 'templates')
         if not config_file.exists():
             host = input('host [localhost] : ')
             host = Ora.nvl(host, "localhost")
@@ -43,8 +45,6 @@ class GeneratePlugin(Plugin):
             version = Ora.nvl(version, "1.0.0")
 
             os.mkdir(project)
-            template_dir = os.path.join(
-                properties.get('plugin.dir'), 'mssql', 'generate', 'templates')
             template_file = os.path.join(template_dir, project_file)
 
             f = open(template_file)
@@ -136,17 +136,17 @@ class GeneratePlugin(Plugin):
             os.mkdir(ddl_dir)
 
             # create the object folders in the ddl folder
-            for object in objects:
-                os.mkdir(os.path.join(ddl_dir, object))
+            for obj in objects:
+                os.mkdir(os.path.join(ddl_dir, obj))
 
             # create the template code on create.
             if schema == version_schema and next_version == default_version:
-                for object in objects:
-                    object_dir = os.path.join(template_dir, object)
+                for obj in objects:
+                    object_dir = os.path.join(template_dir, obj)
                     if os.path.exists(object_dir):
                         files = Files.list(File(object_dir))
                         for file in files:
                             shutil.copyfile(
-                                file.get_url(), os.path.join(ddl_dir, object, file.tail()))
+                                file.get_url(), os.path.join(ddl_dir, obj, file.tail()))
 
         print("version " + next_version + " created.")
