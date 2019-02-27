@@ -38,7 +38,6 @@ class GeneratePlugin(Plugin):
             host = Ora.nvl(host, "localhost")
             username = input('username : ')
             password = input('password : ')
-            # FIXME: this plugin version is embedded pretty deep in the code
             version = input('version [1.0.0]: ')
             version = Ora.nvl(version, "1.0.0")
 
