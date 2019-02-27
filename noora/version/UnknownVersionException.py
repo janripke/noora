@@ -1,0 +1,2 @@
+class UnknownVersionException(Exception):
+    pass
