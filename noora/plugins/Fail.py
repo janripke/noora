@@ -8,64 +8,55 @@ class Fail(object):
     @staticmethod
     def fail_on_no_host(host):
         if not host:
-            message = "no host was given"
-            raise PluginException(message)
+            raise PluginException("no host was given")
 
     @staticmethod
     def fail_on_no_version(version):
         if not version:
-            message = "no version was given"
-            raise PluginException(message)
+            raise PluginException("no version was given")
 
     @staticmethod
     def fail_on_no_command(commands):
         if not commands:
-            message = "no command was given"
-            raise PluginException(message)
+            raise PluginException("no command was given")
 
     @staticmethod
     def fail_on_no_users(users):
         if not users:
-            message = "no users found"
-            raise PluginException(message)
+            raise PluginException("no users found")
 
     @staticmethod
     def fail_on_invalid_plugin(plugin):
         if not plugin:
-            message = "the given plugin is not valid for this project"
-            raise PluginException(message)
+            raise PluginException("the given plugin is not valid for this project")
 
     @staticmethod
     def fail_on_invalid_database(database, properties):
         if database:
             databases = properties.get('databases')
             if database not in databases:
-                message = "the given database is not valid for this project"
-                raise PluginException(message)
+                raise PluginException("the given database is not valid for this project")
 
     @staticmethod
     def fail_on_invalid_schema(schema, properties):
         if schema:
             schemes = properties.get('schemes')
             if schema not in schemes:
-                message = "the given schema is not valid for this project"
-                raise PluginException(message)
+                raise PluginException("the given schema is not valid for this project")
 
     @staticmethod
     def fail_on_invalid_environment(environment, properties):
         if environment:
             environments = properties.get('environments')
             if environment not in environments:
-                message = "the given environment is not valid for this project"
-                raise PluginException(message)
+                raise PluginException("the given environment is not valid for this project")
 
     @staticmethod
     def fail_on_invalid_alias(alias, properties):
         if alias:
             aliasses = properties.get('aliasses')
             if alias not in aliasses:
-                message = "the given alias is not valid for this project"
-                raise PluginException(message)
+                raise PluginException("the given alias is not valid for this project")
 
     @staticmethod
     def fail_on_unknown_version(version, properties):
@@ -75,5 +66,4 @@ class Fail(object):
         versions.sort()
 
         if not versions.exists(Version(version)):
-            message = "the given version is not valid for this project"
-            raise PluginException(message)
+            raise PluginException("the given version is not valid for this project")
