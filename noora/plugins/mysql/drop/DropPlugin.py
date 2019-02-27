@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import os
 
 from noora.system.PropertyHelper import PropertyHelper

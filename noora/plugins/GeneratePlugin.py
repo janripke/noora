@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import argparse
 
 from noora.plugins.Plugin import Plugin

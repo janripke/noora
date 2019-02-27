@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 class ClassLoader(object):
     def __init__(self):
         pass
