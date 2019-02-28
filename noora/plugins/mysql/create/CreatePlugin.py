@@ -46,7 +46,7 @@ class CreatePlugin(Plugin):
         # if an alias is given, only this database will be installed, other databases will be
         # ignored.
         if alias:
-            print("using alias :" + alias)
+            print("using alias: {}".format(alias))
             databases = [alias]
 
         # retrieve the user credentials for this database project.
@@ -68,9 +68,8 @@ class CreatePlugin(Plugin):
         create_dir = properties.get('create.dir')
 
         for database in databases:
-            print("creating database '" + database +
-                  "' on host '" + host +
-                  "' using environment '" + environment + "'")
+            print("creating database '{db}' on host '{host}' using environment '{env}'".format(
+                db=database, host=host, env=environment))
 
             username = PropertyHelper.get_mysql_user(users, host, database)
             password = PropertyHelper.get_mysql_passwd(users, host, database)
@@ -86,7 +85,6 @@ class CreatePlugin(Plugin):
 
             for obj in objects:
                 # global ddl objects
-
                 folder = File(os.path.join(create_dir, database_folder, 'ddl', obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
@@ -102,4 +100,4 @@ class CreatePlugin(Plugin):
             folder = File(os.path.join(create_dir, database_folder, 'dat', environment))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print("database '" + database + "' created.")
+            print("database '{}' created.".format(database))

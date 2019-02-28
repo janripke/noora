@@ -59,7 +59,7 @@ class BuildPlugin(Plugin):
         if not File(target_dir).exists():
             os.makedirs(target_dir)
 
-        print("building component with version '" + version + "'")
+        print("building component with version '{}'".format(version))
 
         zip_file = os.path.join(target_dir, component_name + '_' + version + '.zip')
         zip_handle = ZipFile(zip_file, 'w')
@@ -131,4 +131,4 @@ class BuildPlugin(Plugin):
 
         zip_handle.close()
 
-        print("component with version " + version + " created.")
+        print("component with version {} created.".format(version))

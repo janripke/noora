@@ -89,7 +89,6 @@ class GeneratePlugin(Plugin):
         objects = properties.get('create_objects')
 
         for database in databases:
-
             # create the scheme folder
             database_dir = os.path.join(version_dir, database)
             os.mkdir(database_dir)
@@ -117,7 +116,6 @@ class GeneratePlugin(Plugin):
 
             # create the environment folders in the dat folder
             for environment in environments:
-
                 os.mkdir(os.path.join(dat_dir, environment))
 
                 # create the environment script in the dat folder.
@@ -148,4 +146,4 @@ class GeneratePlugin(Plugin):
                             shutil.copyfile(
                                 file.get_url(), os.path.join(ddl_dir, obj, file.tail()))
 
-        print("version " + next_version + " created.")
+        print("version {} created.".format(next_version))

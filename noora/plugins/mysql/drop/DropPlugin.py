@@ -30,8 +30,7 @@ class DropPlugin(Plugin):
     def fail_on_blocked_hosts(self, host, properties):
         blocked_hosts = properties.get('blocked_hosts')
         if host in blocked_hosts:
-            message = "block host " + host
-            raise BlockedHostException(message)
+            raise BlockedHostException("block host {}".format(host))
 
     def execute(self, arguments, properties):
         host = arguments.h
@@ -54,7 +53,7 @@ class DropPlugin(Plugin):
         # if an alias is given, only the alias database will be installed, other databases will be
         # ignored.
         if alias:
-            print("using alias :" + alias)
+            print("using alias : {}".format(alias))
             databases = [alias]
 
         # retrieve the user credentials for this database project.
@@ -73,9 +72,8 @@ class DropPlugin(Plugin):
         Fail.fail_on_no_users(users)
 
         for database in databases:
-            print("dropping database '" + database +
-                  "' on host '" + host +
-                  "' using environment '" + environment + "'")
+            print("dropping database '{db}' on host '{host}' using environment '{env}'".format(
+                db=database, host=host, env=environment))
 
             username = PropertyHelper.get_mysql_user(users, host, database)
             password = PropertyHelper.get_mysql_passwd(users, host, database)
@@ -92,4 +90,4 @@ class DropPlugin(Plugin):
                 folder = File(os.path.join(self.get_drop_dir(properties), obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print("database '" + database + "' dropped.")
+            print("database '{}' dropped".format(database))
