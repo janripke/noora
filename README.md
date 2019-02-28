@@ -1,243 +1,115 @@
 # ![noora logo](https://a.fsdn.com/allura/p/noora/icon)
 
-NoOra is a database deployment tool which can be used to automate the database deployment cycle and is designed for agile and or devops teams.
-The supported database platforms are Oracle and Mysql.
 
-# Installation
-Noora currently supports Python 2.x
+# Welcome to Noora
+Noora is a deployment tool that can be used to automate the database deployment cycle. It allows you to organize your database structure, do versioning on your data model, set up environments and generate self-contained Python packages that can deploy your structure to a server.
 
-## Install from a release
-Enter the following to install noora on your system.
-In this example noora version 1.0.13 is installed.
+Noora was created with the DevOps paradigm in mind; especially when as a team you manage many database models it enables you to standardize your DDL and streamline development, testing, acceptance and deployment in production.
 
-```
-$ pip install git+https://github.com/janripke/noora.git@1.0.13#egg=noora-1.0.13 --upgrade
-```
+NOTE: This project is currently split across two branches, where Noora 1.1.0 provides MySQL and MSSQL support using Python 2 and 3 and Noora 1.0.2 supports Oracle and MySQL using Python 2 only. This documentation describes Noora >= 1.1.
 
-## Install from source using virtualenv
+Noora is released under the [GNU General Public License](LICENSE).
 
-First, clone the repo on your machine and then install with `pip`:
+
+# Quick Start
+To install Noora, you can either install a release from Github or install from source:
 
 ```
-$ git clone https://github.com/janripke/noora
-$ cd noora
-$ virtualenv env
-$ source env/bin/activate
-$ pip install .
+# Install a release from Github
+$> pip install https://github.com/janripke/noora/archive/1.1.0.zip
+
+# Clone and install from source
+$> git clone https://github.com/janripke/noora/
+$> cd noora
+$> pip install .
 ```
 
-## Check that the installation worked
-
-Simply run : 
-```
-$ mynoora -r help
-NoOra a database deployment tool.
-https://github.com/janripke/noora
-1.0.13
-```
-
-# Create your first mysql database project
-
-In this example it is assumed that you have installed a mysql database server.
-
-## Create the mysql database user
-
-Enter the following commands to create the database user apps in the mysql server.
-This action is seen as a administrator task and is done once.
+We'll set up a MySQL project, so first make sure to create a user and database for your project:
 
 ```
-$ mysql --user=root --password=[password]
-mysql> CREATE USER 'apps'@'localhost' IDENTIFIED BY 'apps';
-mysql> GRANT ALL PRIVILEGES ON * . * TO 'apps'@'localhost'
-mysql> flush privileges;
-mysql> exit
-```
-
-## Create the mysql database
-
-Enter the following commands to create the database acme in the mysql server.
-This action is seen as a administrator task and is done once.
-
-```
-$ mysql --user=apps --password=[password]
+$> mysql -uroot
 mysql> create database acme;
+mysql> create user apps@'localhost' identified by 'apps';
+mysql> grant all on acme.* to apps@'localhost';
+mysql> -- This is currently required to be able to drop functions and procedures, to be fixed
+mysql> grant select, delete on mysql.proc to apps@'localhost';
+mysql> flush privileges;
 ```
 
-## Create the database project.
-
-Execute the following commands to create a new database project.
+Then, on the command line create your project:
 
 ```
-$ mynoora generate -t=mysql
+$> mynoora generate -t=mysql
 database : acme
 host [localhost] :
 username : apps
 password : apps
-version [1.0.0] :
+version [1.0.0]:
 version 1.0.0 created.
 ```
 
-You will notice that the generate plugin created a directory with the name acme-db. 
-Change into that directory.
+Add a table and some data to your newly created project:
 
 ```
-$ cd acme-db
+$> echo "CREATE TABLE hello ( value VARCHAR(128) );" > acme-db/create/acme/ddl/tab/hello.sql
+$> echo "INSERT INTO hello SET value='world';" > acme-db/create/acme/dat/hello.sql
 ```
 
-The generate plugin created the following standard project structure
-```
-acme-db
-|-- myproject.json
-`-- create
-    |-- acme
-    |   `-- dat
-    |       `-- dev
-    |           `-- environment.sql
-    |       `-- prod
-    |           `-- environment.sql
-    |       `-- test
-    |           `-- environment.sql
-    |       `-- uat
-    |           `-- environment.sql
-    |       `-- version.sql
-    |   `-- ddl
-    |       `-- cst
-    |       `-- fct
-    |           `-- get_property.sql
-    |       `-- idx
-    |           `-- application_properties.sql
-    |       `-- prc
-    |       `-- tab
-    |           `-- application_properties.sql
-    |       `-- trg
-    |           `-- application_properties_bi.sql
-    |           `-- application_properties_bu.sql
-    |       `-- vw
-```
-
-You will also notice that the generate plugin created the acme directory.
-This folder is called the database folder.
-
-The create/acme/dat directory contains the project data scripts. 
-The create/acme/ddl directory contains the source code.
-The myproject.json file in the root of the database project is the project's project configuration file.
-
-### myproject.json
-The myproject.json file is the core of a project's configuration in noora. It is a single configuration file that contains the majority of information required to build a project in just the way you want.
-This project's myproject.json looks like this:
+Now, let's deploy the project and see what happens:
 
 ```
-{
-  "databases": [
-    "acme"
-  ],
-  "aliasses": [],
-  "database_aliases" : [],
-  "mysql_users": [
-    [
-      "localhost",
-      "acme",
-      "apps",
-      "apps"
-    ]
-  ],
-  "default_environment": "dev",
-  "mysql_hosts": [
-    "localhost"
-  ],
-  "blocked_hosts": [],
-  "version_database": "acme",
-  "excluded_extensions": [
-    "bak",
-    "~",
-    "pyc",
-    "log"
-  ],
-  "excluded_folders": [
-    ".svn",
-    "hotfix"
-  ],
-  "excluded_files": [
-    "install.sql"
-  ],
-  "environments": [
-    "dev",
-    "test",
-    "uat",
-    "prod"
-  ],
-  "version_update_statement": "update application_properties set value='<version>' where name='application.version';",
-  "version_insert_statement": "insert into application_properties(name,value) values ('application.version','<version>');",
-  "version_select_statement": "select value into l_value from application_properties where name='application.version';",
-  "environment_insert_statement": "insert into application_properties(name,value) values ('application.environment','<environment>');",
-  "environment_select_statement": "select value into l_value from application_properties where name='application.environment';",
-  "default_version": "1.0.0",
-  "drop_objects": [
-    "vw",
-    "trg",
-    "tab",
-    "prc",
-    "fct",
-    "idx"
-  ],
-  "create_objects": [
-    "tab",
-    "cst",
-    "fct",
-    "prc",
-    "vw",
-    "trg",
-    "idx"
-  ],
-  "plugins": [
-    "noora.plugins.mysql.generate.GeneratePlugin.GeneratePlugin",
-    "noora.plugins.mysql.help.HelpPlugin.HelpPlugin",
-    "noora.plugins.mysql.drop.DropPlugin.DropPlugin",
-    "noora.plugins.mysql.create.CreatePlugin.CreatePlugin",
-    "noora.plugins.mysql.update.UpdatePlugin.UpdatePlugin"
-  ]
-}
-```
-
-### What did i just do
-You executed the noora plugin generate. The generate plugin created the database project folder, the project tree and initiated the myproject.json file.
-
-## Install the database project into the mysql database server.
-To install the database project into the mysql database server enter the following command:
-
-```
-$ mynoora create -h=localhost
-```
-The command line will print out various actions, the following is shown.
-```
+$> cd acme-db
+$> mynoora create -h=localhost
 creating database 'acme' on host 'localhost' using environment 'dev'
-/home/user/acme-db/create/acme/ddl/tab/application_properties.sql
-/home/user/acme-db/create/acme/ddl/fct/get_property.sql
-/home/user/acme-db/create/acme/ddl/trg/application_properties_bi.sql
-/home/user/acme-db/create/acme/ddl/trg/application_properties_bu.sql
-/home/user/acme-db/create/acme/ddl/idx/application_properties.sql
-/home/user/acme-db/create/acme/dat/version.sql
-/home/user/acme-db/create/acme/dat/dev/environment.sql
+/home/niels/tmp/acme-db/create/acme/ddl/tab/application_properties.sql
+/home/niels/tmp/acme-db/create/acme/ddl/tab/hello.sql
+/home/niels/tmp/acme-db/create/acme/ddl/fct/get_property.sql
+/home/niels/tmp/acme-db/create/acme/ddl/trg/application_properties_bi.sql
+/home/niels/tmp/acme-db/create/acme/ddl/trg/application_properties_bu.sql
+/home/niels/tmp/acme-db/create/acme/ddl/idx/application_properties.sql
+/home/niels/tmp/acme-db/create/acme/dat/hello.sql
+/home/niels/tmp/acme-db/create/acme/dat/version.sql
+/home/niels/tmp/acme-db/create/acme/dat/dev/environment.sql
 database 'acme' created.
 ```
 
-## Remove the database project from the mysql database server.
-To remove the database project from the mysql database server enter the following command:
+You can verify that the table you added along with some default data was deployed, and that the current version of your database model is 1.0.0 in the 'dev' environment: 
 
 ```
-$ mynoora drop -h=localhost
+$> mysql -uapps -p acme
+Enter password:
+mysql> select * from hello;
++--------+
+| value  |
++--------+
+| world; |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select get_property('application.version');
++-------------------------------------+
+| get_property('application.version') |
++-------------------------------------+
+| 1.0.0                               |
++-------------------------------------+
+1 row in set (0.00 sec)
 ```
 
-The command line will print out various actions, the following is shown.
+That's it! To learn more about Noora projects, check out http://noora.readthedocs.org/getting-started. For now, you can clear out your database like this::
 
 ```
+$> mynoora drop -h=localhost
 dropping database 'acme' on host 'localhost' using environment 'dev'
-/home/user/workspace/noora/noora/plugins/mysql/drop/vw/drop_views.sql
-/home/user/workspace/noora/noora/plugins/mysql/drop/tab/drop_tables.sql
-/home/user/workspace/noora/noora/plugins/mysql/drop/prc/drop_procedures.sql
-/home/user/workspace/noora/noora/plugins/mysql/drop/fct/drop_functions.sql
+/home/niels/projects/noora/noora/plugins/mysql/drop/vw/drop_views.sql
+/home/niels/projects/noora/noora/plugins/mysql/drop/tab/drop_tables.sql
+/home/niels/projects/noora/noora/plugins/mysql/drop/prc/drop_procedures.sql
+/home/niels/projects/noora/noora/plugins/mysql/drop/fct/drop_functions.sql
 database 'acme' dropped.
 ```
 
-# License
-Released under the [GNU General Public License](LICENSE).
+Note that this does not actually drop the database itself, rather it removes all objects, including views and procedures.
+
+
+# Next Steps
+
+Check out the documentation over at http://noora.readthedocs.org/
