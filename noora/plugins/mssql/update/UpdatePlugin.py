@@ -5,7 +5,7 @@ from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.exceptions.UnknownVersionException import UnknownVersionException
 
-from noora.system.Ora import Ora
+from noora.system import Ora
 from noora.system.PropertyHelper import PropertyHelper
 from noora.io.File import File
 
