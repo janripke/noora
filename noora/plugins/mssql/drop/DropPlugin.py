@@ -28,8 +28,7 @@ class DropPlugin(Plugin):
     def fail_on_blocked_hosts(self, host, properties):
         blocked_hosts = properties.get('blocked_hosts')
         if host in blocked_hosts:
-            message = "block host " + host
-            raise BlockedHostException(message)
+            raise BlockedHostException("block host: {}".format(host))
 
     def execute(self, arguments, properties):
         host = arguments.h
@@ -60,10 +59,9 @@ class DropPlugin(Plugin):
 
         for schema in schemes:
             # FIXME: use format
-            print("dropping schema '" + schema +
-                  "' in database '" + database +
-                  "' on host '" + host +
-                  "' using environment '" + environment + "'")
+            print("dropping schema '{schema}' in database '{db}' "
+                  "on host '{host}' using environment '{env}'".format(
+                    schema=schema, db=database, host=host, env=environment))
 
             username = PropertyHelper.get_mssql_user(users, host, schema)
             password = PropertyHelper.get_mssql_password(users, host, schema)
@@ -82,4 +80,4 @@ class DropPlugin(Plugin):
                 folder = File(os.path.join(self.get_drop_dir(properties), obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print("schema '" + schema + "' dropped.")
+            print("schema '{}' dropped.".format(schema))

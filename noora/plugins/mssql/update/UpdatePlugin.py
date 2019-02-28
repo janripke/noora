@@ -103,10 +103,9 @@ class UpdatePlugin(Plugin):
         connector = self.get_connector()
 
         for schema in schemes:
-            print("updating schema '" + schema +
-                  "' in database '" + database +
-                  "' on host '" + host +
-                  "' using environment '" + environment + "'")
+            print("updating schema '{schema}' in database '{db}' "
+                  "on host '{host}' using environment '{env}'".format(
+                    schema=schema, db=database, host=host, env=environment))
 
             username = PropertyHelper.get_mssql_user(users, host, schema)
             password = PropertyHelper.get_mssql_password(users, host, schema)
@@ -141,4 +140,4 @@ class UpdatePlugin(Plugin):
             folder = File(os.path.join(alter_dir, version, schema, 'dat', environment))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print("database '" + database + "' updated.")
+            print("database '{}' updated.".format(database))

@@ -67,7 +67,6 @@ class RecreatePlugin(Plugin):
         parser.add_argument('-s', type=str, help='schema', required=False)
         parser.add_argument('-e', type=str, help='environment', required=False)
 
-
         commands = []
         if arguments.h:
             commands.append('-h='+arguments.h)
