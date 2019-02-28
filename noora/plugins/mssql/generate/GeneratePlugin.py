@@ -6,7 +6,7 @@ from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.VersionGuesser import VersionGuesser
 
-from noora.system.Ora import Ora
+from noora.system import Ora
 from noora.io.File import File
 from noora.io.Files import Files
 
