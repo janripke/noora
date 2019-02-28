@@ -113,9 +113,8 @@ class UpdatePlugin(Plugin):
         connector = self.get_connector()
 
         for database in databases:
-            print("updating database '" + database +
-                  "' on host '" + host +
-                  "' using environment '" + environment + "'")
+            print("updating database '{db}' on host '{host}' using environment '{env}'".format(
+                db=database, host=host, env=environment))
 
             username = PropertyHelper.get_mysql_user(users, host, database)
             password = PropertyHelper.get_mysql_passwd(users, host, database)
@@ -151,4 +150,4 @@ class UpdatePlugin(Plugin):
             folder = File(os.path.join(alter_dir, version, database_folder, 'dat', environment))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print("database '" + database + "' updated.")
+            print("database '{}' updated".format(database))
