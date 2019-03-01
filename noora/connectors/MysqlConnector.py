@@ -42,12 +42,13 @@ class MysqlConnector(Connector):
         feedback = File('feedback.log')
         feedback_writer = open(feedback.get_url(), 'w')
 
-        statement = \
-            "mysql --show-warnings --host={host} --user={user} --password={passwd} {db}".format(
-                host=executable['host'],
-                user=executable['username'],
-                passwd=executable['password'],
-                db=executable['database'],
+        statement = "mysql --show-warnings --port={port} --host={host} --user={user} " \
+                    "--password={passwd} {db}".format(
+                        host=executable['host'],
+                        port=executable['port'] or '3306',
+                        user=executable['username'],
+                        passwd=executable['password'],
+                        db=executable['database'],
             )
         call = CallFactory.new_call(statement)
         call['stdin'] = script_reader

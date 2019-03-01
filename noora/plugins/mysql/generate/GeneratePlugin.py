@@ -38,6 +38,7 @@ class GeneratePlugin(Plugin):
             project = database + "-db"
             host = input('host [localhost] : ')
             host = Ora.nvl(host, "localhost")
+            port = input('port [3306] :') or '3306'
             username = input('username : ')
             password = input('password : ')
             version = input('version [1.0.0]: ')
@@ -52,6 +53,7 @@ class GeneratePlugin(Plugin):
             stream = stream.replace('{project}', project)
             stream = stream.replace('{database}', database)
             stream = stream.replace('{host}', host)
+            stream = stream.replace('{port}', port)
             stream = stream.replace('{username}', username)
             stream = stream.replace('{password}', password)
             stream = stream.replace('{version}', version)
