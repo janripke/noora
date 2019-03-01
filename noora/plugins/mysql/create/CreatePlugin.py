@@ -1,6 +1,6 @@
 import os
 
-from noora.system.PropertyHelper import PropertyHelper
+from noora.system import PropertyHelper
 from noora.system import Ora
 from noora.io.File import File
 

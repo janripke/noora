@@ -1,5 +1,5 @@
 from os.path import expanduser
-from noora.system.PropertyHelper import PropertyHelper
+from noora.system import PropertyHelper
 import os
 import json
 from noora.io.Files import Files
