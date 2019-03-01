@@ -43,8 +43,9 @@ class MssqlConnector(Connector):
         feedback = File('feedback.log')
         feedback_writer = open(feedback.get_url(), 'w')
         # FIXME: rewrite with format
-        statement = "sqlcmd -b -S {host} -U {user} -P {passwd} -d {db} -i {url}".format(
+        statement = "sqlcmd -b -S {host},{port} -U {user} -P {passwd} -d {db} -i {url}".format(
             host=executable['host'],
+            port=executable.get('port') or 1433,
             user=executable['username'],
             passwd=executable['password'],
             db=executable['database'],

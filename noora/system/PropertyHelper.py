@@ -13,35 +13,27 @@ def get_database_folder(database, folder_aliases):
     return database
 
 
-def get_mssql_user(users, host, schema):
+def get_mssql_properties(users, host, schema):
     """
-    For a list of host/schema/user combinations, return the username that matches the host
-    and schema.
-
-    :param users: list containing a sequence of AT LEAST (host, schema, username)
-    :param host: The hostname to match
-    :param schema: The schema name to match
-    :return: A matched username or None
-    """
-    for user in users:
-        if user[0].lower() == host.lower() and user[1].lower() == schema.lower():
-            return user[2]
-    return None
-
-
-def get_mssql_password(users, host, schema):
-    """
-    For a list of host/schema/user/password combinations, return the password that matches the
-    host, schema and user.
+    For a list of user tuples, find the first occurrence that matches host and database.
 
     :param users: list containing a sequence of AT LEAST (host, schema, username, password)
-    :param host: The hostname to match
-    :param schema: The schema name to match
-    :return: A password or None
+    :param host: the hostname to match
+    :param schema: the schema to match
+    :return: a dict containing host, schema, username, password, port
     """
     for user in users:
         if user[0].lower() == host.lower() and user[1].lower() == schema.lower():
-            return user[3]
+            res = {
+                'host': host,
+                'schema': schema,
+                # Backwards compatibility with old project files
+                'port': user[4] if len(user) > 4 else None,
+                'username': user[2],
+                'password': user[3],
+            }
+            return res
+
     return None
 
 
