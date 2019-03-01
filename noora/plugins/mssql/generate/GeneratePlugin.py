@@ -36,6 +36,7 @@ class GeneratePlugin(Plugin):
         if not config_file.exists():
             host = input('host [localhost] : ')
             host = Ora.nvl(host, "localhost")
+            port = input('port [1433] : ') or '1433'
             database = input('database : ')
             project = database + "-db"
             schema = input('schema : ')
@@ -53,6 +54,7 @@ class GeneratePlugin(Plugin):
             stream = stream.replace('{project}', project)
             stream = stream.replace('{database}', database)
             stream = stream.replace('{host}', host)
+            stream = stream.replace('{port}', host)
             stream = stream.replace('{schema}', schema)
             stream = stream.replace('{username}', username)
             stream = stream.replace('{password}', password)
