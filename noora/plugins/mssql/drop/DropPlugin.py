@@ -63,18 +63,10 @@ class DropPlugin(Plugin):
                   "on host '{host}' using environment '{env}'".format(
                     schema=schema, db=database, host=host, env=environment))
 
-            username = PropertyHelper.get_mssql_user(users, host, schema)
-            password = PropertyHelper.get_mssql_password(users, host, schema)
+            executor = PropertyHelper.get_mssql_properties(users, host, schema)
+            executor['database'] = database
 
             connector = self.get_connector()
-
-            executor = {
-                'host': host,
-                'database': database,
-                'schema':  schema,
-                'username': username,
-                'password': password,
-            }
 
             for obj in objects:
                 folder = File(os.path.join(self.get_drop_dir(properties), obj))
