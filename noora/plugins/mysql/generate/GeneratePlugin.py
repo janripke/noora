@@ -38,7 +38,7 @@ class GeneratePlugin(Plugin):
             project = database + "-db"
             host = input('host [localhost] : ')
             host = Ora.nvl(host, "localhost")
-            port = input('port [3306] :') or '3306'
+            port = input('port [3306] : ') or '3306'
             username = input('username : ')
             password = input('password : ')
             version = input('version [1.0.0]: ')

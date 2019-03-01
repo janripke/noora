@@ -45,7 +45,7 @@ class MysqlConnector(Connector):
         statement = "mysql --show-warnings --port={port} --host={host} --user={user} " \
                     "--password={passwd} {db}".format(
                         host=executable['host'],
-                        port=executable['port'] or '3306',
+                        port=executable.get('port') or '3306',
                         user=executable['username'],
                         passwd=executable['password'],
                         db=executable['database'],
