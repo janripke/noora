@@ -49,7 +49,7 @@ class MysqlConnector(Connector):
                         user=executable['username'],
                         passwd=executable['password'],
                         db=executable['database'],
-            )
+                    )
         call = CallFactory.new_call(statement)
         call['stdin'] = script_reader
         call['stdout'] = feedback_writer
