@@ -54,7 +54,7 @@ class GeneratePlugin(Plugin):
             stream = stream.replace('{project}', project)
             stream = stream.replace('{database}', database)
             stream = stream.replace('{host}', host)
-            stream = stream.replace('{port}', host)
+            stream = stream.replace('{port}', port)
             stream = stream.replace('{schema}', schema)
             stream = stream.replace('{username}', username)
             stream = stream.replace('{password}', password)
