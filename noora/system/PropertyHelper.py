@@ -1,5 +1,6 @@
 import os
 import json
+from copy import copy
 
 
 # FIXME: write a proper docstring
@@ -44,35 +45,27 @@ def get_mssql_password(users, host, schema):
     return None
 
 
-def get_mysql_user(users, host, database):
+def get_mysql_properties(users, host, database):
     """
-    For a list of host/database/user combinations, return the username that matches the
-    host, database and user.
-
-    :param users: list containing a sequence of AT LEAST (host, database, username)
-    :param host: The hostname to match
-    :param database: The database to match
-    :return: A username or None
-    """
-    for user in users:
-        if user[0].lower() == host.lower() and user[1].lower() == database.lower():
-            return user[2]
-    return None
-
-
-def get_mysql_passwd(users, host, database):
-    """
-    For a list of host/database/user/password combinations, return the password that matches the
-    host, database and user.
+    For a list of user tuples, find the first occurrence that matches host and database.
 
     :param users: list containing a sequence of AT LEAST (host, database, username, password)
-    :param host: The hostname to match
-    :param database: The database to match
-    :return: A password or None
+    :param host: the hostname to match
+    :param database: the database to match
+    :return: a dict containing host, database, username, password, port
     """
     for user in users:
         if user[0].lower() == host.lower() and user[1].lower() == database.lower():
-            return user[3]
+            res = {
+                'host': host,
+                'database': database,
+                # Backwards compatibility with old project files
+                'port': user[4] if len(user) > 4 else None,
+                'username': user[2],
+                'password': user[3],
+            }
+            return res
+
     return None
 
 
