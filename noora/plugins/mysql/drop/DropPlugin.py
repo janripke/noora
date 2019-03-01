@@ -75,16 +75,9 @@ class DropPlugin(Plugin):
             print("dropping database '{db}' on host '{host}' using environment '{env}'".format(
                 db=database, host=host, env=environment))
 
-            username = PropertyHelper.get_mysql_user(users, host, database)
-            password = PropertyHelper.get_mysql_passwd(users, host, database)
+            executor = PropertyHelper.get_mysql_properties(users, host, database)
 
             connector = self.get_connector()
-
-            executor = dict()
-            executor['host'] = host
-            executor['database'] = database
-            executor['username'] = username
-            executor['password'] = password
 
             for obj in objects:
                 folder = File(os.path.join(self.get_drop_dir(properties), obj))

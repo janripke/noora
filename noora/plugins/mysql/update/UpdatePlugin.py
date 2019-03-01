@@ -116,15 +116,7 @@ class UpdatePlugin(Plugin):
             print("updating database '{db}' on host '{host}' using environment '{env}'".format(
                 db=database, host=host, env=environment))
 
-            username = PropertyHelper.get_mysql_user(users, host, database)
-            password = PropertyHelper.get_mysql_passwd(users, host, database)
-
-            executor = {
-                'host': host,
-                'database': database,
-                'username': username,
-                'password': password,
-            }
+            executor = PropertyHelper.get_mysql_properties(users, host, database)
 
             database_folder = PropertyHelper.get_database_folder(database, database_aliases)
 
