@@ -57,7 +57,6 @@ class UpdatePlugin(Plugin):
         properties['previous'] = previous
         script = File(os.path.join(plugin_dir, 'mssql', 'update', 'checkversion.sql'))
         executor['script'] = script
-        print(executor)
         connector.execute(executor, properties)
         # if "(Code 1329)" in connector.get_result():
         #     raise InvalidVersionException("invalid version", previous)
