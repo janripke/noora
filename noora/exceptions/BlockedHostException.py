@@ -1,0 +1,2 @@
+class BlockedHostException(Exception):
+    pass

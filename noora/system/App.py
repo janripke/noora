@@ -1,20 +1,21 @@
-#!/usr/bin/env python
 import os
+from os.path import expanduser
+import argparse
+import json
+
 import noora
 from noora.io.File import File
 from noora.system.ClassLoader import ClassLoader
-import argparse
-import json
-from os.path import expanduser
 
 
-class App:
+class App(object):
     def __init__(self):
         pass
 
     @staticmethod
     def get_parser():
-        parser = argparse.ArgumentParser(description="mynoora, a sql deployment tool", add_help=False)
+        parser = argparse.ArgumentParser(
+            description="mynoora, a sql deployment tool", add_help=False)
         parser.add_argument("commands", help="command to execute", type=str, nargs='+')
         parser.add_argument('-r', action='store_true', help='show the revision', required=False)
         return parser

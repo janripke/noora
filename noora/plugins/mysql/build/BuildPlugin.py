@@ -1,18 +1,18 @@
-#!/usr/bin/env python
 import os
-import json
-import shutil
-from noora.plugins.Plugin import Plugin
-from noora.io.File import File
-from noora.io.Files import Files
-from noora.system.Ora import Ora
+from zipfile import ZipFile
+from zipfile import ZIP_DEFLATED
+
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.Version import Version
-from noora.plugins.Fail import Fail
+
 from noora.system.App import App
-from zipfile import ZipFile
-from zipfile import ZIP_DEFLATED
+from noora.system import Ora
+from noora.io.File import File
+from noora.io.Files import Files
+
+from noora.plugins.Plugin import Plugin
+from noora.plugins.Fail import Fail
 
 
 class BuildPlugin(Plugin):
@@ -31,7 +31,6 @@ class BuildPlugin(Plugin):
         return properties.get("component_update_statement")
 
     def execute(self, arguments, properties):
-
         properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
         properties['alter.dir'] = os.path.join(properties.get('current.dir'), 'alter')
 
@@ -60,19 +59,17 @@ class BuildPlugin(Plugin):
         if not File(target_dir).exists():
             os.makedirs(target_dir)
 
-        print("building component with version '" + version + "'")
+        print("building component with version '{}'".format(version))
 
         zip_file = os.path.join(target_dir, component_name + '_' + version + '.zip')
         zip_handle = ZipFile(zip_file, 'w')
 
         for database in databases:
-
-            for object in objects:
-
-                if not object == 'lib':
+            for obj in objects:
+                if not obj == 'lib':
                     # global ddl objects
-                    folder = File(os.path.join(build_dir, database, 'ddl', object))
-                    zip_dir = File(os.path.join(component_name + '_' + version, 'ddl', object))
+                    folder = File(os.path.join(build_dir, database, 'ddl', obj))
+                    zip_dir = File(os.path.join(component_name + '_' + version, 'ddl', obj))
 
                     files = Files.list_filtered(folder, properties)
                     for file in files:
@@ -116,7 +113,9 @@ class BuildPlugin(Plugin):
 
         component_select_statement = properties.get("component_select_statement")
         component_select_statement = component_select_statement.replace('<name>', component_name)
-        component_select_statement = component_select_statement.replace('<previous>', previous.get_value())
+        component_select_statement = component_select_statement.replace(
+            '<previous>', previous.get_value())
+
         print(component_select_statement)
 
         f = open('checkversion.sql', 'w')
@@ -132,5 +131,4 @@ class BuildPlugin(Plugin):
 
         zip_handle.close()
 
-        print("component with version " + version + " created.")
-
+        print("component with version {} created.".format(version))

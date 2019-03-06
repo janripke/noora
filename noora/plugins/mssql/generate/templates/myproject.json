@@ -11,7 +11,8 @@
       "{host}",
       "{schema}",
       "{username}",
-      "{password}"
+      "{password}",
+      "{port}"
     ]
   ],
   "default_environment": "dev",

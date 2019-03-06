@@ -1,14 +1,16 @@
-#!/usr/bin/env python
 import os
 import json
 import shutil
-from noora.plugins.Plugin import Plugin
-from noora.io.File import File
-from noora.io.Files import Files
-from noora.system.Ora import Ora
+
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.VersionGuesser import VersionGuesser
+
+from noora.system import Ora
+from noora.io.File import File
+from noora.io.Files import Files
+
+from noora.plugins.Plugin import Plugin
 
 
 class GeneratePlugin(Plugin):
@@ -29,18 +31,20 @@ class GeneratePlugin(Plugin):
         current_dir = properties.get('current.dir')
         project_file = properties.get('project.file')
         config_file = File(os.path.join(current_dir, project_file))
+        template_dir = os.path.join(
+            properties.get('plugin.dir'), 'mysql', 'generate', 'templates')
         if not config_file.exists():
             database = input('database : ')
             project = database + "-db"
             host = input('host [localhost] : ')
             host = Ora.nvl(host, "localhost")
+            port = input('port [3306] : ') or '3306'
             username = input('username : ')
             password = input('password : ')
             version = input('version [1.0.0]: ')
             version = Ora.nvl(version, "1.0.0")
 
             os.mkdir(project)
-            template_dir = os.path.join(properties.get('plugin.dir'), 'mysql', 'generate', 'templates')
             template_file = os.path.join(template_dir, project_file)
 
             f = open(template_file)
@@ -49,6 +53,7 @@ class GeneratePlugin(Plugin):
             stream = stream.replace('{project}', project)
             stream = stream.replace('{database}', database)
             stream = stream.replace('{host}', host)
+            stream = stream.replace('{port}', port)
             stream = stream.replace('{username}', username)
             stream = stream.replace('{password}', password)
             stream = stream.replace('{version}', version)
@@ -86,7 +91,6 @@ class GeneratePlugin(Plugin):
         objects = properties.get('create_objects')
 
         for database in databases:
-
             # create the scheme folder
             database_dir = os.path.join(version_dir, database)
             os.mkdir(database_dir)
@@ -114,7 +118,6 @@ class GeneratePlugin(Plugin):
 
             # create the environment folders in the dat folder
             for environment in environments:
-
                 os.mkdir(os.path.join(dat_dir, environment))
 
                 # create the environment script in the dat folder.
@@ -132,16 +135,17 @@ class GeneratePlugin(Plugin):
             os.mkdir(ddl_dir)
 
             # create the object folders in the ddl folder
-            for object in objects:
-                os.mkdir(os.path.join(ddl_dir, object))
+            for obj in objects:
+                os.mkdir(os.path.join(ddl_dir, obj))
 
             # create the template code on create.
             if database == version_database and next_version == default_version:
-                for object in objects:
-                    object_dir = os.path.join(template_dir, object)
+                for obj in objects:
+                    object_dir = os.path.join(template_dir, obj)
                     if os.path.exists(object_dir):
                         files = Files.list(File(object_dir))
                         for file in files:
-                            shutil.copyfile(file.get_url(), os.path.join(ddl_dir, object, file.tail()))
+                            shutil.copyfile(
+                                file.get_url(), os.path.join(ddl_dir, obj, file.tail()))
 
-        print("version " + next_version + " created.")
+        print("version {} created.".format(next_version))

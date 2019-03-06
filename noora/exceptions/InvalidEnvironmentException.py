@@ -1,0 +1,2 @@
+class InvalidEnvironmentException(Exception):
+    pass

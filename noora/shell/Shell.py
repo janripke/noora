@@ -1,11 +1,9 @@
 import subprocess
-from noora.plugins.PluginException import PluginException
+
+from noora.exceptions.PluginException import PluginException
 
 
-class Shell:
-    def __init__(self):
-        pass
-
+class Shell(object):
     @staticmethod
     def execute(call):
         args = call['args']
@@ -15,10 +13,15 @@ class Shell:
         stdin = call['stdin']
         startupinfo = call['startupinfo']
 
+        # TODO: Popen isn't used any more. Remove?
         #p = subprocess.Popen(args, shell=shell, stdin=stdin, stderr=stderr, startupinfo=startupinfo)
-        result = subprocess.call(args, shell=True, stdin=stdin, stdout=stdout, stderr=stderr, startupinfo=startupinfo)
+
+        result = subprocess.call(
+            args, shell=True, stdin=stdin, stdout=stdout, stderr=stderr, startupinfo=startupinfo)
+
         #output = p.communicate()
         #if p.returncode != 0:
+
         if result != 0:
             f = open(stderr.name)
             stream = f.read()
@@ -28,4 +31,5 @@ class Shell:
         f = open(stdout.name)
         stream = f.read()
         f.close()
+
         return stream

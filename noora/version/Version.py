@@ -1,4 +1,4 @@
-class Version:
+class Version(object):
     def __init__(self, value):
         self.__value = value
 
@@ -15,7 +15,7 @@ class Version:
     def to_string(self):
         return self.__value
 
-    def get_mayor(self):
+    def get_major(self):
         value = self.__value
         if len(value.split('.')) >= 1:
             return value.split('.')[0]
@@ -35,8 +35,8 @@ class Version:
         if len(value.split('.')) >= 4:
             return value.split('.')[3]
 
-    def has_mayor(self):
-        if self.get_mayor():
+    def has_major(self):
+        if self.get_major():
             return True
         return False
 

@@ -1,16 +1,20 @@
 import os
-from noora.plugins.Plugin import Plugin
-from noora.plugins.Fail import Fail
-from noora.connectors.MysqlConnector import MysqlConnector
-from noora.io.File import File
-from noora.plugins.mysql.update.UnknownVersionException import UnknownVersionException
-from noora.plugins.mysql.update.InvalidEnvironmentException import InvalidEnvironmentException
-from noora.plugins.mysql.update.InvalidVersionException import InvalidVersionException
-from noora.system.Ora import Ora
-from noora.system.PropertyHelper import PropertyHelper
+
 from noora.version.Version import Version
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
+from noora.exceptions.UnknownVersionException import UnknownVersionException
+
+from noora.system import Ora
+from noora.system import PropertyHelper
+from noora.io.File import File
+
+from noora.plugins.Plugin import Plugin
+from noora.plugins.Fail import Fail
+from noora.exceptions.InvalidEnvironmentException import InvalidEnvironmentException
+from noora.exceptions.InvalidVersionException import InvalidVersionException
+
+from noora.connectors.MysqlConnector import MysqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
@@ -31,7 +35,7 @@ class UpdatePlugin(Plugin):
         alter_dir = properties.get('alter.dir')
         version_dir = File(os.path.join(alter_dir, version))
         if not version_dir.exists():
-            raise UnknownVersionException("unknown version folder", version)
+            raise UnknownVersionException("unknown version folder: {}".format(version))
 
     def fail_on_invalid_environment(self, connector, executor, environment, properties):
         plugin_dir = properties.get('plugin.dir')
@@ -40,7 +44,7 @@ class UpdatePlugin(Plugin):
         executor['script'] = script
         connector.execute(executor, properties)
         if "(Code 1329)" in connector.get_result():
-            raise InvalidEnvironmentException("invalid environment", environment)
+            raise InvalidEnvironmentException("invalid environment: {}".format(environment))
 
     def fail_on_invalid_version(self, connector, executor, version, properties):
         plugin_dir = properties.get('plugin.dir')
@@ -57,7 +61,7 @@ class UpdatePlugin(Plugin):
         executor['script'] = script
         connector.execute(executor, properties)
         if "(Code 1329)" in connector.get_result():
-            raise InvalidVersionException("invalid version", previous)
+            raise InvalidVersionException("invalid version: {}".format(previous))
 
     def execute(self, arguments, properties):
         properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
@@ -89,7 +93,8 @@ class UpdatePlugin(Plugin):
         database_aliases = properties.get('database_aliases')
         Fail.fail_on_invalid_alias(alias, properties)
 
-        # if an alias is given, only this database will be installed, other databases will be ignored.
+        # if an alias is given, only this database will be installed, other databases will be
+        # ignored.
         if alias:
             print("using alias :" + alias)
             databases = [alias]
@@ -97,7 +102,8 @@ class UpdatePlugin(Plugin):
         # retrieve the user credentials for this database project.
         users = properties.get('mysql_users')
 
-        # try to retrieve the users from the credentials file, when no users are configured in myproject.json.
+        # try to retrieve the users from the credentials file, when no users are configured in
+        # myproject.json.
         if not users:
             # retrieve the name of this database project, introduced in version 1.0.12
             profile = PropertyHelper.get_profile(properties)
@@ -107,16 +113,10 @@ class UpdatePlugin(Plugin):
         connector = self.get_connector()
 
         for database in databases:
-            print("updating database '" + database + "' on host '" + host + "' using environment '" + environment + "'")
+            print("updating database '{db}' on host '{host}' using environment '{env}'".format(
+                db=database, host=host, env=environment))
 
-            username = PropertyHelper.get_mysql_user(users, host, database)
-            password = PropertyHelper.get_mysql_passwd(users, host, database)
-
-            executor = dict()
-            executor['host'] = host
-            executor['database'] = database
-            executor['username'] = username
-            executor['password'] = password
+            executor = PropertyHelper.get_mysql_properties(users, host, database)
 
             database_folder = PropertyHelper.get_database_folder(database, database_aliases)
 
@@ -124,13 +124,14 @@ class UpdatePlugin(Plugin):
                 self.fail_on_invalid_environment(connector, executor, environment, properties)
                 self.fail_on_invalid_version(connector, executor, version, properties)
 
-            for object in objects:
+            for obj in objects:
                 # global ddl objects
-                folder = File(os.path.join(alter_dir, version, database_folder, 'ddl', object))
+                folder = File(os.path.join(alter_dir, version, database_folder, 'ddl', obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
                 # environment specific ddl objects
-                folder = File(os.path.join(alter_dir, version, database_folder, 'ddl', object, environment))
+                folder = File(
+                    os.path.join(alter_dir, version, database_folder, 'ddl', obj, environment))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
             # global dat objects
@@ -141,4 +142,4 @@ class UpdatePlugin(Plugin):
             folder = File(os.path.join(alter_dir, version, database_folder, 'dat', environment))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
-            print("database '" + database + "' updated.")
+            print("database '{}' updated".format(database))

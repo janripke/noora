@@ -1,10 +1,14 @@
 import os
-from noora.plugins.Plugin import Plugin
-from noora.connectors.MssqlConnector import MssqlConnector
+import argparse
+
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
+
 from noora.system.ClassLoader import ClassLoader
-import argparse
+
+from noora.plugins.Plugin import Plugin
+
+from noora.connectors.MssqlConnector import MssqlConnector
 
 
 class RecreatePlugin(Plugin):
@@ -16,6 +20,7 @@ class RecreatePlugin(Plugin):
         parser.add_argument('-s', type=str, help='schema', required=False)
         parser.add_argument('-e', type=str, help='environment', required=False)
         parser.add_argument('-v', type=str, help='version', required=False)
+        parser.add_argument('-a', type=str, help='alias', required=False)
         return parser.parse_args(args)
 
     def find_plugin(self, properties, name):
@@ -37,6 +42,7 @@ class RecreatePlugin(Plugin):
         parser.add_argument('-h', type=str, help='host', required=True)
         parser.add_argument('-s', type=str, help='schema', required=False)
         parser.add_argument('-e', type=str, help='environment', required=False)
+        parser.add_argument('-a', type=str, help='alias', required=False)
 
         commands = []
         if arguments.h:
@@ -62,7 +68,7 @@ class RecreatePlugin(Plugin):
         parser.add_argument('-h', type=str, help='host', required=True)
         parser.add_argument('-s', type=str, help='schema', required=False)
         parser.add_argument('-e', type=str, help='environment', required=False)
-
+        parser.add_argument('-a', type=str, help='alias', required=False)
 
         commands = []
         if arguments.h:

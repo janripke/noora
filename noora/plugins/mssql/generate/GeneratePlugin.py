@@ -1,14 +1,16 @@
-#!/usr/bin/env python
 import os
 import json
 import shutil
-from noora.plugins.Plugin import Plugin
-from noora.io.File import File
-from noora.io.Files import Files
-from noora.system.Ora import Ora
+
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.VersionGuesser import VersionGuesser
+
+from noora.system import Ora
+from noora.io.File import File
+from noora.io.Files import Files
+
+from noora.plugins.Plugin import Plugin
 
 
 class GeneratePlugin(Plugin):
@@ -29,9 +31,12 @@ class GeneratePlugin(Plugin):
         current_dir = properties.get('current.dir')
         project_file = properties.get('project.file')
         config_file = File(os.path.join(current_dir, project_file))
+        template_dir = os.path.join(
+            properties.get('plugin.dir'), 'mssql', 'generate', 'templates')
         if not config_file.exists():
             host = input('host [localhost] : ')
             host = Ora.nvl(host, "localhost")
+            port = input('port [1433] : ') or '1433'
             database = input('database : ')
             project = database + "-db"
             schema = input('schema : ')
@@ -41,7 +46,6 @@ class GeneratePlugin(Plugin):
             version = Ora.nvl(version, "1.0.0")
 
             os.mkdir(project)
-            template_dir = os.path.join(properties.get('plugin.dir'), 'mssql', 'generate', 'templates')
             template_file = os.path.join(template_dir, project_file)
 
             f = open(template_file)
@@ -50,6 +54,7 @@ class GeneratePlugin(Plugin):
             stream = stream.replace('{project}', project)
             stream = stream.replace('{database}', database)
             stream = stream.replace('{host}', host)
+            stream = stream.replace('{port}', port)
             stream = stream.replace('{schema}', schema)
             stream = stream.replace('{username}', username)
             stream = stream.replace('{password}', password)
@@ -88,7 +93,6 @@ class GeneratePlugin(Plugin):
         objects = properties.get('create_objects')
 
         for schema in schemes:
-
             # create the scheme folder
             schema_dir = os.path.join(version_dir, schema)
             os.mkdir(schema_dir)
@@ -111,12 +115,12 @@ class GeneratePlugin(Plugin):
                 f.write(stream)
                 f.close()
 
+                # FIXME: remove?
                 # sqlScript=self.getSqlVersionStatement(versions, version)
                 # projectHelper.writeFile(datFolder+os.sep+'version.sql', sqlScript)
 
             # create the environment folders in the dat folder
             for environment in environments:
-
                 os.mkdir(os.path.join(dat_dir, environment))
 
                 # create the environment script in the dat folder.
@@ -134,16 +138,17 @@ class GeneratePlugin(Plugin):
             os.mkdir(ddl_dir)
 
             # create the object folders in the ddl folder
-            for object in objects:
-                os.mkdir(os.path.join(ddl_dir, object))
+            for obj in objects:
+                os.mkdir(os.path.join(ddl_dir, obj))
 
             # create the template code on create.
             if schema == version_schema and next_version == default_version:
-                for object in objects:
-                    object_dir = os.path.join(template_dir, object)
+                for obj in objects:
+                    object_dir = os.path.join(template_dir, obj)
                     if os.path.exists(object_dir):
                         files = Files.list(File(object_dir))
                         for file in files:
-                            shutil.copyfile(file.get_url(), os.path.join(ddl_dir, object, file.tail()))
+                            shutil.copyfile(
+                                file.get_url(), os.path.join(ddl_dir, obj, file.tail()))
 
-        print("version " + next_version + " created.")
+        print("version {} created.".format(next_version))

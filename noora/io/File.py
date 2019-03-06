@@ -1,7 +1,7 @@
 import os
 
 
-class File:
+class File(object):
     def __init__(self, url=None):
         self.__url = url
 

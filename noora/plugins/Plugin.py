@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-
-
-class Plugin:
+class Plugin(object):
     def __init__(self, type, connectable):
         self.__type = type
         self.__connectable = connectable

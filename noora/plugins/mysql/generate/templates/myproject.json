@@ -10,7 +10,8 @@
       "{host}",
       "{database}",
       "{username}",
-      "{password}"
+      "{password}",
+      "{port}"
     ]
   ],
   "default_environment": "dev",

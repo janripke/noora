@@ -1,5 +1,5 @@
 from os.path import expanduser
-from noora.system.PropertyHelper import PropertyHelper
+from noora.system import PropertyHelper
 import os
 import json
 from noora.io.Files import Files
@@ -38,6 +38,6 @@ databases = ['acme']
 host = 'localhost'
 
 for database in databases:
-    username = PropertyHelper.get_mysql_user(mysql_users, host, database)
-    print(username)
+    executor = PropertyHelper.get_mysql_properties(mysql_users, host, database)
+    print(executor['username'])
 
