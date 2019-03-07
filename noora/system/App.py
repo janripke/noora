@@ -16,7 +16,6 @@ class App(click.MultiCommand):
         :param ctx:
         :return:
         """
-        print(properties['project'])
         if 'project' in properties:
             return ["generate", ]
         else:
