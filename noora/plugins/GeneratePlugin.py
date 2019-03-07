@@ -20,9 +20,13 @@ class GeneratePlugin(click.MultiCommand):
 
     def get_command(self, ctx, cmd_name):
         mod = import_module("noora.plugins.{}.generate.GeneratePlugin".format(cmd_name))
-        return mod.GeneratePlugin
+        return mod.GeneratePlugin.create_project
 
 
 @click.command(cls=GeneratePlugin)
 def cli():
+    """
+    The generate plugin can be used to create a new database project or
+    bootstrap a new version for the currently selected project.
+    """
     pass
