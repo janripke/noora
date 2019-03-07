@@ -48,7 +48,10 @@ class BuildPlugin(Plugin):
 
         objects = properties.get('create_objects')
 
-        build_dir = App.build_dir(version, properties)
+        if version == properties.get("default_version"):
+            build_dir = properties.get("create.dir")
+        else:
+            build_dir = os.path.join(properties.get("alter.dir"), version)
 
         # exclude the file 'version.sql', this file is excluded from the dat listing below.
         component_excluded_files = properties.get('component_excluded_files')
