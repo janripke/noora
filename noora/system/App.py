@@ -16,26 +16,20 @@ class App(click.MultiCommand):
         :param ctx:
         :return:
         """
-        print('project' in properties)
+        print(properties['project'])
         if 'project' in properties:
-            return ["PROJECTS", ]
+            return ["generate", ]
         else:
             return ['generate', ]
 
     def get_command(self, ctx, cmd_name):
         if 'project' in properties:
-            return None
+            mod = import_module('noora.plugins.{}.generate.GeneratePlugin'.format(
+                properties['technology']))
+            return mod.GeneratePlugin.upgrade_project
         else:
             mod = import_module('noora.plugins.GeneratePlugin')
             return mod.cli
-
-    @staticmethod
-    def find_plugin(command, properties):
-        plugins = properties.get('plugins')
-        for plugin in plugins:
-            p = ClassLoader.find(plugin)
-            if command.lower() == p.get_type().lower():
-                return p
 
     @staticmethod
     # FIXME: move to proper place
