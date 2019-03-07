@@ -45,7 +45,7 @@
   "version_select_statement": "select value into l_value from application_properties where name='application.version';",
   "environment_insert_statement": "insert into application_properties(name,value) values ('application.environment','<environment>');",
   "environment_select_statement": "select value into l_value from application_properties where name='application.environment';",
-  "default_version": "1.0.0",
+  "default_version": "{version}",
   "drop_objects": [
     "vw",
     "syn",
