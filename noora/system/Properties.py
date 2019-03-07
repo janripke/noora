@@ -23,23 +23,41 @@ class Properties(object):
             'home.dir': expanduser('~'),
         }
 
-        # Get the configuration and merge it into the properties
-        self.__props.update(self.__get_config())
+        self.update_config()
 
     def __get_config(self):
+        """
+        Load a myproject.json file and update some extra parameters if this is an actual project
+        """
         current_dir = self.__props.get("current.dir")
         project_file = self.__props.get("project.file")
 
-        f = File(os.path.join(current_dir, project_file))
-        if f.exists():
-            return f
+        config_file = File(os.path.join(current_dir, project_file))
+        if not config_file.exists():
+            noora_dir = self.__props.get("noora.dir")
+            config_file = File(os.path.join(noora_dir, project_file))
 
-        noora_dir = self.__props.get("noora.dir")
-        config_file = File(os.path.join(noora_dir, project_file))
-
+        # Read project configuration
         with open(config_file.get_url()) as fd:
             data = json.load(fd)
+
         return data
+
+    def update_config(self):
+        """
+        Update the project configuration
+        """
+        # Get the configuration and merge it into the properties
+        self.__props.update(self.__get_config())
+
+        # If this is an actual project, update some other properties
+        if 'project' in self:
+            self['alter.dir'] = os.path.join(self['current.dir'], 'alter')
+            self['create.dir'] = os.path.join(self['current.dir'], 'create')
+
+            # Guess the database technology
+            # FIXME
+            self['technology'] = self['plugins'][0].split(".")[2]
 
     def __getitem__(self, item):
         # Do not catch exceptions here, but upstream
