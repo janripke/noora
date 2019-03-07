@@ -1,60 +1,33 @@
 import os
-from os.path import expanduser
-import argparse
-import json
+from importlib import import_module
 
-import noora
-from noora.io.File import File
+import click
+
 from noora.system.ClassLoader import ClassLoader
+from noora.system.Properties import properties
 
 
-class App(object):
-    def __init__(self):
-        pass
+class App(click.MultiCommand):
+    def list_commands(self, ctx):
+        """
+        Get the commands based on the context. If 'project' is defined on the
+        properties, look up all available plugins for the project's
+        technology. Else, only return 'generate'
+        :param ctx:
+        :return:
+        """
+        print('project' in properties)
+        if 'project' in properties:
+            return ["PROJECTS", ]
+        else:
+            return ['generate', ]
 
-    @staticmethod
-    def get_parser():
-        parser = argparse.ArgumentParser(
-            description="mynoora, a sql deployment tool", add_help=False)
-        parser.add_argument("commands", help="command to execute", type=str, nargs='+')
-        parser.add_argument('-r', action='store_true', help='show the revision', required=False)
-        return parser
-
-    @staticmethod
-    def get_config_file(properties):
-        current_dir = properties.get("current.dir")
-        project_file = properties.get("project.file")
-
-        f = File(os.path.join(current_dir, project_file))
-        if f.exists():
-            return f
-
-        noora_dir = properties.get("noora.dir")
-        f = File(os.path.join(noora_dir, project_file))
-        return f
-
-    @staticmethod
-    def properties():
-        noora_dir = os.path.dirname(noora.__file__)
-        current_dir = os.path.abspath('.')
-
-        properties = dict()
-        properties["noora.dir"] = noora_dir
-        properties["current.dir"] = current_dir
-        properties["plugin.dir"] = os.path.join(noora_dir, 'plugins')
-        properties["project.file"] = "myproject.json"
-        properties['home.dir'] = expanduser('~')
-        return properties
-
-    @staticmethod
-    def load_properties(properties):
-        f = App.get_config_file(properties)
-        f = open(f.get_url())
-
-        data = json.load(f)
-        for key in data.keys():
-            properties[key] = data[key]
-        f.close()
+    def get_command(self, ctx, cmd_name):
+        if 'project' in properties:
+            return None
+        else:
+            mod = import_module('noora.plugins.GeneratePlugin')
+            return mod.cli
 
     @staticmethod
     def find_plugin(command, properties):
@@ -65,6 +38,7 @@ class App(object):
                 return p
 
     @staticmethod
+    # FIXME: move to proper place
     def build_dir(version, properties):
         if version == properties.get("default_version"):
             return properties.get("create.dir")
