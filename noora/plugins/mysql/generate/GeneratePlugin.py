@@ -1,5 +1,4 @@
 import os
-import json
 import shutil
 
 import click
@@ -8,7 +7,6 @@ from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.VersionGuesser import VersionGuesser
 
-from noora.system import Ora
 from noora.system.Properties import properties
 from noora.io.File import File
 from noora.io.Files import Files
