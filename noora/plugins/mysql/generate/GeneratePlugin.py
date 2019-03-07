@@ -25,11 +25,45 @@ class GeneratePlugin(object):
                   hide_input=True, confirmation_prompt=True)
     @click.option('-v', '--version', required=False,
                   prompt='Initial project version', default='1.0.0')
-    def create_project(host, port, database, schema, user, password, version):
+    def create_project(host, port, database, username, password, version):
         """
         Generate a new MySQL database project
         """
-        pass
+        project_file = properties.get('project.file')
+        current_dir = properties.get('current.dir')
+
+        # Determine the project's name and create a new directory
+        project = database + "-db"
+        os.mkdir(project)
+
+        # Get the json project template for this plugin
+        template_file = os.path.join(
+            properties.get('plugin.dir'), 'mysql', 'generate', 'templates', project_file)
+
+        # Parse the template and replace the parameters
+        with open(template_file) as fd:
+            stream = fd.read()
+        stream = stream.replace('{project}', project)
+        stream = stream.replace('{database}', database)
+        stream = stream.replace('{host}', host)
+        stream = stream.replace('{port}', str(port))
+        stream = stream.replace('{username}', username)
+        stream = stream.replace('{password}', password)
+        stream = stream.replace('{version}', version)
+
+        # Write the new configuration back to file
+        config_file = os.path.join(current_dir, project, project_file)
+        with open(config_file, 'w') as fd:
+            fd.write(stream)
+
+        # Update the project properties to set current.dir to the new project dir
+        properties['current.dir'] = os.path.join(current_dir, project)
+
+        # Update the project properties
+        properties.update_config()
+
+        # Do the project creation crunching stuff
+        GeneratePlugin.process_project(version)
 
     @staticmethod
     @click.command()
@@ -38,52 +72,13 @@ class GeneratePlugin(object):
         """
         Bootstrap a new version of a MySQL database project
         """
-        project = properties.get('project')
+        # All we have to do here is call process_project with the new version
+        GeneratePlugin.process_project(version)
 
-        current_dir = properties.get('current.dir')
-        project_file = properties.get('project.file')
-        config_file = File(os.path.join(current_dir, project_file))
+    @staticmethod
+    def process_project(version):
         template_dir = os.path.join(
             properties.get('plugin.dir'), 'mysql', 'generate', 'templates')
-        if not config_file.exists():
-            database = input('database : ')
-            project = database + "-db"
-            host = input('host [localhost] : ')
-            host = Ora.nvl(host, "localhost")
-            port = input('port [3306] : ') or '3306'
-            username = input('username : ')
-            password = input('password : ')
-            version = input('version [1.0.0]: ')
-            version = Ora.nvl(version, "1.0.0")
-
-            os.mkdir(project)
-            template_file = os.path.join(template_dir, project_file)
-
-            f = open(template_file)
-            stream = f.read()
-            f.close()
-            stream = stream.replace('{project}', project)
-            stream = stream.replace('{database}', database)
-            stream = stream.replace('{host}', host)
-            stream = stream.replace('{port}', port)
-            stream = stream.replace('{username}', username)
-            stream = stream.replace('{password}', password)
-            stream = stream.replace('{version}', version)
-
-            config_file = os.path.join(current_dir, project, project_file)
-            f = open(config_file, 'w')
-            f.write(stream)
-            f.close()
-
-        properties['alter.dir'] = os.path.join(current_dir, project, 'alter')
-        properties['create.dir'] = os.path.join(current_dir, project, 'create')
-
-        config_file = os.path.join(current_dir, project, project_file)
-        f = open(config_file)
-        data = json.load(f)
-        for key in data.keys():
-            properties[key] = data[key]
-        f.close()
 
         versions = Versions()
         version_loader = VersionLoader(versions)
