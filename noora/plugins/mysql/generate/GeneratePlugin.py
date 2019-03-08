@@ -17,8 +17,8 @@ class GeneratePlugin(Plugin):
     """
     This class provides generation functionality for MySQL projects.
     """
-    _executable = 'execute_new_project'
-    _executable_outside_scope = 'execute_new_version'
+    _executable = 'execute_new_version'
+    _executable_outside_scope = 'execute_new_project'
 
     @staticmethod
     @click.command()
