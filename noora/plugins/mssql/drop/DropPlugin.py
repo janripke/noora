@@ -1,5 +1,8 @@
 import os
 
+import click
+
+from noora.system.Properties import properties
 from noora.system import Ora
 from noora.system import PropertyHelper
 from noora.io.File import File
@@ -13,35 +16,33 @@ from noora.connectors.MssqlConnector import MssqlConnector
 
 
 class DropPlugin(Plugin):
-    def __init__(self):
-        Plugin.__init__(self, "drop", MssqlConnector())
+    _connector = MssqlConnector
 
-    def parse_args(self, parser, args):
-        parser.add_argument('-h', type=str, help='host', required=True)
-        parser.add_argument('-s', type=str, help='schema', required=False)
-        parser.add_argument('-e', type=str, help='environment', required=False)
-        return parser.parse_args(args)
-
-    def get_drop_dir(self, properties):
-        return os.path.join(properties.get('plugin.dir'), 'mssql', 'drop')
-
-    def fail_on_blocked_hosts(self, host, properties):
+    @staticmethod
+    def fail_on_blocked_hosts(host):
         blocked_hosts = properties.get('blocked_hosts')
         if host in blocked_hosts:
             raise BlockedHostException("block host: {}".format(host))
 
-    def execute(self, arguments, properties):
-        host = arguments.h
+    @staticmethod
+    @click.command()
+    @click.option('-h', '--host', required=True, prompt=True, default='localhost')
+    @click.option('-s', '--schema', required=False, prompt='Schema name')
+    @click.option('-s', '--environment', required=False, prompt='Environment')
+    def execute(host, schema, environment):
+        """
+        Drop a schema in the database for the specified environment
+        """
         Fail.fail_on_no_host(host)
-        self.fail_on_blocked_hosts(host, properties)
+        DropPlugin.fail_on_blocked_hosts(host)
 
         default_schemes = properties.get('schemes')
-        schemes = Ora.nvl(arguments.s, default_schemes)
-        Fail.fail_on_invalid_schema(arguments.s, properties)
+        schemes = Ora.nvl(schema, default_schemes)
+        Fail.fail_on_invalid_schema(schema, properties)
 
         default_environment = properties.get('default_environment')
-        environment = Ora.nvl(arguments.e, default_environment)
-        Fail.fail_on_invalid_environment(arguments.e, properties)
+        environment = Ora.nvl(schema, default_environment)
+        Fail.fail_on_invalid_environment(schema, properties)
 
         database = properties.get('database')
         objects = properties.get('drop_objects')
@@ -58,7 +59,6 @@ class DropPlugin(Plugin):
                 users = profile.get('mssql_users')
 
         for schema in schemes:
-            # FIXME: use format
             print("dropping schema '{schema}' in database '{db}' "
                   "on host '{host}' using environment '{env}'".format(
                     schema=schema, db=database, host=host, env=environment))
@@ -66,10 +66,10 @@ class DropPlugin(Plugin):
             executor = PropertyHelper.get_mssql_properties(users, host, schema)
             executor['database'] = database
 
-            connector = self.get_connector()
+            connector = DropPlugin.get_connector()
 
             for obj in objects:
-                folder = File(os.path.join(self.get_drop_dir(properties), obj))
+                folder = File(os.path.join(properties.get('plugin.dir'), 'mssql', 'drop', obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
             print("schema '{}' dropped.".format(schema))
