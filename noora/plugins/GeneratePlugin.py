@@ -4,7 +4,7 @@ from importlib import import_module
 import click
 
 
-class GenerateProject(click.MultiCommand):
+class GeneratePlugin(click.MultiCommand):
     def list_commands(self, ctx):
         """
         Check all plugin directories and return a list of plugins with a "GeneratePlugin" module
@@ -23,7 +23,7 @@ class GenerateProject(click.MultiCommand):
         return mod.GeneratePlugin.get_executor(outside_scope=True)
 
 
-@click.command(cls=GenerateProject)
+@click.command(cls=GeneratePlugin)
 def cli():
     """
     The generate plugin can be used to create a new database project or

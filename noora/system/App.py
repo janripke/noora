@@ -52,5 +52,5 @@ class App(click.MultiCommand):
             cls = getattr(mod, cls_name)
             return cls.get_executor()
         else:
-            mod = import_module('noora.plugins.GenerateProject')
+            mod = import_module('noora.plugins.GeneratePlugin')
             return mod.cli
