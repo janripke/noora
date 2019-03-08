@@ -12,7 +12,7 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 from noora.connectors.MysqlConnector import MysqlConnector
 
 
-class DropPlugin(Plugin):
+class DropPlugin(object):
     def __init__(self):
         Plugin.__init__(self, "drop", MysqlConnector())
 

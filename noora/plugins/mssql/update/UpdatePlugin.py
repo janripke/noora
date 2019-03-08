@@ -16,7 +16,7 @@ from noora.connectors.MssqlConnector import MssqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
-class UpdatePlugin(Plugin):
+class UpdatePlugin(object):
     def __init__(self):
         Plugin.__init__(self, "update", MssqlConnector())
 

@@ -18,7 +18,7 @@ from noora.connectors.MysqlConnector import MysqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
-class UpdatePlugin(Plugin):
+class UpdatePlugin(object):
     def __init__(self):
         Plugin.__init__(self, "update", MysqlConnector())
 
