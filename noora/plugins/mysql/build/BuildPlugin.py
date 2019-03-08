@@ -15,7 +15,7 @@ from noora.plugins.Plugin import Plugin
 from noora.plugins.Fail import Fail
 
 
-class BuildPlugin(Plugin):
+class BuildPlugin(object):
     def __init__(self):
         Plugin.__init__(self, "build", None)
 

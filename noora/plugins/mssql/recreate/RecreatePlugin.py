@@ -11,7 +11,7 @@ from noora.plugins.Plugin import Plugin
 from noora.connectors.MssqlConnector import MssqlConnector
 
 
-class RecreatePlugin(Plugin):
+class RecreatePlugin(object):
     def __init__(self):
         Plugin.__init__(self, "recreate", MssqlConnector())
 
