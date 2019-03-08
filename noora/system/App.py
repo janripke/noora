@@ -26,5 +26,5 @@ class App(click.MultiCommand):
                 properties['technology']))
             return mod.GeneratePlugin.upgrade_project
         else:
-            mod = import_module('noora.plugins.GeneratePlugin')
+            mod = import_module('noora.plugins.GenerateProject')
             return mod.cli
