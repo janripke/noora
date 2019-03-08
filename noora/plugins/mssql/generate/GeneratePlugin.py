@@ -7,12 +7,19 @@ from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.VersionGuesser import VersionGuesser
 
+from noora.plugins.Plugin import Plugin
 from noora.system.Properties import properties
 from noora.io.File import File
 from noora.io.Files import Files
 
 
-class GeneratePlugin(object):
+class GeneratePlugin(Plugin):
+    """
+    This class provides generation functionality for MSSQL projects.
+    """
+    _executable = 'execute_new_project'
+    _executable_outside_scope = 'execute_new_version'
+
     @staticmethod
     @click.command()
     @click.option('-h', '--host', required=False, prompt=True, default='localhost')
@@ -24,7 +31,7 @@ class GeneratePlugin(object):
                   hide_input=True, confirmation_prompt=True)
     @click.option('-v', '--version', required=False,
                   prompt='Initial project version', default='1.0.0')
-    def create_project(host, port, database, schema, username, password, version):
+    def execute_new_project(host, port, database, schema, username, password, version):
         """
         Generate a new MSSQL database project
         """
@@ -63,20 +70,20 @@ class GeneratePlugin(object):
         properties.update_config()
 
         # Do the project creation crunching stuff
-        GeneratePlugin.process_project(version)
+        GeneratePlugin.execute(version)
 
     @staticmethod
     @click.command()
     @click.option('-v', '--version', required=False, prompt=True)
-    def upgrade_project(version):
+    def execute_new_version(version):
         """
         Bootstrap a new version of a MSSQL database project
         """
         # All we have to do here is call process_project with the new version
-        GeneratePlugin.process_project(version)
+        GeneratePlugin.execute(version)
 
     @staticmethod
-    def process_project(version):
+    def execute(version):
         template_dir = os.path.join(
             properties.get('plugin.dir'), 'mssql', 'generate', 'templates')
 
