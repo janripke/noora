@@ -25,7 +25,7 @@ class App(click.MultiCommand):
 
         :return: A list of available commands
         """
-        props = self.initialize_and_get_properties()
+        props = self.initialize_and_get_properties(ctx)
 
         if 'project' in props:
             technology = props.get('technology')
@@ -38,9 +38,12 @@ class App(click.MultiCommand):
                 p_path = os.path.join(plugin_path, p)
                 if os.path.isdir(p_path):
                     # Try to import the cli command from the package root
-                    mod = import_module('noora.plugins.{}.{}'.format(technology, p))
-                    if getattr(mod, 'cli'):
-                        res.append(p)
+                    try:
+                        mod = import_module('noora.plugins.{}.{}'.format(technology, p))
+                        if getattr(mod, 'cli'):
+                            res.append(p)
+                    except (ImportError, AttributeError):
+                        pass
             return res
 
         # NOTE: in the future it might happen we support more than just 'generate' outside of a project's scope.
@@ -54,10 +57,13 @@ class App(click.MultiCommand):
 
         if 'project' in props:
             # Import the module and return the cli method
-            mod = import_module('noora.plugins.{}.{}'.format(props['technology'], cmd_name))
-            return mod.cli
+            try:
+                mod = import_module('noora.plugins.{}.{}'.format(props['technology'], cmd_name))
+                return mod.cli
+            except ModuleNotFoundError:
+                return None
         elif cmd_name == 'generate':
             mod = import_module('noora.plugins.GeneratePlugin')
             return mod.cli
-        else:
-            raise click.Abort("critical: unknown command: {}".format(cmd_name))
+
+        return None
