@@ -4,24 +4,28 @@ class Plugin(object):
     """
     # The DB connector class. Override on subclass.
     _connector = None
-    # The default excecute method for this plugin
-    _executable = 'execute'
-    # If the command provides functionality outside of the project scope, set this variable
-    _executable_outside_scope = None
 
-    @classmethod
-    def get_connector(cls):
-        return cls._connector()
+    def __init__(self, properties, connector):
+        self._properties = properties
+        self._connector = connector()
+        self._arguments = {}
 
-    @classmethod
-    def get_executor(cls, outside_scope=False):
-        if not outside_scope:
-            return getattr(cls, cls._executable)
-        if outside_scope:
-            return getattr(cls, cls._executable_outside_scope)
+    def set_argument(self, arg, val):
+        self._arguments[arg] = val
 
-    @staticmethod
-    def execute(*args):
+    def get_argument(self, arg):
+        return self._arguments[arg]
+
+    def get_connector(self):
+        return self._connector()
+
+    def prepare(self, *args):
+        """
+        The prepare method. This should be implemented by subclasses.
+        """
+        raise NotImplementedError("Plugin.prepare should be defined by subclasses")
+
+    def execute(self, *args):
         """
         The execute method. This should be implemented by subclasses.
         """
