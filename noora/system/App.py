@@ -7,7 +7,8 @@ from noora.system.Properties import Properties
 
 
 class App(click.MultiCommand):
-    def initialize_and_get_properties(self, ctx):
+    @staticmethod
+    def initialize_and_get_properties(ctx):
         """
         Makes sure the Properties object is initialized and assigned to the context object.
         :param ctx: The click context
@@ -40,15 +41,16 @@ class App(click.MultiCommand):
                     # Try to import the cli command from the package root
                     try:
                         mod = import_module('noora.plugins.{}.{}'.format(technology, p))
-                        if getattr(mod, 'cli'):
+                        if hasattr(mod, 'cli'):
                             res.append(p)
-                    except (ImportError, AttributeError):
+                    except ModuleNotFoundError:
                         pass
             return res
 
-        # NOTE: in the future it might happen we support more than just 'generate' outside of a project's scope.
-        # In this case one should loop over all technologies and plugins per technology to check if an execute method\
-        # exists that can be run outside of a project's scope.
+        # NOTE: in the future it might happen we support more than just 'generate' outside of a
+        # project's scope. In this case one should loop over all technologies and plugins per
+        # technology to check if an execute method exists that can be run outside of a project's
+        # scope.
         else:
             return ['generate', ]
 
@@ -59,11 +61,12 @@ class App(click.MultiCommand):
             # Import the module and return the cli method
             try:
                 mod = import_module('noora.plugins.{}.{}'.format(props['technology'], cmd_name))
-                return mod.cli
             except ModuleNotFoundError:
                 return None
+            if hasattr(mod, 'cli'):
+                return mod.cli
         elif cmd_name == 'generate':
-            mod = import_module('noora.plugins.GeneratePlugin')
+            mod = import_module('noora.system.GenerateCommand')
             return mod.cli
 
         return None
