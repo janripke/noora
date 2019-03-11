@@ -77,7 +77,3 @@ class Properties(object):
 
     def __contains__(self, item):
         return item in self.__props
-
-
-# Initialize the properties so it can be imported project-wide
-properties = Properties()
