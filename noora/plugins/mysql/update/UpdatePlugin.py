@@ -31,12 +31,6 @@ class UpdatePlugin(object):
 
         return parser.parse_args(args)
 
-    def fail_on_unknown_version(self, version, properties):
-        alter_dir = properties.get('alter.dir')
-        version_dir = File(os.path.join(alter_dir, version))
-        if not version_dir.exists():
-            raise UnknownVersionException("unknown version folder: {}".format(version))
-
     def fail_on_invalid_environment(self, connector, executor, environment, properties):
         plugin_dir = properties.get('plugin.dir')
         properties['environment'] = environment
@@ -87,7 +81,7 @@ class UpdatePlugin(object):
 
         alter_dir = properties.get('alter.dir')
 
-        self.fail_on_unknown_version(version, properties)
+        Fail.fail_on_unknown_version(version, properties)
 
         alias = arguments.a
         database_aliases = properties.get('database_aliases')
