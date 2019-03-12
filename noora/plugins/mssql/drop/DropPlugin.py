@@ -2,48 +2,49 @@ import os
 
 import click
 
-from noora.system.Properties import properties
 from noora.system import Ora
 from noora.system import PropertyHelper
 from noora.io.File import File
 
 from noora.plugins.Plugin import Plugin
 from noora.plugins.Fail import Fail
-from noora.exceptions.BlockedHostException import BlockedHostException
 
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
-from noora.connectors.MssqlConnector import MssqlConnector
 
 
 class DropPlugin(Plugin):
-    _connector = MssqlConnector
-
-    @staticmethod
-    def fail_on_blocked_hosts(host):
-        blocked_hosts = properties.get('blocked_hosts')
-        if host in blocked_hosts:
-            raise BlockedHostException("block host: {}".format(host))
-
-    @staticmethod
-    @click.command()
-    @click.option('-h', '--host', required=True, prompt=True, default='localhost')
-    @click.option('-s', '--schema', required=False, prompt='Schema name')
-    @click.option('-s', '--environment', required=False, prompt='Environment')
-    def execute(host, schema, environment):
+    def prepare(self, host, schema, environment):
         """
-        Drop a schema in the database for the specified environment
+        Prepare to drop database by checking if schema and environment are
+        valid values. Also check that host is not on the block list
+
+        :param host: The hostname to drop on
+        :param schema: Schema to drop
+        :param environment: Environment to drop the database from
         """
-        Fail.fail_on_no_host(host)
-        DropPlugin.fail_on_blocked_hosts(host)
+        properties = self._properties
+
+        Fail.fail_on_blocked_hosts(host, properties)
+        self.set_argument('host', host)
 
         default_schemes = properties.get('schemes')
         schemes = Ora.nvl(schema, default_schemes)
         Fail.fail_on_invalid_schema(schema, properties)
+        self.set_argument('schemes', schemes)
 
         default_environment = properties.get('default_environment')
-        environment = Ora.nvl(schema, default_environment)
-        Fail.fail_on_invalid_environment(schema, properties)
+        environment = Ora.nvl(environment, default_environment)
+        Fail.fail_on_invalid_environment(environment, properties)
+        self.set_argument('environment', environment)
 
+    def execute(self):
+        """
+        Drop a schema in the database for the specified environment
+        """
+        properties = self._properties
+        host = self.get_argument('host')
+        schemes = self.get_argument('schemes')
+        environment = self.get_argument('environment')
         database = properties.get('database')
         objects = properties.get('drop_objects')
 
