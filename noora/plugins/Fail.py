@@ -1,4 +1,6 @@
 from noora.exceptions.PluginException import PluginException
+from noora.exceptions.BlockedHostException import BlockedHostException
+
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.Version import Version
@@ -67,3 +69,10 @@ class Fail(object):
 
         if not versions.exists(Version(version)):
             raise PluginException("the given version is not valid for this project")
+
+    @staticmethod
+    def fail_on_blocked_hosts(host, properties):
+        blocked_hosts = properties.get('blocked_hosts')
+        if host in blocked_hosts:
+            raise BlockedHostException("block host: {}".format(host))
+
