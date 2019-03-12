@@ -1,5 +1,6 @@
 from noora.exceptions.PluginException import PluginException
 from noora.exceptions.BlockedHostException import BlockedHostException
+from noora.exceptions.UnknownVersionException import UnknownVersionException
 
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
@@ -30,35 +31,28 @@ class Fail(object):
     @staticmethod
     def fail_on_invalid_plugin(plugin):
         if not plugin:
-            raise PluginException("the given plugin is not valid for this project")
+            raise PluginException("plugin '{}' is not valid for this project".format(plugin))
 
     @staticmethod
     def fail_on_invalid_database(database, properties):
-        if database:
-            databases = properties.get('databases')
-            if database not in databases:
-                raise PluginException("the given database is not valid for this project")
+        if database and database not in properties.get('databases'):
+            raise PluginException("database '{}' is not valid for this project".format(database))
 
     @staticmethod
     def fail_on_invalid_schema(schema, properties):
-        if schema:
-            schemes = properties.get('schemes')
-            if schema not in schemes:
-                raise PluginException("the given schema is not valid for this project")
+        if schema and schema not in properties.get('schemes'):
+            raise PluginException("schema '{}' is not valid for this project".format(schema))
 
     @staticmethod
     def fail_on_invalid_environment(environment, properties):
-        if environment:
-            environments = properties.get('environments')
-            if environment not in environments:
-                raise PluginException("the given environment is not valid for this project")
+        if environment and environment not in properties.get('environments'):
+            raise PluginException(
+                "environment '{}' is not valid for this project".format(environment))
 
     @staticmethod
     def fail_on_invalid_alias(alias, properties):
-        if alias:
-            aliasses = properties.get('aliasses')
-            if alias not in aliasses:
-                raise PluginException("the given alias is not valid for this project")
+        if alias and alias not in properties.get('aliasses'):
+            raise PluginException("alias '{}' is not valid for this project".format(alias))
 
     @staticmethod
     def fail_on_unknown_version(version, properties):
@@ -68,11 +62,12 @@ class Fail(object):
         versions.sort()
 
         if not versions.exists(Version(version)):
-            raise PluginException("the given version is not valid for this project")
+            raise UnknownVersionException(
+                "version {} is not valid for this project".format(version))
 
     @staticmethod
     def fail_on_blocked_hosts(host, properties):
         blocked_hosts = properties.get('blocked_hosts')
         if host in blocked_hosts:
-            raise BlockedHostException("block host: {}".format(host))
+            raise BlockedHostException("blocked host: {}".format(host))
 
