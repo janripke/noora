@@ -1,14 +1,11 @@
 import os
 import shutil
 
-import click
-
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.VersionGuesser import VersionGuesser
 
 from noora.plugins.Plugin import Plugin
-from noora.system.Properties import properties
 from noora.io.File import File
 from noora.io.Files import Files
 
@@ -17,23 +14,27 @@ class GeneratePlugin(Plugin):
     """
     This class provides generation functionality for MySQL projects.
     """
-    _executable = 'execute_new_version'
-    _executable_outside_scope = 'execute_new_project'
+    def prepare(self, version, host=None, port=None, database=None, username=None, password=None):
+        """
+        Prepare the plugin. The version is always required, the rest only when
+        generating an entirely new project.
 
-    @staticmethod
-    @click.command()
-    @click.option('-h', '--host', required=False, prompt=True, default='localhost')
-    @click.option('-p', '--port', required=False, prompt=True, type=int, default=3306)
-    @click.option('-d', '--database', required=True, prompt='Database name')
-    @click.option('-U', '--username', required=True, prompt='Database username')
-    @click.option('-P', '--password', required=True, prompt='Database password',
-                  hide_input=True, confirmation_prompt=True)
-    @click.option('-v', '--version', required=False,
-                  prompt='Initial project version', default='1.0.0')
-    def execute_new_project(host, port, database, username, password, version):
+        :param version: (Initial) project version to generate for
+        :param host: The hostname for the new project. If not provided, an
+            upgrade is assumed (optional)
+        :param port: Port to connect to (optional)
+        :param database: Name of the database (optional)
+        :param username: Database username (optional)
+        :param password: Database password (optional)
         """
-        Generate a new MySQL database project
-        """
+        # If no hostname was provided, we only set the version and then return
+        self.set_argument('version', version)
+
+        if not host:
+            return
+
+        properties = self._properties
+
         project_file = properties.get('project.file')
         current_dir = properties.get('current.dir')
 
@@ -67,21 +68,9 @@ class GeneratePlugin(Plugin):
         # Update the project properties
         properties.update_config()
 
-        # Do the project creation crunching stuff
-        GeneratePlugin.execute(version)
+    def execute(self):
+        properties = self._properties
 
-    @staticmethod
-    @click.command()
-    @click.option('-v', '--version')
-    def execute_new_version(version):
-        """
-        Bootstrap a new version of a MySQL database project
-        """
-        # All we have to do here is call process_project with the new version
-        GeneratePlugin.execute(version)
-
-    @staticmethod
-    def execute(version):
         template_dir = os.path.join(
             properties.get('plugin.dir'), 'mysql', 'generate', 'templates')
 
@@ -90,7 +79,7 @@ class GeneratePlugin(Plugin):
         version_loader.load(properties)
         versions.sort()
         version_guesser = VersionGuesser(properties, versions)
-        next_version = version_guesser.guess(version).to_string()
+        next_version = version_guesser.guess(self.get_argument('version')).to_string()
         version_dir = version_guesser.to_folder(next_version)
 
         # create the version folder

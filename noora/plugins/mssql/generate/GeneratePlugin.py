@@ -23,7 +23,7 @@ class GeneratePlugin(Plugin):
         :param version: (Initial) project version to generate for
         :param host: The hostname for the new project. If not provided, an
             upgrade is assumed (optional)
-        :param port: Port to connect on (optional)
+        :param port: Port to connect to (optional)
         :param database: Name of the database (optional)
         :param schema: Name of the schema (optional)
         :param username: Database username (optional)
