@@ -7,13 +7,10 @@ from noora.io.File import File
 from noora.plugins.Plugin import Plugin
 from noora.plugins.Fail import Fail
 
-from noora.connectors.MssqlConnector import MssqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
 class CreatePlugin(Plugin):
-    _connector = MssqlConnector
-
     def prepare(self, host, schema, environment):
         """
         Prepare database creation by checking if schema and environment are valid values.
@@ -44,7 +41,6 @@ class CreatePlugin(Plugin):
         host = self.get_argument('host')
         schemes = self.get_argument('schemes')
         environment = self.get_argument('environment')
-
         database = properties.get('database')
         objects = properties.get('create_objects')
 
