@@ -16,25 +16,38 @@ from noora.connectors.MssqlConnector import MssqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
-class UpdatePlugin(object):
-    def __init__(self):
-        Plugin.__init__(self, "update", MssqlConnector())
+class UpdatePlugin(Plugin):
+    def prepare(self, version, host, schema, environment):
+        """
+        Prepare to update database by checking if schema and environment are
+        valid values. Also check that host is not on the block list and that
+        the version to update to is valid
 
-    def parse_args(self, parser, args):
-        parser.add_argument('-v', type=str, help='version', required=True)
-        parser.add_argument('-h', type=str, help='host', required=True)
-        parser.add_argument('-s', type=str, help='schema', required=False)
-        parser.add_argument('-e', type=str, help='environment', required=False)
+        :param version: The version to update the database to
+        :param host: The hostname that hosts the database to update
+        :param schema: Schema to update
+        :param environment: Environment to update the database in
+        """
+        properties = self._properties
 
-        return parser.parse_args(args)
+        Fail.fail_on_no_version(version)
+        Fail.fail_on_unknown_version(version, properties)
+        self.set_argument('version', version)
 
-    def fail_on_unknown_version(self, version, properties):
-        alter_dir = properties.get('alter.dir')
-        version_dir = File(os.path.join(alter_dir, version))
-        if not version_dir.exists():
-            raise UnknownVersionException("unknown version folder: {}".format(version))
+        self.set_argument('host', host)
 
-    def fail_on_invalid_environment(self, connector, executor, environment, properties):
+        default_schemes = properties.get('schemes')
+        schemes = Ora.nvl(schema, default_schemes)
+        Fail.fail_on_invalid_schema(schema, properties)
+        self.set_argument('schemes', schemes)
+
+        default_environment = properties.get('default_environment')
+        environment = Ora.nvl(environment, default_environment)
+        Fail.fail_on_invalid_environment(environment, properties)
+        self.set_argument('environment', environment)
+
+    def fail_on_invalid_environment(self, connector, executor, environment):
+        properties = self._properties
         plugin_dir = properties.get('plugin.dir')
         properties['environment'] = environment
         script = File(os.path.join(plugin_dir, 'mssql', 'update', 'checkenvironment.sql'))
@@ -44,7 +57,8 @@ class UpdatePlugin(object):
         # if "(Code 1329)" in connector.get_result():
         #     raise InvalidEnvironmentException("invalid environment", environment)
 
-    def fail_on_invalid_version(self, connector, executor, version, properties):
+    def fail_on_invalid_version(self, connector, executor, version):
+        properties = self._properties
         plugin_dir = properties.get('plugin.dir')
 
         versions = Versions()
@@ -61,32 +75,16 @@ class UpdatePlugin(object):
         # if "(Code 1329)" in connector.get_result():
         #     raise InvalidVersionException("invalid version", previous)
 
-    def execute(self, arguments, properties):
-        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
-        properties['alter.dir'] = os.path.join(properties.get('current.dir'), 'alter')
-
-        host = arguments.h
-        Fail.fail_on_no_host(host)
-
-        version = arguments.v
-        Fail.fail_on_no_version(version)
-
-        default_schemes = properties.get('schemes')
-        schemes = Ora.nvl(arguments.s, default_schemes)
-        Fail.fail_on_invalid_schema(arguments.s, properties)
-
-        default_environment = properties.get('default_environment')
-        environment = Ora.nvl(arguments.e, default_environment)
-        Fail.fail_on_invalid_environment(arguments.e, properties)
-
+    def execute(self):
+        properties = self._properties
+        schemes = self.get_argument('schemes')
+        host = self.get_argument('host')
+        environment = self.get_argument('environment')
+        version = self.get_argument('version')
         database = properties.get('database')
         objects = properties.get('create_objects')
-
         version_schema = properties.get('version_schema')
-
         alter_dir = properties.get('alter.dir')
-
-        self.fail_on_unknown_version(version, properties)
 
         # retrieve the user credentials for this database project.
         users = properties.get('mssql_users')
@@ -112,8 +110,8 @@ class UpdatePlugin(object):
             # database_folder = PropertyHelper.get_database_folder(database, database_aliases)
 
             if schema == version_schema:
-                self.fail_on_invalid_environment(connector, executor, environment, properties)
-                self.fail_on_invalid_version(connector, executor, version, properties)
+                self.fail_on_invalid_environment(connector, executor, environment)
+                self.fail_on_invalid_version(connector, executor, version)
 
             for obj in objects:
                 # global ddl objects
