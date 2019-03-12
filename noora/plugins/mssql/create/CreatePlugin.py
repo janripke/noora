@@ -1,8 +1,5 @@
 import os
 
-import click
-
-from noora.system.Properties import properties
 from noora.system import PropertyHelper
 from noora.system import Ora
 from noora.io.File import File
@@ -17,26 +14,36 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 class CreatePlugin(Plugin):
     _connector = MssqlConnector
 
-    @staticmethod
-    @click.command()
-    @click.option('-h', '--host', required=True, prompt=True, default='localhost')
-    @click.option('-s', '--schema', required=False, prompt='Schema name')
-    @click.option('-s', '--environment', required=False, prompt='Environment')
-    def execute(host, schema, environment):
+    def prepare(self, host, schema, environment):
         """
-        Create a new database instance for the latest version
-        """
-        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
+        Prepare database creation by checking if schema and environment are valid values.
 
-        Fail.fail_on_no_host(host)
+        :param host: The hostname to create on
+        :param schema: Schema to create
+        :param environment: Environment to create the database in
+        """
+        properties = self._properties
+
+        self.set_argument('host', host)
 
         default_schemes = properties.get('schemes')
         schemes = Ora.nvl(schema, default_schemes)
         Fail.fail_on_invalid_schema(schema, properties)
+        self.set_argument('schemes', schemes)
 
         default_environment = properties.get('default_environment')
         environment = Ora.nvl(environment, default_environment)
         Fail.fail_on_invalid_environment(environment, properties)
+        self.set_argument('environment', environment)
+
+    def execute(self):
+        """
+        Create a new database instance for the latest version
+        """
+        properties = self._properties
+        host = self.get_argument('host')
+        schemes = self.get_argument('schemes')
+        environment = self.get_argument('environment')
 
         database = properties.get('database')
         objects = properties.get('create_objects')
@@ -52,7 +59,7 @@ class CreatePlugin(Plugin):
             if profile:
                 users = profile.get('mssql_users')
 
-        connector = CreatePlugin.get_connector()
+        connector = self.get_connector()
         create_dir = properties.get('create.dir')
         for schema in schemes:
             print("creating schema '{schema}' in database '{db}' "
