@@ -5,10 +5,9 @@ from noora.plugins.mssql.generate.GeneratePlugin import GeneratePlugin
 
 
 @click.command()
-@click.option('-v', '--version', required=False, prompt=True)
+@click.option('-v', '--version', required=False)
 @click.pass_obj
 def cli(props, version):
-    pass
     """
     Bootstrap a new version of a MSSQL database project
     """
