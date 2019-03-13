@@ -11,9 +11,8 @@ def cli(props, version):
     """
     Bootstrap a new version of a MSSQL database project
     """
-    plugin = GeneratePlugin(props, MssqlConnector)
-    plugin.prepare(version)
-    plugin.execute()
+    plugin = GeneratePlugin()
+    plugin.execute(props, {'version': version})
 
 
 @click.command()
@@ -31,6 +30,11 @@ def cli_outside_scope(props, host, port, database, schema, username, password, v
     """
     Generate a new MSSQL database project
     """
-    plugin = GeneratePlugin(props, MssqlConnector)
-    plugin.prepare(version, host, port, database, schema, username, password)
-    plugin.execute()
+    plugin = GeneratePlugin()
+    plugin.execute(
+        props,
+        {
+            'host': host, 'port': port, 'database': database, 'schema': schema,
+            'username': username, 'password': password, 'version': version,
+        },
+    )

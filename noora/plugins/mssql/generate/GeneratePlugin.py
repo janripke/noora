@@ -5,43 +5,61 @@ from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.VersionGuesser import VersionGuesser
 
-from noora.plugins.Plugin import Plugin
+from noora.plugins.mssql.MssqlPlugin import MssqlPlugin
+from noora.plugins.Fail import Fail
 from noora.io.File import File
 from noora.io.Files import Files
 
 
-class GeneratePlugin(Plugin):
+class GeneratePlugin(MssqlPlugin):
     """
     This class provides generation functionality for MSSQL projects.
     """
-    def prepare(self, version, host=None, port=None,
-                database=None, schema=None, username=None, password=None):
+    def _validate_and_prepare(self, properties, arguments):
         """
         Prepare the plugin. The version is always required, the rest only when
         generating an entirely new project.
 
-        :param version: (Initial) project version to generate for
-        :param host: The hostname for the new project. If not provided, an
-            upgrade is assumed (optional)
-        :param port: Port to connect to (optional)
-        :param database: Name of the database (optional)
-        :param schema: Name of the schema (optional)
-        :param username: Database username (optional)
-        :param password: Database password (optional)
+        :param arguments: A dict containing: {
+            'version': '(Initial) project version to generate for'
+            'host': 'The hostname for the new project. If not provided, an
+                upgrade is assumed (optional)'
+            'port': 'Port to connect to (optional)'
+            'database': 'Name of the database (optional)'
+            'schema': 'Name of the schema (optional)'
+            'username': 'Database username (optional)'
+            'password': 'Database password (optional)'
+        }
         """
         # If no hostname was provided, we only set the version and then return
-        self.set_argument('version', version)
+        prepared_args = {}
 
+        version = arguments.get('version')
+        Fail.fail_on_no_version(version)
+        prepared_args['version'] = version
+
+        host = arguments.get('host')
         if not host:
-            return
-
-        properties = self._properties
+            return prepared_args
 
         project_file = properties.get('project.file')
         current_dir = properties.get('current.dir')
 
         # Determine the project's name and create a new directory
+        database = arguments.get('database')
+        Fail.fail_on_no_database(database)
         project = database + "-db"
+
+        # First check the rest of the arguments before we continue
+        port = arguments.get('port')
+        Fail.fail_on_no_port(port)
+        schema = arguments.get('schema')
+        Fail.fail_on_no_schema(schema)
+        username = arguments.get('username')
+        Fail.fail_on_no_user('username')
+        password = arguments.get('password')
+
+        # Create the project directory
         os.mkdir(project)
 
         # Get the json project template for this plugin
@@ -71,8 +89,10 @@ class GeneratePlugin(Plugin):
         # Update the project properties
         properties.update_config()
 
-    def execute(self):
-        properties = self._properties
+        return prepared_args
+
+    def execute(self, properties, arguments):
+        prepared_args = self._validate_and_prepare(properties, arguments)
 
         template_dir = os.path.join(
             properties.get('plugin.dir'), 'mssql', 'generate', 'templates')
@@ -82,7 +102,7 @@ class GeneratePlugin(Plugin):
         version_loader.load(properties)
         versions.sort()
         version_guesser = VersionGuesser(properties, versions)
-        next_version = version_guesser.guess(self.get_argument('version')).to_string()
+        next_version = version_guesser.guess(prepared_args.get('version')).to_string()
         version_dir = version_guesser.to_folder(next_version)
 
         # create the version folder
