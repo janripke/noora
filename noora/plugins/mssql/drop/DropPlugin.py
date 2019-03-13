@@ -1,19 +1,17 @@
 import os
 
-import click
-
 from noora.system import Ora
 from noora.system import PropertyHelper
 from noora.io.File import File
 
-from noora.plugins.Plugin import Plugin
+from noora.plugins.mssql.MssqlPlugin import MssqlPlugin
 from noora.plugins.Fail import Fail
 
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
-class DropPlugin(Plugin):
-    def prepare(self, host, schema, environment):
+class DropPlugin(MssqlPlugin):
+    def _validate_and_prepare(self, properties, arguments):
         """
         Prepare to drop database by checking if schema and environment are
         valid values. Also check that host is not on the block list
@@ -22,29 +20,37 @@ class DropPlugin(Plugin):
         :param schema: Schema to drop
         :param environment: Environment to drop the database from
         """
-        properties = self._properties
+        prepared_args = {}
 
+        host = arguments.get('host')
+        Fail.fail_on_no_host(host)
+        Fail.fail_on_invalid_host(host, properties)
         Fail.fail_on_blocked_hosts(host, properties)
-        self.set_argument('host', host)
+        prepared_args['host'] = host
 
+        schema = arguments.get('schema')
         default_schemes = properties.get('schemes')
         schemes = Ora.nvl(schema, default_schemes)
         Fail.fail_on_invalid_schema(schema, properties)
-        self.set_argument('schemes', schemes)
+        prepared_args['schemes'] = schemes
 
+        environment = arguments.get('environment')
         default_environment = properties.get('default_environment')
         environment = Ora.nvl(environment, default_environment)
         Fail.fail_on_invalid_environment(environment, properties)
-        self.set_argument('environment', environment)
+        prepared_args['environment'] = environment
 
-    def execute(self):
+        return prepared_args
+
+    def execute(self, properties, arguments):
         """
         Drop a schema in the database for the specified environment
         """
-        properties = self._properties
-        host = self.get_argument('host')
-        schemes = self.get_argument('schemes')
-        environment = self.get_argument('environment')
+        prepared_args = self._validate_and_prepare(properties, arguments)
+
+        host = prepared_args['host']
+        schemes = prepared_args['schemes']
+        environment = prepared_args['environment']
         database = properties.get('database')
         objects = properties.get('drop_objects')
 
