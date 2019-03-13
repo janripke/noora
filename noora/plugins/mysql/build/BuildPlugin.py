@@ -10,39 +10,42 @@ from noora.system import Ora
 from noora.io.File import File
 from noora.io.Files import Files
 
-from noora.plugins.Plugin import Plugin
+from noora.plugins.mysql.MysqlPlugin import MysqlPlugin
 from noora.plugins.Fail import Fail
 
 
-class BuildPlugin(Plugin):
-    def prepare(self, version, database):
-        """
-        Prepare the plugin. Verifies version is valid, and database, if provided.
+class BuildPlugin(MysqlPlugin):
+    def _validate_and_prepare(self, properties, arguments):
+        prepared_args = {}
 
-        :param version: The version to package for
-        :param database: The database to package for (optional)
-        """
-        properties = self._properties
-
+        version = arguments.get('version')
         Fail.fail_on_no_version(version)
         Fail.fail_on_unknown_version(version, properties)
-        self.set_argument('version', version)
+        prepared_args['version'] = version
 
+        database = arguments.get('database')
         default_databases = properties.get('databases')
         databases = Ora.nvl(database, default_databases)
         Fail.fail_on_invalid_database(database, properties)
-        self.set_argument('databases', databases)
+        prepared_args['databases'] = databases
 
-    def version_statement(self, version):
-        properties = self._properties
-        if version == properties.get("default_version"):
-            return properties.get("component_insert_statement")
-        return properties.get("component_update_statement")
+        return prepared_args
 
-    def execute(self):
-        properties = self._properties
-        version = self.get_argument('version')
-        databases = self.get_argument('databases')
+    def execute(self, properties, arguments):
+        """
+        Build the package after verifying version is valid, and database,
+        if provided.
+
+        :param properties: The project properties
+        :param arguments: A dict of {
+            'version': 'The version to package for'
+            'database': 'The database to package for (optional)'
+        }
+        """
+        prepared_args = self._validate_and_prepare(properties, arguments)
+
+        version = prepared_args['version']
+        databases = prepared_args['databases']
         current_dir = properties.get('current.dir')
         component_name = properties.get('component_name')
         target_dir = os.path.join(current_dir, properties.get('component_target_folder'))
@@ -92,7 +95,10 @@ class BuildPlugin(Plugin):
                 zip_handle.write(file.get_url(), target_file.get_url(), ZIP_DEFLATED)
 
         # create the version script in the dat folder
-        version_statement = self.version_statement(version)
+        if version == properties.get("default_version"):
+            version_statement = properties.get("component_insert_statement")
+        else:
+            version_statement = properties.get("component_update_statement")
         version_statement = version_statement.replace('<version>', version)
         version_statement = version_statement.replace('<name>', component_name)
 

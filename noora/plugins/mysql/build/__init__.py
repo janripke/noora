@@ -1,6 +1,5 @@
 import click
 
-from noora.connectors.MysqlConnector import MysqlConnector
 from .BuildPlugin import BuildPlugin
 
 
@@ -13,6 +12,5 @@ def cli(props, version, database):
     """
     Bootstrap a new version of a MySQL database project
     """
-    plugin = BuildPlugin(props, MysqlConnector)
-    plugin.prepare(version, database)
-    plugin.execute()
+    plugin = BuildPlugin()
+    plugin.execute(props, {'version': version, 'database': database})
