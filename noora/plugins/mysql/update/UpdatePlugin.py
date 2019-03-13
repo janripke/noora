@@ -3,7 +3,6 @@ import os
 from noora.version.Version import Version
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
-from noora.exceptions.UnknownVersionException import UnknownVersionException
 
 from noora.system import Ora
 from noora.system import PropertyHelper
@@ -11,8 +10,8 @@ from noora.io.File import File
 
 from noora.plugins.Plugin import Plugin
 from noora.plugins.Fail import Fail
-from noora.exceptions.InvalidEnvironmentException import InvalidEnvironmentException
-from noora.exceptions.InvalidVersionException import InvalidVersionException
+from noora.exceptions.plugins.InvalidEnvironmentException import InvalidEnvironmentException
+from noora.exceptions.plugins.InvalidVersionException import InvalidVersionException
 
 from noora.connectors.MysqlConnector import MysqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor

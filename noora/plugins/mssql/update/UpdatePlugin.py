@@ -3,7 +3,6 @@ import os
 from noora.version.Version import Version
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
-from noora.exceptions.UnknownVersionException import UnknownVersionException
 
 from noora.system import Ora
 from noora.system import PropertyHelper
@@ -12,7 +11,6 @@ from noora.io.File import File
 from noora.plugins.Plugin import Plugin
 from noora.plugins.Fail import Fail
 
-from noora.connectors.MssqlConnector import MssqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
