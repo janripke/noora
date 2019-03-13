@@ -20,8 +20,8 @@ class GeneratePlugin(MssqlPlugin):
         prepared_args = {}
 
         version = arguments.get('version')
-        Fail.fail_on_no_version(version)
-        prepared_args['version'] = version
+        if version:
+            prepared_args['version'] = version
 
         host = arguments.get('host')
         if not host:

@@ -4,4 +4,4 @@ from noora.connectors.MssqlConnector import MssqlConnector
 
 
 class MssqlPlugin(Plugin):
-    __connectable = MssqlConnector
+    _connectable = MssqlConnector
