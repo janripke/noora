@@ -12,14 +12,6 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 class DropPlugin(MssqlPlugin):
     def _validate_and_prepare(self, properties, arguments):
-        """
-        Prepare to drop database by checking if schema and environment are
-        valid values. Also check that host is not on the block list
-
-        :param host: The hostname to drop on
-        :param schema: Schema to drop
-        :param environment: Environment to drop the database from
-        """
         prepared_args = {}
 
         host = arguments.get('host')
@@ -44,7 +36,15 @@ class DropPlugin(MssqlPlugin):
 
     def execute(self, properties, arguments):
         """
-        Drop a schema in the database for the specified environment
+        Drop a database after checking if schema and environment are
+        valid values. Also check that host is not on the block list
+
+        :param properties: The project properties
+        :param arguments: A dict of {
+            'host': 'The hostname to drop on',
+            'schema': 'Schema to drop',
+            'environment': 'Environment to drop the database from'
+        }
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
