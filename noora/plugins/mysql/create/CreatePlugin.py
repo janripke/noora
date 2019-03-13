@@ -4,50 +4,63 @@ from noora.system import PropertyHelper
 from noora.system import Ora
 from noora.io.File import File
 
-from noora.plugins.Plugin import Plugin
+from noora.plugins.mysql.MysqlPlugin import MysqlPlugin
 from noora.plugins.Fail import Fail
 
-from noora.connectors.MysqlConnector import MysqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
-class CreatePlugin(object):
-    def __init__(self):
-        Plugin.__init__(self, "create", MysqlConnector())
+class CreatePlugin(MysqlPlugin):
+    def _validate_and_prepare(self, properties, arguments):
+        prepared_args = {}
 
-    def parse_args(self, parser, args):
-        parser.add_argument('-h', type=str, help='host', required=True)
-        parser.add_argument('-d', type=str, help='database', required=False)
-        parser.add_argument('-e', type=str, help='environment', required=False)
-        parser.add_argument('-a', type=str, help='alias', required=False)
-
-        return parser.parse_args(args)
-
-    def execute(self, arguments, properties):
-        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
-
-        host = arguments.h
+        host = arguments.get('host')
         Fail.fail_on_no_host(host)
+        prepared_args['host'] = host
 
-        default_databases = properties.get('databases')
-        databases = Ora.nvl(arguments.d, default_databases)
-        Fail.fail_on_invalid_database(arguments.d, properties)
-
+        environment = arguments.get('environment')
         default_environment = properties.get('default_environment')
-        environment = Ora.nvl(arguments.e, default_environment)
-        Fail.fail_on_invalid_environment(arguments.e, properties)
+        environment = Ora.nvl(environment, default_environment)
+        Fail.fail_on_invalid_environment(environment, properties)
+        prepared_args['environment'] = environment
 
-        objects = properties.get('create_objects')
-
-        alias = arguments.a
-        database_aliases = properties.get('database_aliases')
+        alias = arguments.get('alias')
         Fail.fail_on_invalid_alias(alias, properties)
-
         # if an alias is given, only this database will be installed, other databases will be
         # ignored.
         if alias:
             print("using alias: {}".format(alias))
-            databases = [alias]
+            prepared_args['databases'] = [alias]
+        else:
+            database = arguments.get('database')
+            default_databases = properties.get('databases')
+            databases = Ora.nvl(database, default_databases)
+            Fail.fail_on_invalid_database(arguments.d, properties)
+            prepared_args['databases'] = databases
+
+        return prepared_args
+
+    def execute(self, properties, arguments):
+        """
+        Create a new database instance for the latest version
+
+        :param properties: The project properties
+        :param arguments: A dict of {
+            'host': 'The hostname where the database will run',
+            'database': 'The database to create in (optional)',
+            'environment': 'The environment to create the database in (optional),
+            'alias': 'The database alias. If provided, this will overrule
+                the database argument (optional),
+        }
+        """
+        prepared_args = self._validate_and_prepare(properties, arguments)
+
+        host = prepared_args['host']
+        environment = prepared_args['environment']
+        databases = prepared_args['databases']
+        database_aliases = properties.get('database_aliases')
+
+        objects = properties.get('create_objects')
 
         # retrieve the user credentials for this database project.
         users = properties.get('mysql_users')
