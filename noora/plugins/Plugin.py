@@ -2,7 +2,7 @@ class Plugin(object):
     """
     This is the base class to be used by all plugins.
     """
-    __connectable = None
+    _connectable = None
 
     def __init__(self, connectable=None):
         """
@@ -14,12 +14,12 @@ class Plugin(object):
             having to define a new plugin class.
         """
         if connectable:
-            self.__connector = connectable()
+            self._connector = connectable()
         else:
-            self.__connector = self.__connectable()
+            self._connector = self._connectable()
 
     def get_connector(self):
-        return self.__connector()
+        return self._connector()
 
     def _validate_and_prepare(self, properties, arguments):
         """

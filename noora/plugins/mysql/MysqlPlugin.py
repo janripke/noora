@@ -4,4 +4,4 @@ from noora.connectors.MysqlConnector import MysqlConnector
 
 
 class MysqlPlugin(Plugin):
-    __connectable = MysqlConnector
+    _connectable = MysqlConnector
