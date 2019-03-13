@@ -14,7 +14,7 @@ class Fail(object):
     def fail_on_no_host(host):
         if not host:
             raise PluginException("no host was given")
-        elif not issubclass(host, six.string_types):
+        elif not issubclass(type(host), six.string_types):
             raise PluginException("provided host is not a string")
 
     @staticmethod
@@ -28,7 +28,7 @@ class Fail(object):
     def fail_on_no_version(version):
         if not version:
             raise PluginException("no version was given")
-        elif not issubclass(version, six.string_types):
+        elif not issubclass(type(version), six.string_types):
             raise PluginException("version is not a string")
 
     @staticmethod
@@ -42,21 +42,21 @@ class Fail(object):
     def fail_on_no_schema(schema):
         if not schema:
             raise PluginException("no schema name provided")
-        elif not issubclass(schema, six.string_types):
+        elif not issubclass(type(schema), six.string_types):
             raise PluginException("provided schema is not a string")
 
     @staticmethod
     def fail_on_no_database(database):
         if not database:
             raise PluginException("no database name provided")
-        elif not issubclass(database, six.string_types):
+        elif not issubclass(type(database), six.string_types):
             raise PluginException("provided database is not a string")
 
     @staticmethod
     def fail_on_no_user(user):
         if not user:
             raise PluginException("no username provided")
-        elif not issubclass(user, six.string_types):
+        elif not issubclass(type(user), six.string_types):
             raise PluginException("provided username is not a string")
 
     @staticmethod
