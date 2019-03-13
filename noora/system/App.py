@@ -43,7 +43,7 @@ class App(click.MultiCommand):
                         mod = import_module('noora.plugins.{}.{}'.format(technology, p))
                         if hasattr(mod, 'cli'):
                             res.append(p)
-                    except ModuleNotFoundError:
+                    except:
                         pass
             return res
 
@@ -61,7 +61,7 @@ class App(click.MultiCommand):
             # Import the module and return the cli method
             try:
                 mod = import_module('noora.plugins.{}.{}'.format(props['technology'], cmd_name))
-            except ModuleNotFoundError:
+            except:
                 return None
             if hasattr(mod, 'cli'):
                 return mod.cli
