@@ -2,31 +2,39 @@ class Plugin(object):
     """
     This is the base class to be used by all plugins.
     """
-    # The DB connector class. Override on subclass.
-    _connector = None
+    __connectable = None
 
-    def __init__(self, properties, connector):
-        self._properties = properties
-        self._connector = connector()
-        self._arguments = {}
+    def __init__(self, connectable=None):
+        """
+        Initialize the class.
 
-    def set_argument(self, arg, val):
-        self._arguments[arg] = val
-
-    def get_argument(self, arg):
-        return self._arguments[arg]
+        :param connectable: If set, initializes the connectable and sets this
+            as connector on the class instead of the default connectable class.
+            This allows you to override a connector for a technology without
+            having to define a new plugin class.
+        """
+        if connectable:
+            self.__connector = connectable()
+        else:
+            self.__connector = self.__connectable()
 
     def get_connector(self):
-        return self._connector()
+        return self.__connector()
 
-    def prepare(self, *args):
+    def _validate_and_prepare(self, properties, arguments):
         """
-        The prepare method. This should be implemented by subclasses.
-        """
-        raise NotImplementedError("Plugin.prepare should be defined by subclasses")
+        Internal method called by execute to validate and prepare the arguments.
 
-    def execute(self, *args):
+        :param properties: An initialized noora.system.Properties.Properties class
+        :param arguments: A dict containing the arguments for execution
+        """
+        raise NotImplementedError("Plugin._validate_and_prepare should be defined by subclasses")
+
+    def execute(self, properties, arguments):
         """
         The execute method. This should be implemented by subclasses.
+
+        :param properties: An initialized noora.system.Properties.Properties class
+        :param arguments: A dict containing the arguments for execution
         """
         raise NotImplementedError("Plugin.execute should be defined by subclasses")
