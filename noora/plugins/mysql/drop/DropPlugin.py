@@ -4,57 +4,63 @@ from noora.system import PropertyHelper
 from noora.system import Ora
 from noora.io.File import File
 
-from noora.plugins.Plugin import Plugin
+from noora.plugins.mysql.MysqlPlugin import MysqlPlugin
 from noora.plugins.Fail import Fail
-from noora.exceptions.plugins.BlockedHostException import BlockedHostException
 
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
-from noora.connectors.MysqlConnector import MysqlConnector
 
 
-class DropPlugin(object):
-    def __init__(self):
-        Plugin.__init__(self, "drop", MysqlConnector())
+class DropPlugin(MysqlPlugin):
+    def _validate_and_prepare(self, properties, arguments):
+        prepared_args = {}
 
-    def parse_args(self, parser, args):
-        parser.add_argument('-h', type=str, help='host', required=True)
-        parser.add_argument('-d', type=str, help='database', required=False)
-        parser.add_argument('-e', type=str, help='environment', required=False)
-        parser.add_argument('-a', type=str, help='alias', required=False)
-
-        return parser.parse_args(args)
-
-    def get_drop_dir(self, properties):
-        return os.path.join(properties.get('plugin.dir'), 'mysql', 'drop')
-
-    def fail_on_blocked_hosts(self, host, properties):
-        blocked_hosts = properties.get('blocked_hosts')
-        if host in blocked_hosts:
-            raise BlockedHostException("block host {}".format(host))
-
-    def execute(self, arguments, properties):
-        host = arguments.h
+        host = arguments.get('host')
         Fail.fail_on_no_host(host)
-        self.fail_on_blocked_hosts(host, properties)
+        Fail.fail_on_blocked_hosts(host, properties)
+        prepared_args['host'] = host
 
-        default_databases = properties.get('databases')
-        databases = Ora.nvl(arguments.d, default_databases)
-        Fail.fail_on_invalid_database(arguments.d, properties)
-
+        environment = arguments.get('environment')
         default_environment = properties.get('default_environment')
-        environment = Ora.nvl(arguments.e, default_environment)
-        Fail.fail_on_invalid_environment(arguments.e, properties)
+        environment = Ora.nvl(environment, default_environment)
+        Fail.fail_on_invalid_environment(environment, properties)
+        prepared_args['environment'] = environment
 
-        objects = properties.get('drop_objects')
-
-        alias = arguments.a
-        Fail.fail_on_invalid_alias(arguments.a, properties)
-
-        # if an alias is given, only the alias database will be installed, other databases will be
+        alias = arguments.get('alias')
+        Fail.fail_on_invalid_alias(alias, properties)
+        # if an alias is given, only this database will be installed, other databases will be
         # ignored.
         if alias:
-            print("using alias : {}".format(alias))
-            databases = [alias]
+            print("using alias: {}".format(alias))
+            prepared_args['databases'] = [alias]
+        else:
+            database = arguments.get('database')
+            Fail.fail_on_invalid_database(database, properties)
+            default_databases = properties.get('databases')
+            databases = Ora.nvl(database, default_databases)
+            prepared_args['databases'] = databases
+
+        return prepared_args
+
+    def execute(self, properties, arguments):
+        """
+        Drop a database instance
+
+        :param properties: The project properties
+        :param arguments: A dict of {
+            'host': 'The hostname where the database will be dropped on',
+            'database': 'The database to drop (optional)',
+            'environment': 'The environment to drop the database in (optional),
+            'alias': 'The database alias. If provided, this will overrule
+                the database argument (optional),
+        }
+        """
+        prepared_args = self._validate_and_prepare(properties, arguments)
+
+        host = prepared_args['host']
+        environment = prepared_args['environment']
+        databases = prepared_args['databases']
+
+        objects = properties.get('drop_objects')
 
         # retrieve the user credentials for this database project.
         users = properties.get('mysql_users')
@@ -80,7 +86,7 @@ class DropPlugin(object):
             connector = self.get_connector()
 
             for obj in objects:
-                folder = File(os.path.join(self.get_drop_dir(properties), obj))
+                folder = File(os.path.join(properties.get('plugin.dir'), 'mysql', 'drop', obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
             print("database '{}' dropped".format(database))
