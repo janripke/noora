@@ -6,7 +6,6 @@ from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.Version import Version
 
-from noora.system.App import App
 from noora.system import Ora
 from noora.io.File import File
 from noora.io.Files import Files
@@ -15,33 +14,35 @@ from noora.plugins.Plugin import Plugin
 from noora.plugins.Fail import Fail
 
 
-class BuildPlugin(object):
-    def __init__(self):
-        Plugin.__init__(self, "build", None)
+class BuildPlugin(Plugin):
+    def prepare(self, version, database):
+        """
+        Prepare the plugin. Verifies version is valid, and database, if provided.
 
-    def parse_args(self, parser, args):
-        parser.add_argument('-v', type=str, help='version', required=True)
-        parser.add_argument('-d', type=str, help='database', required=False)
+        :param version: The version to package for
+        :param database: The database to package for (optional)
+        """
+        properties = self._properties
 
-        return parser.parse_args(args)
+        Fail.fail_on_no_version(version)
+        Fail.fail_on_unknown_version(version, properties)
+        self.set_argument('version', version)
 
-    def version_statement(self, version, properties):
+        default_databases = properties.get('databases')
+        databases = Ora.nvl(database, default_databases)
+        Fail.fail_on_invalid_database(database, properties)
+        self.set_argument('databases', databases)
+
+    def version_statement(self, version):
+        properties = self._properties
         if version == properties.get("default_version"):
             return properties.get("component_insert_statement")
         return properties.get("component_update_statement")
 
-    def execute(self, arguments, properties):
-        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
-        properties['alter.dir'] = os.path.join(properties.get('current.dir'), 'alter')
-
-        version = arguments.v
-        Fail.fail_on_no_version(version)
-        Fail.fail_on_unknown_version(version, properties)
-
-        default_databases = properties.get('databases')
-        databases = Ora.nvl(arguments.d, default_databases)
-        Fail.fail_on_invalid_database(arguments.d, properties)
-
+    def execute(self):
+        properties = self._properties
+        version = self.get_argument('version')
+        databases = self.get_argument('databases')
         current_dir = properties.get('current.dir')
         component_name = properties.get('component_name')
         target_dir = os.path.join(current_dir, properties.get('component_target_folder'))
@@ -91,7 +92,7 @@ class BuildPlugin(object):
                 zip_handle.write(file.get_url(), target_file.get_url(), ZIP_DEFLATED)
 
         # create the version script in the dat folder
-        version_statement = self.version_statement(version, properties)
+        version_statement = self.version_statement(version)
         version_statement = version_statement.replace('<version>', version)
         version_statement = version_statement.replace('<name>', component_name)
 

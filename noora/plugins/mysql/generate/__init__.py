@@ -8,7 +8,6 @@ from .GeneratePlugin import GeneratePlugin
 @click.option('-v', '--version', required=False)
 @click.pass_obj
 def cli(props, version):
-    pass
     """
     Bootstrap a new version of a MySQL database project
     """
