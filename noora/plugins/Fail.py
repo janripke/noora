@@ -1,6 +1,6 @@
-from noora.exceptions.PluginException import PluginException
-from noora.exceptions.BlockedHostException import BlockedHostException
-from noora.exceptions.UnknownVersionException import UnknownVersionException
+from noora.exceptions.plugins.PluginException import PluginException
+from noora.exceptions.plugins.BlockedHostException import BlockedHostException
+from noora.exceptions.plugins.UnknownVersionException import UnknownVersionException
 
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
@@ -71,3 +71,15 @@ class Fail(object):
         if host in blocked_hosts:
             raise BlockedHostException("blocked host: {}".format(host))
 
+    @staticmethod
+    def fail_on_invalid_host(host, properties):
+        """
+        Verify that host is in host_list and raise an exception if not.
+
+        :param host: The host to look up
+        :param host_list: Properties containing the host list
+        """
+        host_list = properties.get('{}_hosts'.format(properties.get('technology')))
+        if host not in host_list:
+            raise PluginException(
+                "Host {} not in list of valid hosts for this project".format(host))
