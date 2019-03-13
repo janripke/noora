@@ -16,21 +16,6 @@ class GeneratePlugin(MssqlPlugin):
     This class provides generation functionality for MSSQL projects.
     """
     def _validate_and_prepare(self, properties, arguments):
-        """
-        Prepare the plugin. The version is always required, the rest only when
-        generating an entirely new project.
-
-        :param arguments: A dict containing: {
-            'version': '(Initial) project version to generate for'
-            'host': 'The hostname for the new project. If not provided, an
-                upgrade is assumed (optional)'
-            'port': 'Port to connect to (optional)'
-            'database': 'Name of the database (optional)'
-            'schema': 'Name of the schema (optional)'
-            'username': 'Database username (optional)'
-            'password': 'Database password (optional)'
-        }
-        """
         # If no hostname was provided, we only set the version and then return
         prepared_args = {}
 
@@ -92,6 +77,22 @@ class GeneratePlugin(MssqlPlugin):
         return prepared_args
 
     def execute(self, properties, arguments):
+        """
+        Create or upgrade a project. The version is always required, the rest
+        only when generating an entirely new project.
+
+        :param properties: The project properties
+        :param arguments: A dict containing: {
+            'version': '(Initial) project version to generate for'
+            'host': 'The hostname for the new project. If not provided, an
+                upgrade is assumed (optional)'
+            'port': 'Port to connect to (optional)'
+            'database': 'Name of the database (optional)'
+            'schema': 'Name of the schema (optional)'
+            'username': 'Database username (optional)'
+            'password': 'Database password (optional)'
+        }
+        """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
         template_dir = os.path.join(
