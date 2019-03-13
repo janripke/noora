@@ -4,43 +4,55 @@ from noora.system import PropertyHelper
 from noora.system import Ora
 from noora.io.File import File
 
-from noora.plugins.Plugin import Plugin
+from noora.plugins.mssql import MssqlPlugin
 from noora.plugins.Fail import Fail
 
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
-class CreatePlugin(Plugin):
-    def prepare(self, host, schema, environment):
-        """
-        Prepare database creation by checking if schema and environment are valid values.
+class CreatePlugin(MssqlPlugin):
+    def _validate_and_prepare(self, properties, arguments):
+        prepared_args = {}
 
-        :param host: The hostname to create on
-        :param schema: Schema to create
-        :param environment: Environment to create the database in
-        """
-        properties = self._properties
+        # Check host
+        # FIXME: fail on invalid host
+        host = arguments.get('host')
+        Fail.fail_on_no_host(host)
+        prepared_args['host'] = host
 
-        self.set_argument('host', host)
-
+        # Check schema and prepare schemes list
+        schema = arguments.get('schema')
         default_schemes = properties.get('schemes')
         schemes = Ora.nvl(schema, default_schemes)
         Fail.fail_on_invalid_schema(schema, properties)
-        self.set_argument('schemes', schemes)
+        prepared_args['schemes'] = schemes
 
+        # Check environment
+        environment = arguments.get('environment')
         default_environment = properties.get('default_environment')
         environment = Ora.nvl(environment, default_environment)
         Fail.fail_on_invalid_environment(environment, properties)
-        self.set_argument('environment', environment)
+        prepared_args['environment'] = environment
 
-    def execute(self):
+        return prepared_args
+
+    def execute(self, properties, arguments):
         """
         Create a new database instance for the latest version
+
+        :param properties: The project properties
+        :param arguments: A dict of {
+            'host': 'The hostname where the database will run',
+            'schema': 'The schema to create in (optional)',
+            'environment': 'The environment to create the database in (optional),
+        }
         """
-        properties = self._properties
-        host = self.get_argument('host')
-        schemes = self.get_argument('schemes')
-        environment = self.get_argument('environment')
+        prepared_args = self._validate_and_prepare(properties, arguments)
+
+        host = prepared_args['host']
+        schemes = prepared_args['schemes']
+        environment = prepared_args['environment']
+
         database = properties.get('database')
         objects = properties.get('create_objects')
 
