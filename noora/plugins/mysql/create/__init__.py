@@ -11,7 +11,7 @@ from .CreatePlugin import CreatePlugin
 @click.pass_obj
 def cli(props, host, database, environment, alias):
     """
-    Create a new MSSQL database.
+    Create a MySQL database.
     """
     plugin = CreatePlugin()
     plugin.execute(

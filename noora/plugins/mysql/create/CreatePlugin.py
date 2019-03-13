@@ -33,9 +33,9 @@ class CreatePlugin(MysqlPlugin):
             prepared_args['databases'] = [alias]
         else:
             database = arguments.get('database')
+            Fail.fail_on_invalid_database(database, properties)
             default_databases = properties.get('databases')
             databases = Ora.nvl(database, default_databases)
-            Fail.fail_on_invalid_database(arguments.d, properties)
             prepared_args['databases'] = databases
 
         return prepared_args
