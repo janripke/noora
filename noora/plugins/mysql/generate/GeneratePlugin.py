@@ -5,46 +5,49 @@ from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 from noora.version.VersionGuesser import VersionGuesser
 
-from noora.plugins.Plugin import Plugin
+from noora.plugins.mysql.MysqlPlugin import MysqlPlugin
+from noora.plugins.Fail import Fail
 from noora.io.File import File
 from noora.io.Files import Files
 
 
-class GeneratePlugin(Plugin):
+class GeneratePlugin(MysqlPlugin):
     """
     This class provides generation functionality for MySQL projects.
     """
-    def prepare(self, version, host=None, port=None, database=None, username=None, password=None):
-        """
-        Prepare the plugin. The version is always required, the rest only when
-        generating an entirely new project.
+    def _validate_and_prepare(self, properties, arguments):
+        prepared_args = {}
 
-        :param version: (Initial) project version to generate for
-        :param host: The hostname for the new project. If not provided, an
-            upgrade is assumed (optional)
-        :param port: Port to connect to (optional)
-        :param database: Name of the database (optional)
-        :param username: Database username (optional)
-        :param password: Database password (optional)
-        """
         # If no hostname was provided, we only set the version and then return
-        self.set_argument('version', version)
+        version = arguments.get('version')
+        if version:
+            prepared_args['version'] = version
 
+        host = arguments.get('host')
         if not host:
-            return
-
-        properties = self._properties
+            return prepared_args
 
         project_file = properties.get('project.file')
         current_dir = properties.get('current.dir')
 
         # Determine the project's name and create a new directory
+        database = arguments.get['database']
+        Fail.fail_on_no_database(database)
         project = database + "-db"
-        os.mkdir(project)
+
+        # First check the rest of the arguments before we continue
+        port = arguments.get('port')
+        Fail.fail_on_no_port(port)
+        username = arguments.get('username')
+        Fail.fail_on_no_user('username')
+        password = arguments.get('password')
 
         # Get the json project template for this plugin
         template_file = os.path.join(
             properties.get('plugin.dir'), 'mysql', 'generate', 'templates', project_file)
+
+        # Create the project directory
+        os.mkdir(project)
 
         # Parse the template and replace the parameters
         with open(template_file) as fd:
@@ -68,8 +71,25 @@ class GeneratePlugin(Plugin):
         # Update the project properties
         properties.update_config()
 
-    def execute(self):
-        properties = self._properties
+        return prepared_args
+
+    def execute(self, properties, arguments):
+        """
+        Create or upgrade a project. The version is always required, the rest
+        only when generating an entirely new project.
+
+        :param properties: The project properties
+        :param arguments: A dict containing: {
+            'version': '(Initial) project version to generate for'
+            'host': 'The hostname for the new project. If not provided, an
+                upgrade is assumed (optional)'
+            'port': 'Port to connect to (optional)'
+            'database': 'Name of the database (optional)'
+            'username': 'Database username (optional)'
+            'password': 'Database password (optional)'
+        }
+        """
+        prepared_args = self._validate_and_prepare(properties, arguments)
 
         template_dir = os.path.join(
             properties.get('plugin.dir'), 'mysql', 'generate', 'templates')
@@ -79,7 +99,7 @@ class GeneratePlugin(Plugin):
         version_loader.load(properties)
         versions.sort()
         version_guesser = VersionGuesser(properties, versions)
-        next_version = version_guesser.guess(self.get_argument('version')).to_string()
+        next_version = version_guesser.guess(prepared_args.get('version')).to_string()
         version_dir = version_guesser.to_folder(next_version)
 
         # create the version folder

@@ -1,6 +1,5 @@
 import click
 
-from noora.connectors.MysqlConnector import MysqlConnector
 from .GeneratePlugin import GeneratePlugin
 
 
@@ -11,9 +10,8 @@ def cli(props, version):
     """
     Bootstrap a new version of a MySQL database project
     """
-    plugin = GeneratePlugin(props, MysqlConnector)
-    plugin.prepare(version)
-    plugin.execute()
+    plugin = GeneratePlugin()
+    plugin.execute(props, {'version': version})
 
 
 @click.command()
@@ -30,6 +28,11 @@ def cli_outside_scope(props, host, port, database, username, password, version):
     """
     Generate a new MySQL database project
     """
-    plugin = GeneratePlugin(props, MysqlConnector)
-    plugin.prepare(version, host, port, database, username, password)
-    plugin.execute()
+    plugin = GeneratePlugin()
+    plugin.execute(
+        props,
+        {
+            'host': host, 'port': port, 'database': database,
+            'username': username, 'password': password, 'version': version,
+        },
+    )
