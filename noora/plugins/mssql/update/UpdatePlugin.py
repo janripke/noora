@@ -8,44 +8,41 @@ from noora.system import Ora
 from noora.system import PropertyHelper
 from noora.io.File import File
 
-from noora.plugins.Plugin import Plugin
+from noora.plugins.mssql.MssqlPlugin import MssqlPlugin
 from noora.plugins.Fail import Fail
 
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
-class UpdatePlugin(Plugin):
-    def prepare(self, version, host, schema, environment):
-        """
-        Prepare to update database by checking if schema and environment are
-        valid values. Also check that host is not on the block list and that
-        the version to update to is valid
+class UpdatePlugin(MssqlPlugin):
+    def _validate_and_prepare(self, properties, arguments):
+        prepared_args = {}
 
-        :param version: The version to update the database to
-        :param host: The hostname that hosts the database to update
-        :param schema: Schema to update
-        :param environment: Environment to update the database in
-        """
-        properties = self._properties
-
+        version = arguments.get('version')
         Fail.fail_on_no_version(version)
         Fail.fail_on_unknown_version(version, properties)
-        self.set_argument('version', version)
+        prepared_args['version'] = version
 
-        self.set_argument('host', host)
+        host = arguments.get('host')
+        Fail.fail_on_no_host(host)
+        prepared_args['host'] = host
 
+        schema = arguments.get('schema')
         default_schemes = properties.get('schemes')
         schemes = Ora.nvl(schema, default_schemes)
         Fail.fail_on_invalid_schema(schema, properties)
-        self.set_argument('schemes', schemes)
+        prepared_args['schemes'] = schemes
 
+        environment = arguments.get('environment')
         default_environment = properties.get('default_environment')
         environment = Ora.nvl(environment, default_environment)
         Fail.fail_on_invalid_environment(environment, properties)
-        self.set_argument('environment', environment)
+        prepared_args['environment'] = environment
 
-    def fail_on_invalid_environment(self, connector, executor, environment):
-        properties = self._properties
+        return prepared_args
+
+    # FIXME: this doesn't do anything
+    def fail_on_invalid_environment(self, properties, connector, executor, environment):
         plugin_dir = properties.get('plugin.dir')
         properties['environment'] = environment
         script = File(os.path.join(plugin_dir, 'mssql', 'update', 'checkenvironment.sql'))
@@ -55,8 +52,8 @@ class UpdatePlugin(Plugin):
         # if "(Code 1329)" in connector.get_result():
         #     raise InvalidEnvironmentException("invalid environment", environment)
 
-    def fail_on_invalid_version(self, connector, executor, version):
-        properties = self._properties
+    # FIXME: this doesn't do anything either
+    def fail_on_invalid_version(self, properties, connector, executor, version):
         plugin_dir = properties.get('plugin.dir')
 
         versions = Versions()
@@ -73,12 +70,26 @@ class UpdatePlugin(Plugin):
         # if "(Code 1329)" in connector.get_result():
         #     raise InvalidVersionException("invalid version", previous)
 
-    def execute(self):
-        properties = self._properties
-        schemes = self.get_argument('schemes')
-        host = self.get_argument('host')
-        environment = self.get_argument('environment')
-        version = self.get_argument('version')
+    def execute(self, properties, arguments):
+        """
+        Update database after checking if schema and environment are
+        valid values. Also check that host is not on the block list and that
+        the version to update to is valid
+
+        :param properties: The project properties
+        :param arguments: A dict of {
+            'version': 'The version to update the database to',
+            'host': 'The hostname that hosts the database to update'
+            'schema': 'Schema to update (optional)',
+            'environment': 'Environment to update the database in (optional)'
+        }
+        """
+        prepared_args = self._validate_and_prepare(properties, arguments)
+
+        schemes = prepared_args['schemes']
+        host = prepared_args['host']
+        environment = prepared_args['environment']
+        version = prepared_args['version']
         database = properties.get('database')
         objects = properties.get('create_objects')
         version_schema = properties.get('version_schema')

@@ -1,6 +1,5 @@
 import click
 
-from noora.connectors.MssqlConnector import MssqlConnector
 from .UpdatePlugin import UpdatePlugin
 
 
@@ -14,6 +13,8 @@ def cli(props, version, host, schema, environment):
     """
     Create a new MSSQL database.
     """
-    plugin = UpdatePlugin(props, MssqlConnector)
-    plugin.prepare(version, host, schema, environment)
-    plugin.execute()
+    plugin = UpdatePlugin()
+    plugin.execute(
+        props,
+        {'version': version, 'host': host, 'schema': schema, 'environment': environment},
+    )
