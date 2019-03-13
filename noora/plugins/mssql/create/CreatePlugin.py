@@ -18,6 +18,7 @@ class CreatePlugin(MssqlPlugin):
         # FIXME: fail on invalid host
         host = arguments.get('host')
         Fail.fail_on_no_host(host)
+        Fail.fail_on_invalid_host(host, properties)
         prepared_args['host'] = host
 
         # Check schema and prepare schemes list
