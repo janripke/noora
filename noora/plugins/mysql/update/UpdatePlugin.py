@@ -8,27 +8,48 @@ from noora.system import Ora
 from noora.system import PropertyHelper
 from noora.io.File import File
 
-from noora.plugins.Plugin import Plugin
+from noora.plugins.mysql.MysqlPlugin import MysqlPlugin
 from noora.plugins.Fail import Fail
 from noora.exceptions.plugins.InvalidEnvironmentException import InvalidEnvironmentException
 from noora.exceptions.plugins.InvalidVersionException import InvalidVersionException
 
-from noora.connectors.MysqlConnector import MysqlConnector
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
-class UpdatePlugin(object):
-    def __init__(self):
-        Plugin.__init__(self, "update", MysqlConnector())
+class UpdatePlugin(MysqlPlugin):
+    def _validate_and_prepare(self, properties, arguments):
+        prepared_args = {}
 
-    def parse_args(self, parser, args):
-        parser.add_argument('-v', type=str, help='version', required=True)
-        parser.add_argument('-h', type=str, help='host', required=True)
-        parser.add_argument('-d', type=str, help='database', required=False)
-        parser.add_argument('-e', type=str, help='environment', required=False)
-        parser.add_argument('-a', type=str, help='alias', required=False)
+        version = arguments.get('version')
+        Fail.fail_on_no_version(version)
+        Fail.fail_on_unknown_version(version, properties)
+        prepared_args['version'] = version
 
-        return parser.parse_args(args)
+        host = arguments.get('host')
+        Fail.fail_on_no_host(host)
+        prepared_args['host'] = host
+
+        environment = arguments.get('environment')
+        default_environment = properties.get('default_environment')
+        environment = Ora.nvl(environment, default_environment)
+        Fail.fail_on_invalid_environment(environment, properties)
+        prepared_args['environment'] = environment
+
+        alias = arguments.get('alias')
+        Fail.fail_on_invalid_alias(alias, properties)
+        # if an alias is given, only this database will be installed, other databases will be
+        # ignored.
+        if alias:
+            print("using alias: {}".format(alias))
+            prepared_args['databases'] = [alias]
+        else:
+            database = arguments.get('database')
+            Fail.fail_on_invalid_database(database, properties)
+            default_databases = properties.get('databases')
+            databases = Ora.nvl(database, default_databases)
+            prepared_args['databases'] = databases
+
+        return prepared_args
 
     def fail_on_invalid_environment(self, connector, executor, environment, properties):
         plugin_dir = properties.get('plugin.dir')
@@ -56,23 +77,13 @@ class UpdatePlugin(object):
         if "(Code 1329)" in connector.get_result():
             raise InvalidVersionException("invalid version: {}".format(previous))
 
-    def execute(self, arguments, properties):
-        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
-        properties['alter.dir'] = os.path.join(properties.get('current.dir'), 'alter')
+    def execute(self, properties, arguments):
+        prepared_args = self._validate_and_prepare(properties, arguments)
 
-        host = arguments.h
-        Fail.fail_on_no_host(host)
-
-        version = arguments.v
-        Fail.fail_on_no_version(version)
-
-        default_databases = properties.get('databases')
-        databases = Ora.nvl(arguments.d, default_databases)
-        Fail.fail_on_invalid_database(arguments.d, properties)
-
-        default_environment = properties.get('default_environment')
-        environment = Ora.nvl(arguments.e, default_environment)
-        Fail.fail_on_invalid_environment(arguments.e, properties)
+        version = prepared_args['version']
+        host = prepared_args['host']
+        environment = prepared_args['environment']
+        databases = prepared_args['databases']
 
         objects = properties.get('create_objects')
 
@@ -80,17 +91,7 @@ class UpdatePlugin(object):
 
         alter_dir = properties.get('alter.dir')
 
-        Fail.fail_on_unknown_version(version, properties)
-
-        alias = arguments.a
         database_aliases = properties.get('database_aliases')
-        Fail.fail_on_invalid_alias(alias, properties)
-
-        # if an alias is given, only this database will be installed, other databases will be
-        # ignored.
-        if alias:
-            print("using alias :" + alias)
-            databases = [alias]
 
         # retrieve the user credentials for this database project.
         users = properties.get('mysql_users')
