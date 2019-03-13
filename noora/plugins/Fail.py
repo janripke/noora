@@ -1,3 +1,5 @@
+import six
+
 from noora.exceptions.plugins.PluginException import PluginException
 from noora.exceptions.plugins.BlockedHostException import BlockedHostException
 from noora.exceptions.plugins.UnknownVersionException import UnknownVersionException
@@ -12,26 +14,50 @@ class Fail(object):
     def fail_on_no_host(host):
         if not host:
             raise PluginException("no host was given")
+        elif not issubclass(host, six.string_types):
+            raise PluginException("provided host is not a string")
+
+    @staticmethod
+    def fail_on_no_port(port):
+        if not port:
+            raise PluginException("no port was provided")
+        elif type(port) is not int:
+            raise PluginException("provided port is not an integer")
 
     @staticmethod
     def fail_on_no_version(version):
         if not version:
             raise PluginException("no version was given")
-
-    @staticmethod
-    def fail_on_no_command(commands):
-        if not commands:
-            raise PluginException("no command was given")
+        elif not issubclass(version, six.string_types):
+            raise PluginException("version is not a string")
 
     @staticmethod
     def fail_on_no_users(users):
         if not users:
             raise PluginException("no users found")
+        elif type(users) is not list:
+            raise PluginException("provided users is not a list")
 
     @staticmethod
-    def fail_on_invalid_plugin(plugin):
-        if not plugin:
-            raise PluginException("plugin '{}' is not valid for this project".format(plugin))
+    def fail_on_no_schema(schema):
+        if not schema:
+            raise PluginException("no schema name provided")
+        elif not issubclass(schema, six.string_types):
+            raise PluginException("provided schema is not a string")
+
+    @staticmethod
+    def fail_on_no_database(database):
+        if not database:
+            raise PluginException("no database name provided")
+        elif not issubclass(database, six.string_types):
+            raise PluginException("provided database is not a string")
+
+    @staticmethod
+    def fail_on_no_user(user):
+        if not user:
+            raise PluginException("no username provided")
+        elif not issubclass(user, six.string_types):
+            raise PluginException("provided username is not a string")
 
     @staticmethod
     def fail_on_invalid_database(database, properties):
