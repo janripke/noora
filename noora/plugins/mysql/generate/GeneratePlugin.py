@@ -31,7 +31,7 @@ class GeneratePlugin(MysqlPlugin):
         current_dir = properties.get('current.dir')
 
         # Determine the project's name and create a new directory
-        database = arguments.get['database']
+        database = arguments.get('database')
         Fail.fail_on_no_database(database)
         project = database + "-db"
 
