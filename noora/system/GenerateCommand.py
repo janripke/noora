@@ -21,14 +21,16 @@ class GenerateCommand(click.MultiCommand):
                     mod = import_module("noora.plugins.{}.generate".format(f))
                     if hasattr(mod, 'cli_outside_scope'):
                         res.append(f)
-                except ModuleNotFoundError:
+                # Generic handling, Py < 3.6 throws ImportError, >= 3.6 ModuleNotFoundError
+                except:
                     pass
         return res
 
     def get_command(self, ctx, cmd_name):
         try:
             mod = import_module("noora.plugins.{}.generate".format(cmd_name))
-        except ModuleNotFoundError:
+        # Generic handling, Py < 3.6 throws ImportError, >= 3.6 ModuleNotFoundError
+        except:
             return None
 
         if hasattr(mod, 'cli_outside_scope'):
