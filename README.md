@@ -15,8 +15,8 @@ Noora is released under the [GNU General Public License](LICENSE).
 To install Noora, you can either install a release from Github or install from source:
 
 ```
-# Install a release from Github
-$> pip install https://github.com/janripke/noora/archive/1.1.0.zip
+# Install from PyPi
+$> pip install noora
 
 # Clone and install from source
 $> git clone https://github.com/janripke/noora/
@@ -40,11 +40,13 @@ Then, on the command line create your project:
 
 ```
 $> mynoora generate -t=mysql
-database : acme
-host [localhost] :
-username : apps
-password : apps
-version [1.0.0]:
+Host [localhost]:
+Port [3306]:
+Database name: acme
+Database username: apps
+Database password:
+Repeat for confirmation:
+Initial project version [1.0.0]:
 version 1.0.0 created.
 ```
 
