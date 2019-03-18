@@ -77,3 +77,6 @@ class Properties(object):
 
     def __contains__(self, item):
         return item in self.__props
+
+    def keys(self):
+        return self.__props.keys()
