@@ -19,7 +19,7 @@ class Plugin(object):
             self._connector = self._connectable()
 
     def get_connector(self):
-        return self._connector()
+        return self._connector
 
     def _validate_and_prepare(self, properties, arguments):
         """
