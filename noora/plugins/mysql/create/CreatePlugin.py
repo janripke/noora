@@ -16,6 +16,7 @@ class CreatePlugin(MysqlPlugin):
 
         host = arguments.get('host')
         Fail.fail_on_no_host(host)
+        Fail.fail_on_invalid_host(host, properties)
         prepared_args['host'] = host
 
         environment = arguments.get('environment')
