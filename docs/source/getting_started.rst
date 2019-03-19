@@ -3,136 +3,49 @@
 Getting Started
 ===============
 
-.. note:: We're currently in the process of migrating and merging all documentation to Sphinx.
+In this section we'll introduce you to Noora, how to prepare your database for usage with Noora, and outline the Command Line Interface.
 
 Why Noora?
 ----------
 
-To Do.
+To Do:
 
-Database Support
-----------------
+* Philosophy of programmatic databases (integrate parts of white paper)
+* Explanation of interaction with db through command line tools
 
-To Do.
+Database Support and Requirements
+---------------------------------
 
-Installation and basic usage
-----------------------------
+Noora currently supports MySQL and MSSQL databases. Support for Oracle is in the process of being migrated into the new codebase. Support for Teradata and PostgreSQL will follow soon.
 
-To Do.
+For every technology there are some requirements and preparations you must carry out before you can use Noora with your database of choice. We'll explain every technology in turn.
 
-The Project Folder
-------------------
+MySQL
+^^^^^
 
-The generate plugin created the following standard project structure::
+For any host you will run Noora on, the minimal requirement is to have installed the ``mysql`` command line client. Generally on Linux distributions, the package will be called ``mysql-client``.
 
-  acme-db
-  |-- myproject.json
-  `-- create
-      |-- acme
-      |   `-- dat
-      |       `-- dev
-      |           `-- environment.sql
-      |       `-- prod
-      |           `-- environment.sql
-      |       `-- test
-      |           `-- environment.sql
-      |       `-- uat
-      |           `-- environment.sql
-      |       `-- version.sql
-      |   `-- ddl
-      |       `-- cst
-      |       `-- fct
-      |           `-- get_property.sql
-      |       `-- idx
-      |           `-- application_properties.sql
-      |       `-- prc
-      |       `-- tab
-      |           `-- application_properties.sql
-      |       `-- trg
-      |           `-- application_properties_bi.sql
-      |           `-- application_properties_bu.sql
-      |       `-- vw
+On your database instance, all that is required is a user that has sufficient rights to interact with the database you want Noora to manage for you. You provide login details for this user when you create the project later on.
 
-You will also notice that the generate plugin created the acme directory.
-This folder is called the database folder.
+Suppose you want to run your project inside a database called ``acme``, using a user called ``apps``, with your database running on the local machine, you need to run the following commands::
 
-The create/acme/dat directory contains the project data scripts.
-The create/acme/ddl directory contains the source code.
-The myproject.json file in the root of the database project is the project's project configuration file.
+  $> mysql -uroot
+  mysql> create database acme;
+  mysql> create user apps@'localhost' identified by 'secret';
+  mysql> grant all on acme.* to apps@'localhost';
+  mysql> -- This is currently required to be able to drop functions and procedures, to be fixed
+  mysql> grant select, delete on mysql.proc to apps@'localhost';
+  mysql> flush privileges;
 
 
-myproject.json
---------------
-The myproject.json file is the core of a project's configuration in noora. It is a single configuration file that contains the majority of information required to build a project in just the way you want.
-This project's myproject.json looks like this::
+.. NOTE::
 
-  {
-    "databases": [
-      "acme"
-    ],
-    "aliasses": [],
-    "database_aliases" : [],
-    "mysql_users": [
-      [
-        "localhost",
-        "acme",
-        "apps",
-        "apps"
-      ]
-    ],
-    "default_environment": "dev",
-    "mysql_hosts": [
-      "localhost"
-    ],
-    "blocked_hosts": [],
-    "version_database": "acme",
-    "excluded_extensions": [
-      "bak",
-      "~",
-      "pyc",
-      "log"
-    ],
-    "excluded_folders": [
-      ".svn",
-      "hotfix"
-    ],
-    "excluded_files": [
-      "install.sql"
-    ],
-    "environments": [
-      "dev",
-      "test",
-      "uat",
-      "prod"
-    ],
-    "version_update_statement": "update application_properties set value='<version>' where name='application.version';",
-    "version_insert_statement": "insert into application_properties(name,value) values ('application.version','<version>');",
-    "version_select_statement": "select value into l_value from application_properties where name='application.version';",
-    "environment_insert_statement": "insert into application_properties(name,value) values ('application.environment','<environment>');",
-    "environment_select_statement": "select value into l_value from application_properties where name='application.environment';",
-    "default_version": "1.0.0",
-    "drop_objects": [
-      "vw",
-      "trg",
-      "tab",
-      "prc",
-      "fct",
-      "idx"
-    ],
-    "create_objects": [
-      "tab",
-      "cst",
-      "fct",
-      "prc",
-      "vw",
-      "trg",
-      "idx"
-    ],
-    "plugins": [
-      "noora.plugins.mysql.generate.GeneratePlugin.GeneratePlugin",
-      "noora.plugins.mysql.help.HelpPlugin.HelpPlugin",
-      "noora.plugins.mysql.drop.DropPlugin.DropPlugin",
-      "noora.plugins.mysql.create.CreatePlugin.CreatePlugin",
-      "noora.plugins.mysql.update.UpdatePlugin.UpdatePlugin"
-    ]
-  }
+  Procedures and functions in MySQL are manipulated through mysql scripting and queries, but the ``PREPARE`` syntax does not support dropping these objects at this moment, making removing them directly from ``mysql.proc`` the only option. For this reason, your database user needs select and delete rights on this table. We are working on a solution for this.
+
+
+Microsoft SQL Server
+^^^^^^^^^^^^^^^^^^^^
+
+
+The Noora CLI
+-------------

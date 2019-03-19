@@ -36,7 +36,7 @@ We'll set up a MySQL project, so first make sure to create a user and database f
 
   $> mysql -uroot
   mysql> create database acme;
-  mysql> create user apps@'localhost' identified by 'apps';
+  mysql> create user apps@'localhost' identified by 'secret';
   mysql> grant all on acme.* to apps@'localhost';
   mysql> -- This is currently required to be able to drop functions and procedures, to be fixed
   mysql> grant select, delete on mysql.proc to apps@'localhost';
