@@ -115,6 +115,7 @@ Documentation
    :maxdepth: 2
 
    getting_started
+   working_with_projects
    plugin_reference
 
 Miscellaneous
