@@ -3,10 +3,15 @@
 Working with Projects
 =====================
 
-The Project Folder
-------------------
+As explained in :ref:`getting_started`, when you run the Noora CLI, there are two contexts; one where you are outside a project directory and can generate new projects, the other context is where you work inside a project directory.
 
-The generate plugin created the following standard project structure::
+In this section we'll explain the project directory structure and how versioning works inside the project. Next we'll explain the ``myproject.json`` settings file and its directives.
+
+
+The Project Directory
+---------------------
+
+The MySQL generate plugin created the following standard project structure::
 
   acme-db
   |-- myproject.json
@@ -23,7 +28,6 @@ The generate plugin created the following standard project structure::
       |           `-- environment.sql
       |       `-- version.sql
       |   `-- ddl
-      |       `-- cst
       |       `-- fct
       |           `-- get_property.sql
       |       `-- idx
@@ -36,18 +40,31 @@ The generate plugin created the following standard project structure::
       |           `-- application_properties_bu.sql
       |       `-- vw
 
-You will also notice that the generate plugin created the acme directory.
-This folder is called the database folder.
+At the top level resides the project settings file along with the ``create`` directory. This directory contains the initial version of your project and will always be looked in first when deploying to an empty database.
 
-The create/acme/dat directory contains the project data scripts.
-The create/acme/ddl directory contains the source code.
-The myproject.json file in the root of the database project is the project's project configuration file.
+Inside the create directory you'll find another directory, one for every database that is managed by your project. If you just generated your project, there'll be only one database, in our example called "acme".
+
+In this example, there are two subdirectories: `dat` and `ddl`. The `dat` directory contains static data for your database. For example, per environment you deploy your database to you can set environment specific settings.
+
+In the `ddl` directory, the real source code for your database is stored, separated by object type, for example:
+
+* `fct` - Database functions;
+* `idx` - Index definitions;
+* `prc` - Stored procedures;
+* `tab` - Table definitions;
+* `trg` - Triggers;
+
+.. NOTE::
+
+  The `ddl` subdirectories vary per plugin and are documented in :ref:`plugin_reference`.
 
 
-myproject.json
---------------
-The myproject.json file is the core of a project's configuration in noora. It is a single configuration file that contains the majority of information required to build a project in just the way you want.
-This project's myproject.json looks like this::
+Project Settings
+----------------
+
+The ``myproject.json`` file is the core of a project's configuration in noora. It is a single configuration file that contains the majority of information required to build a project the way you want.
+
+An example configuration for MySQL looks like this::
 
   {
     "databases": [
@@ -119,3 +136,9 @@ This project's myproject.json looks like this::
       "noora.plugins.mysql.update.UpdatePlugin.UpdatePlugin"
     ]
   }
+
+
+Generic Configuration Directives
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+FIXME
