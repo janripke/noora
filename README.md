@@ -39,7 +39,7 @@ mysql> flush privileges;
 Then, on the command line create your project:
 
 ```
-$> mynoora generate -t=mysql
+$ mynoora generate -t=mysql
 Host [localhost]:
 Port [3306]:
 Database name: acme
@@ -53,15 +53,15 @@ version 1.0.0 created.
 Add a table and some data to your newly created project:
 
 ```
-$> echo "CREATE TABLE hello ( value VARCHAR(128) );" > acme-db/create/acme/ddl/tab/hello.sql
-$> echo "INSERT INTO hello SET value='world';" > acme-db/create/acme/dat/hello.sql
+$ echo "CREATE TABLE hello ( value VARCHAR(128) );" > acme-db/create/acme/ddl/tab/hello.sql
+$ echo "INSERT INTO hello SET value='world';" > acme-db/create/acme/dat/hello.sql
 ```
 
 Now, let's deploy the project and see what happens:
 
 ```
-$> cd acme-db
-$> mynoora create -h=localhost
+$ cd acme-db
+$ mynoora create -h=localhost
 creating database 'acme' on host 'localhost' using environment 'dev'
 /home/niels/tmp/acme-db/create/acme/ddl/tab/application_properties.sql
 /home/niels/tmp/acme-db/create/acme/ddl/tab/hello.sql
@@ -78,7 +78,7 @@ database 'acme' created.
 You can verify that the table you added along with some default data was deployed, and that the current version of your database model is 1.0.0 in the 'dev' environment: 
 
 ```
-$> mysql -uapps -p acme
+$ mysql -uapps -p acme
 Enter password:
 mysql> select * from hello;
 +--------+
@@ -100,7 +100,7 @@ mysql> select get_property('application.version');
 That's it! To learn more about Noora projects, check out http://noora.readthedocs.org/getting-started. For now, you can clear out your database like this::
 
 ```
-$> mynoora drop -h=localhost
+$ mynoora drop -h=localhost
 dropping database 'acme' on host 'localhost' using environment 'dev'
 /home/niels/projects/noora/noora/plugins/mysql/drop/vw/drop_views.sql
 /home/niels/projects/noora/noora/plugins/mysql/drop/tab/drop_tables.sql

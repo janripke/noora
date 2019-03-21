@@ -25,12 +25,12 @@ Quick Start
 To install Noora, you can either install a release from Github or install from source::
 
   # Install from PyPi
-  $> pip install noora
+  $ pip install noora
 
   # Clone and install from source
-  $> git clone https://github.com/janripke/noora/
-  $> cd noora
-  $> pip install .
+  $ git clone https://github.com/janripke/noora/
+  $ cd noora
+  $ pip install .
 
 We'll set up a MySQL project, so first make sure to create a user and database for your project::
 
@@ -44,7 +44,7 @@ We'll set up a MySQL project, so first make sure to create a user and database f
 
 Then, on the command line create your project::
 
-  $> mynoora generate -t=mysql
+  $ mynoora generate -t=mysql
   Host [localhost]:
   Port [3306]:
   Database name: acme
@@ -56,13 +56,13 @@ Then, on the command line create your project::
 
 Add a table and some data to your newly created project::
 
-  $> echo "CREATE TABLE hello ( value VARCHAR(128) );" > acme-db/create/acme/ddl/tab/hello.sql
-  $> echo "INSERT INTO hello SET value='world';" > acme-db/create/acme/dat/hello.sql
+  $ echo "CREATE TABLE hello ( value VARCHAR(128) );" > acme-db/create/acme/ddl/tab/hello.sql
+  $ echo "INSERT INTO hello SET value='world';" > acme-db/create/acme/dat/hello.sql
 
 Now, let's deploy the project and see what happens::
 
-  $> cd acme-db
-  $> mynoora create -h=localhost
+  $ cd acme-db
+  $ mynoora create -h=localhost
   creating database 'acme' on host 'localhost' using environment 'dev'
   /home/niels/tmp/acme-db/create/acme/ddl/tab/application_properties.sql
   /home/niels/tmp/acme-db/create/acme/ddl/tab/hello.sql
@@ -77,7 +77,7 @@ Now, let's deploy the project and see what happens::
 
 You can verify that the table you added along with some default data was deployed, and that the current version of your database model is 1.0.0 in the 'dev' environment::
 
-  $> mysql -uapps -p acme
+  $ mysql -uapps -p acme
   Enter password:
   mysql> select * from hello;
   +--------+
@@ -95,9 +95,9 @@ You can verify that the table you added along with some default data was deploye
   +-------------------------------------+
   1 row in set (0.00 sec)
 
-That's it! To learn more about Noora projects, check out :ref:`getting_started`. For now, you can clear out your database like this::
+That's it! To learn more about the supported technologies and preparing your database, read :ref:`getting_started`. To learn about Noora projects, check out :ref:`working_with_projects`. For now, you can clear out your database like this::
 
-  $> mynoora drop -h=localhost
+  $ mynoora drop -h=localhost
   dropping database 'acme' on host 'localhost' using environment 'dev'
   /home/niels/projects/noora/noora/plugins/mysql/drop/vw/drop_views.sql
   /home/niels/projects/noora/noora/plugins/mysql/drop/tab/drop_tables.sql
@@ -112,7 +112,7 @@ Documentation
 =============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    getting_started
    working_with_projects

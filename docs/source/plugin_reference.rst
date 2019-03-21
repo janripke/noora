@@ -1,3 +1,5 @@
+.. _plugin_reference:
+
 Plugin Reference
 ================
 
