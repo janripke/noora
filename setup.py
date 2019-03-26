@@ -90,7 +90,7 @@ setup(
                             'plugins/mssql/drop/typ/*.sql',
                             'plugins/mssql/drop/vw/*.sql',
                             'plugins/mssql/update/*.sql']},
-    install_requires=['click'],
+    install_requires=['six', 'click'],
     entry_points={
         'console_scripts': [
             'mynoora=noora.mynoora_cli:main',
