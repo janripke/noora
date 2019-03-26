@@ -4,7 +4,7 @@ from noora.system import PropertyHelper
 from noora.system import Ora
 from noora.io.File import File
 
-from noora.plugins.mssql import MssqlPlugin
+from noora.plugins.mssql.MssqlPlugin import MssqlPlugin
 from noora.plugins.Fail import Fail
 
 from noora.connectors.ConnectionExecutor import ConnectionExecutor
