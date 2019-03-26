@@ -119,8 +119,8 @@ class UpdatePlugin(MssqlPlugin):
             # database_folder = PropertyHelper.get_database_folder(database, database_aliases)
 
             if schema == version_schema:
-                self.fail_on_invalid_environment(connector, executor, environment)
-                self.fail_on_invalid_version(connector, executor, version)
+                self.fail_on_invalid_environment(properties, connector, executor, environment)
+                self.fail_on_invalid_version(properties, connector, executor, version)
 
             for obj in objects:
                 # global ddl objects
