@@ -73,7 +73,7 @@ class DropPlugin(MssqlPlugin):
             executor = PropertyHelper.get_mssql_properties(users, host, schema)
             executor['database'] = database
 
-            connector = DropPlugin.get_connector()
+            connector = self.get_connector()
 
             for obj in objects:
                 folder = File(os.path.join(properties.get('plugin.dir'), 'mssql', 'drop', obj))
