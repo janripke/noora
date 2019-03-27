@@ -1,18 +1,18 @@
 import click
 
-from noora.connectors.MssqlConnector import MssqlConnector
 from .RecreatePlugin import RecreatePlugin
 
 
 @click.command()
-@click.option('-h', '--host', required=True, prompt=True, default='localhost')
-@click.option('-s', '--schema', required=False, prompt='Schema name')
-@click.option('-s', '--environment', required=False, prompt='Environment')
+@click.option('-h', '--host', required=True, default='localhost')
+@click.option('-s', '--schema', required=False, help='Schema name')
+@click.option('-e', '--environment', required=False, help='Environment')
+@click.option('-v', '--version', required=False, help='The version to recreate')
 @click.pass_obj
-def cli(props, host, schema, environment):
+def cli(props, host, schema, environment, version):
     """
     Create a new MSSQL database.
     """
-    plugin = RecreatePlugin(props, MssqlConnector)
-    plugin.prepare(host, schema, environment)
-    plugin.execute()
+    plugin = RecreatePlugin()
+    plugin.execute(
+        props, {'host': host, 'schema': schema, 'environment': environment, 'version': version})
