@@ -7,7 +7,7 @@ from .UpdatePlugin import UpdatePlugin
 @click.option('-v', '--version', required=False)
 @click.option('-h', '--host', required=True, default='localhost')
 @click.option('-s', '--schema', required=False, help='Schema name')
-@click.option('-s', '--environment', required=False, help='Environment')
+@click.option('-e', '--environment', required=False, help='Environment')
 @click.pass_obj
 def cli(props, version, host, schema, environment):
     """
