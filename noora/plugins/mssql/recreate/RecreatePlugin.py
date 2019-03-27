@@ -1,134 +1,60 @@
-import os
-import argparse
-
 from noora.version.Versions import Versions
 from noora.version.VersionLoader import VersionLoader
 
 from noora.system.ClassLoader import ClassLoader
 
-from noora.plugins.Plugin import Plugin
-
-from noora.connectors.MssqlConnector import MssqlConnector
+from noora.plugins.mssql.MssqlPlugin import MssqlPlugin
 
 
-class RecreatePlugin(object):
-    def __init__(self):
-        Plugin.__init__(self, "recreate", MssqlConnector())
+class RecreatePlugin(MssqlPlugin):
+    def _validate_and_prepare(self, properties, arguments):
+        """
+        Prepare the version list here. All other preparation is handled by the
+        plugins in the chain.
+        """
+        prepared_args = {
+            'default_version': properties.get('default_version'),
+            'update_versions': [],
+        }
+        target_version = arguments.get('version')
 
-    def parse_args(self, parser, args):
-        parser.add_argument('-h', type=str, help='host', required=False)
-        parser.add_argument('-s', type=str, help='schema', required=False)
-        parser.add_argument('-e', type=str, help='environment', required=False)
-        parser.add_argument('-v', type=str, help='version', required=False)
-        parser.add_argument('-a', type=str, help='alias', required=False)
-        return parser.parse_args(args)
+        # If the target version is the default, we stop here because create takes care of this
+        if prepared_args['default_version'] == target_version:
+            return prepared_args
 
-    def find_plugin(self, properties, name):
-        plugins = properties.get('plugins')
-        for plugin in plugins:
-            p = ClassLoader.find(plugin)
-            if name.lower() == p.get_type().lower():
-                return p
-
-    def execute(self, arguments, properties):
-        properties['create.dir'] = os.path.join(properties.get('current.dir'), 'create')
-        properties['alter.dir'] = os.path.join(properties.get('current.dir'), 'alter')
-
-        # find the drop plugin.
-        plugin = self.find_plugin(properties, 'drop')
-
-        # create the drop arguments and execute the plugin
-        parser = argparse.ArgumentParser(add_help=False)
-        parser.add_argument('-h', type=str, help='host', required=True)
-        parser.add_argument('-s', type=str, help='schema', required=False)
-        parser.add_argument('-e', type=str, help='environment', required=False)
-        parser.add_argument('-a', type=str, help='alias', required=False)
-
-        commands = []
-        if arguments.h:
-            commands.append('-h='+arguments.h)
-
-        if arguments.s:
-            commands.append('-s='+arguments.d)
-
-        if arguments.e:
-            commands.append('-e='+arguments.e)
-
-        if arguments.a:
-            commands.append('-a='+arguments.a)
-
-        drop_arguments = parser.parse_args(commands)
-        plugin.execute(drop_arguments, properties)
-
-        # find the create plugin.
-        plugin = self.find_plugin(properties, 'create')
-
-        # create the create arguments and execute the plugin
-        parser = argparse.ArgumentParser(add_help=False)
-        parser.add_argument('-h', type=str, help='host', required=True)
-        parser.add_argument('-s', type=str, help='schema', required=False)
-        parser.add_argument('-e', type=str, help='environment', required=False)
-        parser.add_argument('-a', type=str, help='alias', required=False)
-
-        commands = []
-        if arguments.h:
-            commands.append('-h='+arguments.h)
-
-        if arguments.s:
-            commands.append('-s='+arguments.s)
-
-        if arguments.e:
-            commands.append('-e='+arguments.e)
-
-        if arguments.a:
-            commands.append('-a='+arguments.a)
-
-        create_arguments = parser.parse_args(commands)
-        plugin.execute(create_arguments, properties)
-
+        # Here we determine the initial version
         versions = Versions()
         version_loader = VersionLoader(versions)
         version_loader.load(properties)
         versions.sort()
 
-        # retrieve the update versions
-        default_version = properties.get('default_version')
-        update_versions = []
+        # retrieve all versions
         for version in versions.list():
-            if version.get_value() == default_version and arguments.v == version.get_value():
-                break
-            if version.get_value() == arguments.v:
-                update_versions.append(version.get_value())
+            # First add this version if it's not the default one, because that's handled by create
+            if version.get_value() != prepared_args['default_version']:
+                prepared_args['update_versions'].append(version.get_value())
+
+            # Then if we reached the target version, we break
+            if version.get_value() == target_version:
                 break
 
-            if version.get_value() != default_version:
-                update_versions.append(version.get_value())
+        return prepared_args
 
-        # find the update plugin.
-        plugin = self.find_plugin(properties, 'update')
+    def execute(self, properties, arguments):
+        prepared_args = self._validate_and_prepare(properties, arguments)
+
+        # find and execute the drop plugin.
+        plugin = ClassLoader.load_class(ClassLoader.find_plugin(properties['technology'], 'drop'))
+        plugin.execute(properties, arguments)
+
+        # find and execute the create plugin.
+        plugin = ClassLoader.load_class(ClassLoader.find_plugin(properties['technology'], 'create'))
+        plugin.execute(properties, arguments)
+
+        # find and execute the create plugin.
+        plugin = ClassLoader.load_class(ClassLoader.find_plugin(properties['technology'], 'update'))
 
         # create the arguments and execute the plugin
-        for version in update_versions:
-            parser = argparse.ArgumentParser(add_help=False)
-            parser.add_argument('-h', type=str, help='host', required=True)
-            parser.add_argument('-s', type=str, help='schema', required=False)
-            parser.add_argument('-e', type=str, help='environment', required=False)
-            parser.add_argument('-v', type=str, help='version', required=True)
-
-            commands = []
-            if arguments.h:
-                commands.append('-h='+arguments.h)
-
-            if arguments.s:
-                commands.append('-s='+arguments.s)
-
-            if arguments.e:
-                commands.append('-e='+arguments.e)
-
-            if arguments.a:
-                commands.append('-a='+arguments.a)
-
-            commands.append('-v='+version)
-
-            update_arguments = parser.parse_args(commands)
-            plugin.execute(update_arguments, properties)
+        for version in prepared_args['update_versions']:
+            arguments['version'] = version
+            plugin.execute(properties, arguments)
