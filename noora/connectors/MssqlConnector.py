@@ -7,7 +7,24 @@ from noora.connectors.Connector import Connector
 
 
 class MssqlConnector(Connector):
+    """
+    Connector for Microsoft SQL server.
+    """
     def execute(self, executable, properties):
+        """
+        Execute the script provided by `executable` on the target server.
+
+        :param executable: A dict containing the following parameters: {
+            'host': 'The address of the server to connect to',
+            'port': 'Server port to connect to',
+            'database': 'The database name',
+            'schema': 'The schema to use',
+            'username': 'Database username',
+            'password': 'Database user password',
+            'script': 'Path to the script to execute',
+        }
+        :param properties: A Noora project properties instance
+        """
         script = executable['script']
 
         cp = dict()
