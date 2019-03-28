@@ -1,5 +1,3 @@
-import os
-
 from noora.io.Filters import Filters
 from noora.io.File import File
 from noora.io.Files import Files
