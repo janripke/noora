@@ -10,6 +10,10 @@ from noora.version.Version import Version
 
 
 class Fail(object):
+    """
+    Class providing assertion methods for various attributes.
+    PluginExceptions will be raised when an assertion fails.
+    """
     @staticmethod
     def fail_on_no_host(host):
         if not host:
