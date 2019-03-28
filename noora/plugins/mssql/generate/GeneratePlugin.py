@@ -83,14 +83,14 @@ class GeneratePlugin(MssqlPlugin):
 
         :param properties: The project properties
         :param arguments: A dict containing: {
-            'version': '(Initial) project version to generate for'
+            'version': '(Initial) project version to generate for',
             'host': 'The hostname for the new project. If not provided, an
-                upgrade is assumed (optional)'
-            'port': 'Port to connect to (optional)'
-            'database': 'Name of the database (optional)'
-            'schema': 'Name of the schema (optional)'
-            'username': 'Database username (optional)'
-            'password': 'Database password (optional)'
+                upgrade is assumed (optional)',
+            'port': 'Port to connect to (optional)',
+            'database': 'Name of the database (optional)',
+            'schema': 'Name of the schema (optional)',
+            'username': 'Database username (optional)',
+            'password': 'Database password (optional)',
         }
         """
         prepared_args = self._validate_and_prepare(properties, arguments)

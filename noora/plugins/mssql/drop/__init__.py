@@ -10,7 +10,7 @@ from .DropPlugin import DropPlugin
 @click.pass_obj
 def cli(props, host, schema, environment):
     """
-    Create a new MSSQL database.
+    Drop (empty) an MSSQL database.
     """
     plugin = DropPlugin()
     plugin.execute(props, {'host': host, 'schema': schema, 'environment': environment})

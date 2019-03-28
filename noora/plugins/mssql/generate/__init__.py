@@ -8,7 +8,7 @@ from .GeneratePlugin import GeneratePlugin
 @click.pass_obj
 def cli(props, version):
     """
-    Bootstrap a new version of a MSSQL database project
+    Bootstrap a new version of an MSSQL database project
     """
     plugin = GeneratePlugin()
     plugin.execute(props, {'version': version})

@@ -11,7 +11,7 @@ from .UpdatePlugin import UpdatePlugin
 @click.pass_obj
 def cli(props, version, host, schema, environment):
     """
-    Create a new MSSQL database.
+    Update an MSSQL database to the specified version.
     """
     plugin = UpdatePlugin()
     plugin.execute(
