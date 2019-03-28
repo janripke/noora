@@ -1,6 +1,6 @@
 import click
 
-from .CreatePlugin import CreatePlugin
+from noora.plugins.mssql.create.CreatePlugin import CreatePlugin
 
 
 @click.command()
@@ -10,7 +10,7 @@ from .CreatePlugin import CreatePlugin
 @click.pass_obj
 def cli(props, host, schema, environment):
     """
-    Create a new MSSQL database.
+    Initialize an MSSQL database at the default version.
     """
     plugin = CreatePlugin()
     plugin.execute(props, {'host': host, 'schema': schema, 'environment': environment})

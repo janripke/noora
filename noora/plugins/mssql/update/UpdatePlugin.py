@@ -81,7 +81,7 @@ class UpdatePlugin(MssqlPlugin):
             'version': 'The version to update the database to',
             'host': 'The hostname that hosts the database to update'
             'schema': 'Schema to update (optional)',
-            'environment': 'Environment to update the database in (optional)'
+            'environment': 'Environment to update the database in (optional)',
         }
         """
         prepared_args = self._validate_and_prepare(properties, arguments)

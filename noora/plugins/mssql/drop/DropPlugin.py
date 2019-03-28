@@ -37,7 +37,7 @@ class DropPlugin(MssqlPlugin):
     def execute(self, properties, arguments):
         """
         Drop a database after checking if schema and environment are
-        valid values. Also check that host is not on the block list
+        valid values. Also check that host is not on the block list.
 
         :param properties: The project properties
         :param arguments: A dict of {

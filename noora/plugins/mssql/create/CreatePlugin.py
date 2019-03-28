@@ -39,7 +39,7 @@ class CreatePlugin(MssqlPlugin):
 
     def execute(self, properties, arguments):
         """
-        Create a new database instance for the latest version
+        Create a new database instance for the latest version.
 
         :param properties: The project properties
         :param arguments: A dict of {

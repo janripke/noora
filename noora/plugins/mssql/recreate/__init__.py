@@ -11,7 +11,7 @@ from .RecreatePlugin import RecreatePlugin
 @click.pass_obj
 def cli(props, host, schema, environment, version):
     """
-    Create a new MSSQL database.
+    Drop and recreate an MSSQL database to the specified or latest version.
     """
     plugin = RecreatePlugin()
     plugin.execute(
