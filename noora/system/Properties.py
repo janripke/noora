@@ -55,9 +55,9 @@ class Properties(object):
             self['alter.dir'] = os.path.join(self['current.dir'], 'alter')
             self['create.dir'] = os.path.join(self['current.dir'], 'create')
 
-            # Guess the database technology
-            # FIXME
-            self['technology'] = self['plugins'][0].split(".")[2]
+            # Guess the database technology if not present
+            if 'technology' not in self:
+                self['technology'] = self['plugins'][0].split(".")[2]
 
     def __getitem__(self, item):
         # Do not catch exceptions here, but upstream
