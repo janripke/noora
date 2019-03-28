@@ -3,6 +3,9 @@ from noora.exceptions.ConnectorException import ConnectorException
 
 
 class Connector(Connectable):
+    """
+    Connector base class. All technology connectors should inherit this.
+    """
     def __init__(self):
         self.__result = None
 
