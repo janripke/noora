@@ -11,7 +11,7 @@ from .CreatePlugin import CreatePlugin
 @click.pass_obj
 def cli(props, host, database, environment, alias):
     """
-    Create a MySQL database.
+    Initialize a MySQL database at the default version.
     """
     plugin = CreatePlugin()
     plugin.execute(

@@ -78,6 +78,20 @@ class UpdatePlugin(MysqlPlugin):
             raise InvalidVersionException("invalid version: {}".format(previous))
 
     def execute(self, properties, arguments):
+        """
+        Update database after checking if schema and environment are
+        valid values. Also check that host is not on the block list and that
+        the version to update to is valid
+
+        :param properties: The project properties
+        :param arguments: A dict of {
+            'version': 'The version to update the database to',
+            'host': 'The hostname that hosts the database to update'
+            'database': 'Database to update (optional)',
+            'alias': 'Alias to use (optional)',
+            'environment': 'Environment to update the database in (optional)',
+        }
+        """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
         version = prepared_args['version']
