@@ -69,11 +69,5 @@
     "idx",
     "gra"
   ],
-  "plugins": [
-    "noora.plugins.mssql.generate.GeneratePlugin.GeneratePlugin",
-    "noora.plugins.mssql.drop.DropPlugin.DropPlugin",
-    "noora.plugins.mssql.create.CreatePlugin.CreatePlugin",
-    "noora.plugins.mssql.update.UpdatePlugin.UpdatePlugin",
-    "noora.plugins.mssql.recreate.RecreatePlugin.RecreatePlugin"
-  ]
+  "technology": "mssql"
 }
