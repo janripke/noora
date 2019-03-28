@@ -29,14 +29,12 @@ On your database instance, all that is required is a user that has sufficient ri
 
 Suppose you want to run your project inside a database called ``acme``, using a user called ``apps``, with your database running on the local machine, you need to run the following commands::
 
-  $> mysql -uroot
-  mysql> create database acme;
-  mysql> create user apps@'localhost' identified by 'secret';
-  mysql> grant all on acme.* to apps@'localhost';
-  mysql> -- This is currently required to be able to drop functions and procedures, to be fixed
-  mysql> grant select, delete on mysql.proc to apps@'localhost';
-  mysql> flush privileges;
-
+  CREATE DATABASE acme
+  CREATE USER apps@'localhost' IDENTIFIED BY 'Welcome123';
+  GRANT ALL ON acme.* TO apps@'localhost';
+  -- This is currently required to be able to drop functions and procedures, to be fixed
+  GRANT SELECT, DELETE ON mysql.proc TO apps@'localhost';
+  FLUSH PRIVILEGES;
 
 .. NOTE::
 
@@ -53,11 +51,21 @@ To use Noora with Microsoft SQL Server, having the ``sqlcmd`` commandline utilit
 
 Next, you'll need to configure all schemas you want to manage through Noora with one user that has full access to these schemas::
 
-  FIXME: add TL-SQL queries to assign rights
+  -- First create a login on the DB instance. In this case we use a SQL server login
+  -- but other login types are of course possible
+  CREATE LOGIN apps WITH PASSWORD='Welcome123';
+  -- Make sure the target database is selected
+  USE acme;
+  -- Now create a database user for the login you just created
+  CREATE USER apps FOR LOGIN apps;
+  -- Create the target schema and assign the required rights to the db user
+  CREATE SCHEMA acme AUTHORIZATION apps GRANT CONTROL ON SCHEMA::acme TO apps;
+  ALTER USER apps with DEFAULT_SCHEMA=acme;
+  ALTER ROLE db_ddladmin ADD MEMBER apps;
 
 .. NOTE::
 
-  Noora's Microsoft SQL plugins support managing multiple schemas in your database. However, the generate plugin does not yet support creating versions for multiple schemas. This will be implemented soon.
+  Noora's Microsoft SQL plugins support managing multiple schemas in your database. However, the generate plugin does not yet support selecting a specific schema outside of the user's default schema. We will implement a fix for this soon.
 
 
 The Noora CLI
@@ -124,11 +132,13 @@ There are two ways to create a project: interactive or using options. If you sim
 
 For now, we'll generate a MySQL project using options::
 
-  $ mynoora generate mysql -h localhost -p 3306 -d acme -U apps -P apps -v 1.0.0
+  $ mynoora generate mysql -h localhost -p 3306 -d acme -U apps -P Welcome123 -v 1.0.0
   version 1.0.0 created.
 
 What does this do? The generate script creates a project directory for you, suffixed with "-db". You are free to rename this directory.
 
 Inside the project, a configuration file is created called ``myproject.json``, storing the details you just provided along with the project default settings. Secondly, one directory is added containing the initial project files for you database.
+
+----
 
 The project configuration and structure are described in the next section: :ref:`working_with_projects`.
