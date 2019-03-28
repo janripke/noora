@@ -128,17 +128,54 @@ An example configuration for MySQL looks like this::
       "trg",
       "idx"
     ],
-    "plugins": [
-      "noora.plugins.mysql.generate.GeneratePlugin.GeneratePlugin",
-      "noora.plugins.mysql.help.HelpPlugin.HelpPlugin",
-      "noora.plugins.mysql.drop.DropPlugin.DropPlugin",
-      "noora.plugins.mysql.create.CreatePlugin.CreatePlugin",
-      "noora.plugins.mysql.update.UpdatePlugin.UpdatePlugin"
-    ]
+    "technology": "mysql"
   }
 
+
+Below is the list of configuration directives in `myproject.json` that are common across all technologies, grouped together by context:
 
 Generic Configuration Directives
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-FIXME
+Below directives are specific to the target infrastructure:
+
+* **technology**: The database technology of this project. This is used to determine which plugins to load, among other things;
+* **blocked_hosts**: A list of hosts to block when running destructive operations such as the *drop* plugin.
+
+Target environment
+^^^^^^^^^^^^^^^^^^
+
+The next directives are related to the environment you deploy your database in, for example when your projects have testing, acceptance and production setups, you can use the environments directives:
+
+* **environments**: The list of environments your database can be deployed in;
+* **default_environment**: The default environment that Noora will operate on if not explicitly specified.
+* **environment_insert_statement**: The statement to run to set the environment a new database was deployed to;
+* **environment_select_statement**: The statement to run to look up the environment for a database;
+
+Versioning
+^^^^^^^^^^
+
+Versioning directives. These are normally set by the *generate* plugin and generally do not need to be changed:
+
+* **default_version**: The initial version of your project. This version will be inserted in the properties table when running the *create* plugin;
+* **version_insert_statement**: The statement to run after creating a new database, setting the initial database version;
+* **version_update_statement**: The statement that will be run after deploying a new version to your database;
+* **version_select_statement**: The statement run for getting the current version of a database.
+
+File inclusion and exclusion
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A number of directives related to including or excluding files and directories when running Noora plugins:
+
+* **create_objects**: When running the *create* plugin, only SQL scripts in these directories will be executed inside the Project's create directory;
+* **drop_objects**: When running the *drop* plugin, run all SQL scripts in these directories (NOTE: these scripts are included in the drop plugin package directory);
+
+Excluding files:
+
+* **excluded_extensions**: Files with an extension from this list will be ignored;
+* **excluded_folders**: Files where the folder path matches a folder in this list will be ignored;
+* **excluded_files**: Files that match a filename in this list will be ignored.
+
+----
+
+For more on technologies, plugins and technology-specific directives, continue reading in :ref:`plugin_reference`.
