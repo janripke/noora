@@ -12,7 +12,7 @@ from .RecreatePlugin import RecreatePlugin
 @click.pass_obj
 def cli(props, host, database, environment, alias, version):
     """
-    Create a new MSSQL database.
+    Drop and recreate a MySQL database to the specified or latest version.
     """
     plugin = RecreatePlugin()
     plugin.execute(

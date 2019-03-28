@@ -11,7 +11,7 @@ from .DropPlugin import DropPlugin
 @click.pass_obj
 def cli(props, host, database, environment, alias):
     """
-    Drop a MySQL database.
+    Drop (empty) a MySQL database.
     """
     plugin = DropPlugin()
     plugin.execute(

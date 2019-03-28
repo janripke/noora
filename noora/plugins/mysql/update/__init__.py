@@ -12,7 +12,7 @@ from .UpdatePlugin import UpdatePlugin
 @click.pass_obj
 def cli(props, version, host, database, environment, alias):
     """
-    Update a MySQL database.
+    Update a MSSQL database to the specified version.
     """
     plugin = UpdatePlugin()
     plugin.execute(
