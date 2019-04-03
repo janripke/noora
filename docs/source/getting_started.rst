@@ -20,6 +20,15 @@ Noora currently supports MySQL and MSSQL databases. Support for Oracle is in the
 
 For every technology there are some requirements and preparations you must carry out before you can use Noora with your database of choice. We'll explain every technology in turn.
 
+
+PostgreSQL
+^^^^^^^^^^
+Create database and user::
+
+  CREATE DATABASE acme;
+  CREATE USER apps WITH ENCRYPTED PASSWORD 'Welcome123';
+  GRANT ALL ON DATABASE acme TO apps;
+
 MySQL
 ^^^^^
 
@@ -29,7 +38,7 @@ On your database instance, all that is required is a user that has sufficient ri
 
 Suppose you want to run your project inside a database called ``acme``, using a user called ``apps``, with your database running on the local machine, you need to run the following commands::
 
-  CREATE DATABASE acme
+  CREATE DATABASE acme;
   CREATE USER apps@'localhost' IDENTIFIED BY 'Welcome123';
   GRANT ALL ON acme.* TO apps@'localhost';
   -- This is currently required to be able to drop functions and procedures, to be fixed
