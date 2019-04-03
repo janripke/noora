@@ -5,7 +5,7 @@
   ],
   "aliasses": [],
   "database_aliases" : [],
-  "mysql_users": [
+  "postgresql_users": [
     [
       "{host}",
       "{database}",
@@ -15,7 +15,7 @@
     ]
   ],
   "default_environment": "dev",
-  "pgsql_hosts": [
+  "postgresql_hosts": [
     "{host}"
   ],
   "blocked_hosts": [],

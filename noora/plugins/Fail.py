@@ -109,7 +109,7 @@ class Fail(object):
         :param host: The host to look up
         :param host_list: Properties containing the host list
         """
-        host_list = properties.get('{}_hosts'.format(properties.get('technology')))
+        host_list = properties.get('{}_hosts'.format(properties.get('technology')), [])
         if host not in host_list:
             raise PluginException(
                 "Host {} not in list of valid hosts for this project".format(host))

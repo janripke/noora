@@ -38,9 +38,12 @@ class PGSQLConnector(Connector):
 
         stream = PreProcessor.parse(script, cp)
 
-        tmp = StringIO()
-        tmp.write(stream)
-        tmp.seek(0)
+        tmp = File("tmp.sql")
+        f = open(tmp.get_url(), 'w')
+        f.write(stream)
+        f.close()
+
+        script_reader = open(tmp.get_url())
 
         feedback = File('feedback.log')
         feedback_writer = open(feedback.get_url(), 'w')
@@ -54,9 +57,10 @@ class PGSQLConnector(Connector):
         )
 
         call = CallFactory.new_call(statement)
-        call['stdin'] = tmp
+        call['stdin'] = script_reader
         call['stdout'] = feedback_writer
         call['stderr'] = feedback_writer
         result = Shell.execute(call)
+        print(result)
         self.set_result(result)
 

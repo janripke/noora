@@ -1,6 +1,5 @@
 import os
 import json
-from copy import copy
 
 
 # FIXME: write a proper docstring
@@ -61,21 +60,27 @@ def get_mysql_properties(users, host, database):
     return None
 
 
-def get_postgres_user(users, host, port, database):
+def get_postgres_properties(users, host, database):
     """
-    For a list of host/port/database/user combinations, return the username that matches the
-    host, port, database and user.
+    For a list of user tuples, return the first user that matches the host and database
 
-    :param users: list containing a sequence of AT LEAST (host, port, database, username)
+    :param users: list containing a sequence of AT LEAST (host, database, username, password, port)
     :param host: The hostname to match
-    :param port: The port to match
     :param database: The database to match
-    :return: A username or None
+    :return: a dict containing host, database, username, password, port
     """
     for user in users:
-        if user[0].lower() == host.lower() and user[1].lower() == port.lower() and \
-                user[2].lower() == database.lower():
-            return user[3]
+        if user[0].lower() == host.lower() and user[1].lower() == database.lower():
+            res = {
+                'host': host,
+                'database': database,
+                # Backwards compatibility with old project files
+                'port': user[4] if len(user) > 4 else None,
+                'username': user[2],
+                'password': user[3],
+            }
+            return res
+
     return None
 
 
