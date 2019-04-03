@@ -1,11 +1,11 @@
-create table application_properties
+CREATE TABLE application_properties
 (
-  id           int not null auto_increment primary key,
-  name         varchar(100) not null unique,
-  value        varchar(4000) not null,
-  description  varchar(255),
-  created_at   datetime not null,
-  created_by   varchar(45) not null,
-  updated_at   datetime not null,
-  updated_by   varchar(45) not null
+  id INT NOT NULL DEFAULT nextval('serial')
+, name VARCHAR(100) not null unique
+, value VARCHAR(4000) not null
+, description VARCHAR(255)
+, created_at VARCHAR NOT NULL
+, created_by VARCHAR(45) NOT NULL
+, updated_at TIMESTAMP NOT NULL
+, updated_by VARCHAR(45) NOT NULL
 );
