@@ -1,3 +1,4 @@
 CREATE TRIGGER application_properties_bi
   BEFORE INSERT ON application_properties
-  EXECUTE PROCEDURE application_properties_bi_fct
+  FOR EACH ROW
+  EXECUTE PROCEDURE application_properties_bi_fct();

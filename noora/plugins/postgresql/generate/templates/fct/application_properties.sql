@@ -21,5 +21,6 @@ AS $$
     NEW.created_by := current_user;
     NEW.updated_at := NEW.created_at;
     NEW.updated_by := NEW.created_by;
+    RETURN NEW;
   END;
-$$
+$$ LANGUAGE plpgsql;
