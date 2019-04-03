@@ -1,8 +1,8 @@
-### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+docs/build
 
 # Environments
 .env
@@ -18,3 +18,6 @@ venv.bak/
 *.iml
 out
 gen
+
+# Packaging stuff
+*.egg-info/
