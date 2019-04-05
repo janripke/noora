@@ -1,0 +1,1 @@
+CREATE SEQUENCE application_properties_s;

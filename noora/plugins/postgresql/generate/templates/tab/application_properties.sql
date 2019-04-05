@@ -1,6 +1,6 @@
 CREATE TABLE application_properties
 (
-  id SERIAL NOT NULL
+  id INTEGER NOT NULL NEXTVAL('application_properties_s')
 , name VARCHAR(100) not null unique
 , value VARCHAR(4000) not null
 , description VARCHAR(255)
