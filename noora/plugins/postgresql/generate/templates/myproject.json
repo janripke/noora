@@ -47,11 +47,11 @@
   "default_version": "{version}",
   "drop_objects": [
     "vw",
+    "fct",
     "trg",
     "tab",
-    "prc",
-    "fct",
-    "idx"
+    "idx",
+    "seq"
   ],
   "create_objects": [
     "tab",
