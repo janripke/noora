@@ -54,10 +54,9 @@
     "seq"
   ],
   "create_objects": [
+    "seq",
     "tab",
-    "cst",
     "fct",
-    "prc",
     "vw",
     "trg",
     "idx"
