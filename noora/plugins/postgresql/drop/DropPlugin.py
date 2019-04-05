@@ -65,7 +65,7 @@ class DropPlugin(PGSQLPlugin):
         objects = properties.get('drop_objects')
 
         # retrieve the user credentials for this database project.
-        users = properties.get('mysql_users')
+        users = properties.get('postgresql_users')
 
         # try to retrieve the users from the credentials file, when no users are configured in
         # myproject.json.
@@ -73,7 +73,7 @@ class DropPlugin(PGSQLPlugin):
             # retrieve the name of this database project, introduced in version 1.0.12
             profile = PropertyHelper.get_profile(properties)
             if profile:
-                users = profile.get('mysql_users')
+                users = profile.get('postgresql_users')
 
         # fail when no users are found. This means that they are not set in myproject.json or
         # credentials.json
@@ -83,7 +83,7 @@ class DropPlugin(PGSQLPlugin):
             print("dropping database '{db}' on host '{host}' using environment '{env}'".format(
                 db=database, host=host, env=environment))
 
-            executor = PropertyHelper.get_mysql_properties(users, host, database)
+            executor = PropertyHelper.get_postgres_properties(users, host, database)
 
             connector = self.get_connector()
 
