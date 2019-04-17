@@ -47,8 +47,8 @@
   "default_version": "{version}",
   "drop_objects": [
     "vw",
-    "fct",
     "trg",
+    "fct",
     "tab",
     "idx",
     "seq"
