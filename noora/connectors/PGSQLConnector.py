@@ -48,19 +48,20 @@ class PGSQLConnector(Connector):
         feedback = File('feedback.log')
         feedback_writer = open(feedback.get_url(), 'w')
 
-        statement = "PGPASSWORD={passwd} psql -h {host} -p {port} -U {user} -d {db}".format(
-            host=executable['host'],
-            port=executable.get('port'),
-            user=executable['username'],
-            passwd=executable['password'],
-            db=executable['database'],
-        )
+        statement = \
+            "PGPASSWORD={passwd} psql -h {host} -p {port} -U {user} -d {db} " \
+            "-v ON_ERROR_STOP=1".format(
+                host=executable['host'],
+                port=executable.get('port'),
+                user=executable['username'],
+                passwd=executable['password'],
+                db=executable['database'],
+            )
 
         call = CallFactory.new_call(statement)
         call['stdin'] = script_reader
         call['stdout'] = feedback_writer
         call['stderr'] = feedback_writer
         result = Shell.execute(call)
-        print(result)
         self.set_result(result)
 
