@@ -41,18 +41,13 @@ class UpdatePlugin(MssqlPlugin):
 
         return prepared_args
 
-    # FIXME: this doesn't do anything
     def fail_on_invalid_environment(self, properties, connector, executor, environment):
         plugin_dir = properties.get('plugin.dir')
         properties['environment'] = environment
         script = File(os.path.join(plugin_dir, 'mssql', 'update', 'checkenvironment.sql'))
         executor['script'] = script
-        # FIXME: remove?
-        # connector.execute(executor, properties)
-        # if "(Code 1329)" in connector.get_result():
-        #     raise InvalidEnvironmentException("invalid environment", environment)
+        connector.execute(executor, properties)
 
-    # FIXME: this doesn't do anything either
     def fail_on_invalid_version(self, properties, connector, executor, version):
         plugin_dir = properties.get('plugin.dir')
 
@@ -67,8 +62,6 @@ class UpdatePlugin(MssqlPlugin):
         script = File(os.path.join(plugin_dir, 'mssql', 'update', 'checkversion.sql'))
         executor['script'] = script
         connector.execute(executor, properties)
-        # if "(Code 1329)" in connector.get_result():
-        #     raise InvalidVersionException("invalid version", previous)
 
     def execute(self, properties, arguments):
         """
