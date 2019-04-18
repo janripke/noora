@@ -7,7 +7,9 @@ DO $$
       FROM pg_indexes
       WHERE schemaname='public'
     LOOP
-      EXECUTE sttmnt;
+      IF sttmnt IS NOT NULL THEN
+          EXECUTE sttmnt;
+      END IF;
     END LOOP;
   END;
 $$
