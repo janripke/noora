@@ -1,6 +1,6 @@
 import click
 
-from .DropPlugin import DropPlugin
+from noora.plugins.mssql.drop.DropPlugin import DropPlugin
 
 
 @click.command()

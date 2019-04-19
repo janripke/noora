@@ -1,6 +1,6 @@
 import click
 
-from .UpdatePlugin import UpdatePlugin
+from noora.plugins.mssql.update.UpdatePlugin import UpdatePlugin
 
 
 @click.command()
