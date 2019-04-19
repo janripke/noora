@@ -64,9 +64,8 @@ class RecreatePlugin(PGSQLPlugin):
         plugin = ClassLoader.load_class(ClassLoader.find_plugin(properties['technology'], 'create'))
         plugin.execute(properties, arguments)
 
-        # find and execute the create plugin.
+        # find and execute the update plugin.
         plugin = ClassLoader.load_class(ClassLoader.find_plugin(properties['technology'], 'update'))
-
         # create the arguments and execute the plugin
         for version in prepared_args['update_versions']:
             arguments['version'] = version
