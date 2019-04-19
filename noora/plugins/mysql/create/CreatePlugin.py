@@ -11,6 +11,7 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
 class CreatePlugin(MysqlPlugin):
+    """Plugin for creating (initializing) a MySQL database."""
     def _validate_and_prepare(self, properties, arguments):
         prepared_args = {}
 
@@ -45,17 +46,19 @@ class CreatePlugin(MysqlPlugin):
         """
         Create a new database instance for the latest version
 
+        :type properties: system.Properties.Properties
         :param properties: The project properties
-        :param arguments: A dict of {
-            'host': 'The hostname where the database will run',
-            'database': 'The database to create in (optional)',
-            'environment': 'The environment to create the database in (optional),
-            'alias': 'The database alias. If provided, this will overrule
-                the database argument (optional),
-        }
+        :type arguments: dict
+        :param arguments: This dict contains the plugin arguments:
+
+            * **host**: The hostname where the database will run;
+            * **database**: The database to create in (optional);
+            * **environment** (optional): The environment to create the database in;
+            * **alias** (optional): The database alias. If provided, this will overrule the database argument.
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
+        #: Some comment
         host = prepared_args['host']
         environment = prepared_args['environment']
         databases = prepared_args['databases']
