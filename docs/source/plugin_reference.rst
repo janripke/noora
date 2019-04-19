@@ -3,12 +3,18 @@
 Plugin Reference
 ================
 
-.. note:: We're currently in the process of migrating and merging all documentation to Sphinx.
+This page documents per technology the default object structure, technology-specific configuration directives and all available plugins.
 
 MySQL
 -----
 
-To Do.
+A Noora MySQL project can contain one or more databases inside one MySQL instance.
+
+.. autoclass:: noora.plugins.mysql.create.CreatePlugin.CreatePlugin
+    :members:
+
+.. autoclass:: noora.plugins.mysql.drop.DropPlugin.DropPlugin
+    :members:
 
 Microsoft SQL
 -------------
