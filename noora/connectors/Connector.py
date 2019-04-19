@@ -1,5 +1,4 @@
 from noora.connectors.Connectable import Connectable
-from noora.exceptions.ConnectorException import ConnectorException
 
 
 class Connector(Connectable):
@@ -16,4 +15,4 @@ class Connector(Connectable):
         self.__result = result
 
     def execute(self, executable, properties):
-        raise ConnectorException("method not implemented")
+        raise NotImplementedError("execute method not implemented")
