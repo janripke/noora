@@ -1,6 +1,6 @@
 import click
 
-from .RecreatePlugin import RecreatePlugin
+from noora.plugins.mssql.recreate.RecreatePlugin import RecreatePlugin
 
 
 @click.command()
