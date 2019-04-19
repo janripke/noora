@@ -117,6 +117,7 @@ Documentation
    getting_started
    working_with_projects
    plugin_reference
+   api
 
 Miscellaneous
 =============
