@@ -11,22 +11,15 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
 class CreatePlugin(MssqlPlugin):
+    """Plugin for creating (initializing) a MySQL database."""
     def _validate_and_prepare(self, properties, arguments):
         prepared_args = {}
 
         # Check host
-        # FIXME: fail on invalid host
         host = arguments.get('host')
         Fail.fail_on_no_host(host)
         Fail.fail_on_invalid_host(host, properties)
         prepared_args['host'] = host
-
-        # Check schema and prepare schemes list
-        schema = arguments.get('schema')
-        default_schemes = properties.get('schemes')
-        schemes = Ora.nvl(schema, default_schemes)
-        Fail.fail_on_invalid_schema(schema, properties)
-        prepared_args['schemes'] = schemes
 
         # Check environment
         environment = arguments.get('environment')
@@ -44,14 +37,13 @@ class CreatePlugin(MssqlPlugin):
         :param properties: The project properties
         :param arguments: A dict of {
             'host': 'The hostname where the database will run',
-            'schema': 'The schema to create in (optional)',
             'environment': 'The environment to create the database in (optional),
         }
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
         host = prepared_args['host']
-        schemes = prepared_args['schemes']
+        schemes = properties.get('schemes')
         environment = prepared_args['environment']
 
         database = properties.get('database')
