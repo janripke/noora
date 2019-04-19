@@ -27,12 +27,6 @@ class UpdatePlugin(MssqlPlugin):
         Fail.fail_on_no_host(host)
         prepared_args['host'] = host
 
-        schema = arguments.get('schema')
-        default_schemes = properties.get('schemes')
-        schemes = Ora.nvl(schema, default_schemes)
-        Fail.fail_on_invalid_schema(schema, properties)
-        prepared_args['schemes'] = schemes
-
         environment = arguments.get('environment')
         default_environment = properties.get('default_environment')
         environment = Ora.nvl(environment, default_environment)
@@ -79,7 +73,7 @@ class UpdatePlugin(MssqlPlugin):
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
-        schemes = prepared_args['schemes']
+        schemes = properties.get('schemes')
         host = prepared_args['host']
         environment = prepared_args['environment']
         version = prepared_args['version']

@@ -20,12 +20,6 @@ class DropPlugin(MssqlPlugin):
         Fail.fail_on_blocked_hosts(host, properties)
         prepared_args['host'] = host
 
-        schema = arguments.get('schema')
-        default_schemes = properties.get('schemes')
-        schemes = Ora.nvl(schema, default_schemes)
-        Fail.fail_on_invalid_schema(schema, properties)
-        prepared_args['schemes'] = schemes
-
         environment = arguments.get('environment')
         default_environment = properties.get('default_environment')
         environment = Ora.nvl(environment, default_environment)
@@ -42,14 +36,13 @@ class DropPlugin(MssqlPlugin):
         :param properties: The project properties
         :param arguments: A dict of {
             'host': 'The hostname to drop on',
-            'schema': 'Schema to drop',
             'environment': 'Environment to drop the database from'
         }
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
         host = prepared_args['host']
-        schemes = prepared_args['schemes']
+        schemes = properties.get('schemes')
         environment = prepared_args['environment']
         database = properties.get('database')
         objects = properties.get('drop_objects')
