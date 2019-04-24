@@ -25,20 +25,6 @@ class CreatePlugin(PGSQLPlugin):
         Fail.fail_on_invalid_environment(environment, properties)
         prepared_args['environment'] = environment
 
-        alias = arguments.get('alias')
-        Fail.fail_on_invalid_alias(alias, properties)
-        # if an alias is given, only this database will be installed, other databases will be
-        # ignored.
-        if alias:
-            print("using alias: {}".format(alias))
-            prepared_args['databases'] = [alias]
-        else:
-            database = arguments.get('database')
-            Fail.fail_on_invalid_database(database, properties)
-            default_databases = properties.get('databases')
-            databases = Ora.nvl(database, default_databases)
-            prepared_args['databases'] = databases
-
         return prepared_args
 
     def execute(self, properties, arguments):
@@ -48,18 +34,14 @@ class CreatePlugin(PGSQLPlugin):
         :param properties: The project properties
         :param arguments: A dict of {
             'host': 'The hostname where the database will run',
-            'database': 'The database to create in (optional)',
             'environment': 'The environment to create the database in (optional),
-            'alias': 'The database alias. If provided, this will overrule
-                the database argument (optional),
         }
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
         host = prepared_args['host']
         environment = prepared_args['environment']
-        databases = prepared_args['databases']
-        database_aliases = properties.get('database_aliases')
+        databases = properties.get('databases')
 
         objects = properties.get('create_objects')
 
@@ -87,23 +69,21 @@ class CreatePlugin(PGSQLPlugin):
 
             executor = PropertyHelper.get_postgres_properties(users, host, database)
 
-            database_folder = PropertyHelper.get_database_folder(database, database_aliases)
-
             for obj in objects:
                 # global ddl objects
-                folder = File(os.path.join(create_dir, database_folder, 'ddl', obj))
+                folder = File(os.path.join(create_dir, database, 'ddl', obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
                 # environment specific ddl objects
-                folder = File(os.path.join(create_dir, database_folder, 'ddl', obj, environment))
+                folder = File(os.path.join(create_dir, database, 'ddl', obj, environment))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
             # global dat objects
-            folder = File(os.path.join(create_dir, database_folder, 'dat'))
+            folder = File(os.path.join(create_dir, database, 'dat'))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
             # environment specific dat objects
-            folder = File(os.path.join(create_dir, database_folder, 'dat', environment))
+            folder = File(os.path.join(create_dir, database, 'dat', environment))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
             print("database '{}' created.".format(database))
