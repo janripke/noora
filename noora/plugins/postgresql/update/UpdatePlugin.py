@@ -97,15 +97,13 @@ class UpdatePlugin(PGSQLPlugin):
         version = prepared_args['version']
         host = prepared_args['host']
         environment = prepared_args['environment']
-        databases = prepared_args['databases']
+        databases = properties.get('databases')
 
         objects = properties.get('create_objects')
 
         version_database = properties.get('version_database')
 
         alter_dir = properties.get('alter.dir')
-
-        database_aliases = properties.get('database_aliases')
 
         # retrieve the user credentials for this database project.
         users = properties.get('postgresql_users')
@@ -126,28 +124,26 @@ class UpdatePlugin(PGSQLPlugin):
 
             executor = PropertyHelper.get_mysql_properties(users, host, database)
 
-            database_folder = PropertyHelper.get_database_folder(database, database_aliases)
-
             if database == version_database:
                 self.fail_on_invalid_environment(connector, executor, environment, properties)
                 self.fail_on_invalid_version(connector, executor, version, properties)
 
             for obj in objects:
                 # global ddl objects
-                folder = File(os.path.join(alter_dir, version, database_folder, 'ddl', obj))
+                folder = File(os.path.join(alter_dir, version, database, 'ddl', obj))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
                 # environment specific ddl objects
                 folder = File(
-                    os.path.join(alter_dir, version, database_folder, 'ddl', obj, environment))
+                    os.path.join(alter_dir, version, database, 'ddl', obj, environment))
                 ConnectionExecutor.execute(connector, executor, properties, folder)
 
             # global dat objects
-            folder = File(os.path.join(alter_dir, version, database_folder, 'dat'))
+            folder = File(os.path.join(alter_dir, version, database, 'dat'))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
             # environment specific dat objects
-            folder = File(os.path.join(alter_dir, version, database_folder, 'dat', environment))
+            folder = File(os.path.join(alter_dir, version, database, 'dat', environment))
             ConnectionExecutor.execute(connector, executor, properties, folder)
 
             print("database '{}' updated".format(database))

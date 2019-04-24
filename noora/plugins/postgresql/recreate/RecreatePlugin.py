@@ -50,8 +50,6 @@ class RecreatePlugin(PGSQLPlugin):
             'version': 'Desired target version',
             'host': 'Hostname to connect to',
             'port': 'Port to connect to (optional)',
-            'database': 'Name of the database (optional)',
-            'alias': 'Database alias to use (optional)',
             'environment': 'Name of the environment (optional)',
         """
         prepared_args = self._validate_and_prepare(properties, arguments)

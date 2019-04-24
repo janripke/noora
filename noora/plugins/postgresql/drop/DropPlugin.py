@@ -26,20 +26,6 @@ class DropPlugin(PGSQLPlugin):
         Fail.fail_on_invalid_environment(environment, properties)
         prepared_args['environment'] = environment
 
-        alias = arguments.get('alias')
-        Fail.fail_on_invalid_alias(alias, properties)
-        # if an alias is given, only this database will be installed, other databases will be
-        # ignored.
-        if alias:
-            print("using alias: {}".format(alias))
-            prepared_args['databases'] = [alias]
-        else:
-            database = arguments.get('database')
-            Fail.fail_on_invalid_database(database, properties)
-            default_databases = properties.get('databases')
-            databases = Ora.nvl(database, default_databases)
-            prepared_args['databases'] = databases
-
         return prepared_args
 
     def execute(self, properties, arguments):
@@ -60,7 +46,7 @@ class DropPlugin(PGSQLPlugin):
 
         host = prepared_args['host']
         environment = prepared_args['environment']
-        databases = prepared_args['databases']
+        databases = properties.get('databases')
 
         objects = properties.get('drop_objects')
 
