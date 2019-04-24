@@ -14,7 +14,7 @@ Noora is a deployment tool that can be used to automate the database deployment 
 
 Noora was created with the DevOps paradigm in mind; especially when as a team you manage many database models it enables you to standardize your DDL and streamline development, testing, acceptance and deployment in production.
 
-NOTE: This project is currently split across two branches, where Noora 1.1.0 provides MySQL and MSSQL support using Python 2 and 3 and Noora 1.0.2 supports Oracle and MySQL using Python 2 only. This documentation describes Noora >= 1.1.
+NOTE: This project is currently split across two branches, where Noora 1.1.0 provides MySQL, MSSQL and PostgreSQL support using Python 2 and 3 and Noora 1.0.2 supports Oracle and MySQL using Python 2 only. This documentation describes Noora >= 1.1.
 
 Noora is released under the :ref:`license`.
 
@@ -22,14 +22,20 @@ Noora is released under the :ref:`license`.
 Quick Start
 ===========
 
-To install Noora, you can either install a release from Github or install from source::
+To install Noora, you can install from pip, a release from Github or from source::
 
   # Install from PyPi
   $ pip install noora
 
+  # Install from github
+  $ pip install git+https://github.com/janripke/noora.git@1.1.0#egg=noora
+
   # Clone and install from source
   $ git clone https://github.com/janripke/noora/
   $ cd noora
+  # Checkout the release you want to use
+  # (NOTE: the master branch is NOT guaranteed to be stable!)
+  $ git checkout tags/1.1.0
   $ pip install .
 
 We'll set up a MySQL project, so first make sure to create a user and database for your project::
