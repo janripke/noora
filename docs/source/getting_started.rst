@@ -5,6 +5,7 @@ Getting Started
 
 In this part we'll introduce you to Noora, how to prepare your database for usage with Noora, and outline the Command Line Interface.
 
+
 Why Noora?
 ----------
 
@@ -13,21 +14,13 @@ To Do:
 * Philosophy of programmatic databases (integrate parts of white paper)
 * Explanation of interaction with db through command line tools
 
+
 Database Support and Requirements
 ---------------------------------
 
-Noora currently supports MySQL and MSSQL databases. Support for Oracle is in the process of being migrated into the new codebase. Support for Teradata and PostgreSQL will follow soon.
+Noora currently supports MySQL, MSSQL and PostgreSQL databases. Support for Oracle is in the process of being migrated into the new codebase. Support for Teradata will follow soon.
 
 For every technology there are some requirements and preparations you must carry out before you can use Noora with your database of choice. We'll explain every technology in turn.
-
-
-PostgreSQL
-^^^^^^^^^^
-Create database and user::
-
-  CREATE DATABASE acme;
-  CREATE USER apps WITH ENCRYPTED PASSWORD 'Welcome123';
-  GRANT ALL ON DATABASE acme TO apps;
 
 MySQL
 ^^^^^
@@ -48,7 +41,6 @@ Suppose you want to run your project inside a database called ``acme``, using a 
 .. NOTE::
 
   Procedures and functions in MySQL are manipulated through mysql scripting and queries, but the ``PREPARE`` syntax does not support dropping these objects at this moment, making removing them directly from ``mysql.proc`` the only option. For this reason, your database user needs select and delete rights on this table. We are working on a solution for this.
-
 
 Microsoft SQL Server
 ^^^^^^^^^^^^^^^^^^^^
@@ -75,6 +67,17 @@ Next, you'll need to configure all schemas you want to manage through Noora with
 .. NOTE::
 
   Noora's Microsoft SQL plugins support managing multiple schemas in your database. However, the generate plugin does not yet support selecting a specific schema outside of the user's default schema. We will implement a fix for this soon.
+
+PostgreSQL
+^^^^^^^^^^
+
+For PostgreSQL, you'll need the client installed on any system you run Noora from. Generally, packages will be called ``postgresql-client-X.Y`` where X.Y is the version of the target PostgreSQL instance.
+
+Then, for your project, set up a database, user and permissions like such::
+
+  CREATE DATABASE acme;
+  CREATE USER apps WITH ENCRYPTED PASSWORD 'Welcome123';
+  GRANT ALL ON DATABASE acme TO apps;
 
 
 The Noora CLI
