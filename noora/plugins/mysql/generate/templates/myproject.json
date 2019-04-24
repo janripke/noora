@@ -55,10 +55,7 @@
   ],
   "create_objects": [
     "tab",
-    "cst",
     "fct",
-    "prc",
-    "vw",
     "trg",
     "idx"
   ],
