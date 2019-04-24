@@ -45,14 +45,17 @@ class RecreatePlugin(MysqlPlugin):
         Drop, create and update the database. Will loop over all versions and
         initialize the database to the latest version available.
 
+        :type properties: system.Properties.Properties
         :param properties: The project properties
-        :param arguments: A dict containing: {
-            'version': 'Desired target version',
-            'host': 'Hostname to connect to',
-            'port': 'Port to connect to (optional)',
-            'database': 'Name of the database (optional)',
-            'alias': 'Database alias to use (optional)',
-            'environment': 'Name of the environment (optional)',
+        :type arguments: dict
+        :param arguments: This dict contains the plugin arguments:
+
+            **version**: Desired target version;
+            **host**: Hostname to connect to;
+            **port**: Port to connect to (optional);
+            **database**: Name of the database (optional);
+            **alias**: Database alias to use (optional);
+            **environment**: Name of the environment (optional);
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 

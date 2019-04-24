@@ -78,16 +78,17 @@ class GeneratePlugin(MysqlPlugin):
         Create or upgrade a project. The version is always required, the rest
         only when generating an entirely new project.
 
+        :type properties: system.Properties.Properties
         :param properties: The project properties
-        :param arguments: A dict containing: {
-            'version': '(Initial) project version to generate for'
-            'host': 'The hostname for the new project. If not provided, an
-                upgrade is assumed (optional)'
-            'port': 'Port to connect to (optional)'
-            'database': 'Name of the database (optional)'
-            'username': 'Database username (optional)'
-            'password': 'Database password (optional)'
-        }
+        :type arguments: dict
+        :param arguments: This dict contains the plugin arguments:
+
+            * **version**: (Initial) project version to generate for;
+            * **host**: The hostname for the new project. If not provided, an upgrade is assumed (optional);
+            * **port**: Port to connect to (optional);
+            * **database**: Name of the database (optional);
+            * **username**: Database username (optional);
+            * **password**: Database password (optional).
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
