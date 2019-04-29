@@ -15,6 +15,9 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
 class UpdatePlugin(MssqlPlugin):
+    """
+    This class provides functionality for updating a project to a specified version.
+    """
     def _validate_and_prepare(self, properties, arguments):
         prepared_args = {}
 
@@ -63,13 +66,15 @@ class UpdatePlugin(MssqlPlugin):
         valid values. Also check that host is not on the block list and that
         the version to update to is valid
 
+        :type properties: system.Properties.Properties
         :param properties: The project properties
-        :param arguments: A dict of {
-            'version': 'The version to update the database to',
-            'host': 'The hostname that hosts the database to update'
-            'schema': 'Schema to update (optional)',
-            'environment': 'Environment to update the database in (optional)',
-        }
+        :type arguments: dict
+        :param arguments: This dict contains the plugin arguments:
+
+            * **version**: The version to update the database to;
+            * **host**: The hostname that hosts the database to update;
+            * **schema**: Schema to update (optional);
+            * **environment**: Environment to update the database in (optional).
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
