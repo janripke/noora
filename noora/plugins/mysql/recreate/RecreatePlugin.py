@@ -7,6 +7,10 @@ from noora.plugins.mysql.MysqlPlugin import MysqlPlugin
 
 
 class RecreatePlugin(MysqlPlugin):
+    """
+    This class provides functionality to drop, create and update a database
+    to a specified version.
+    """
     def _validate_and_prepare(self, properties, arguments):
         """
         Prepare the version list here. All other preparation is handled by the

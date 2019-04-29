@@ -1,6 +1,6 @@
 import click
 
-from .DropPlugin import DropPlugin
+from noora.plugins.mysql.drop.DropPlugin import DropPlugin
 
 
 @click.command()

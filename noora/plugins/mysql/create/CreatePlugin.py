@@ -44,7 +44,7 @@ class CreatePlugin(MysqlPlugin):
 
     def execute(self, properties, arguments):
         """
-        Create a new database instance for the latest version
+        Create a new database instance for the initial version
 
         :type properties: system.Properties.Properties
         :param properties: The project properties
