@@ -17,6 +17,9 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
 class UpdatePlugin(MysqlPlugin):
+    """
+    This class provides functionality for updating a project to a specified version.
+    """
     def _validate_and_prepare(self, properties, arguments):
         prepared_args = {}
 
