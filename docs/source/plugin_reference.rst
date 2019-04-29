@@ -51,12 +51,62 @@ Plugins
 Microsoft SQL
 -------------
 
-To Do.
+Objects and directives
+^^^^^^^^^^^^^^^^^^^^^^
 
-Oracle
-------
+A Microsoft SQL Server project contains one or more schemas inside one MSSQL Database Instance. When creating a MSSQL project, you'll get the following ddl objects for your initial database, in order of execution (the ``create_objects`` directive):
 
-To Do.
+* **seq**: Contains sequences. A sequence for the ``application_properties`` table is added by Noora;
+* **syn**: FIXME
+* **tab**: Tables are stored here. A table ``application_properties`` is added by Noora to manage project properties;
+* **cst**: FIXME
+* **fct**: Contains functions. A ``get_property`` function is added by Noora to manage project properties;
+* **prc**: Contains stored procedures.
+* **vw**: Contains views.
+* **trg**: Contains triggers. Triggers are added by Noora to manage insert and update actions on the project properties table;
+* **idx**: Contains indexes. An index for the ``application_properties`` table is added by Noora.
+* **gra**: FIXME
+
+The ``drop_objects`` directive has the following default list, in order of execution:
+
+* vw
+* syn
+* typ
+* tab
+* prc
+* fct
+* seq
+* idx
+* dbl
+
+Plugins
+^^^^^^^
+
+.. autoclass:: noora.plugins.mssql.generate.GeneratePlugin.GeneratePlugin
+    :members:
+
+.. autoclass:: noora.plugins.mssql.create.CreatePlugin.CreatePlugin
+    :members:
+
+.. autoclass:: noora.plugins.mssql.drop.DropPlugin.DropPlugin
+    :members:
+
+.. autoclass:: noora.plugins.mssql.update.UpdatePlugin.UpdatePlugin
+    :members:
+
+.. autoclass:: noora.plugins.mssql.recreate.RecreatePlugin.RecreatePlugin
+    :members:
+
+
+PostgreSQL
+----------
+
+Objects and directives
+^^^^^^^^^^^^^^^^^^^^^^
+
+Plugins
+^^^^^^^
+
 
 Adding Plugins
 --------------
