@@ -33,11 +33,13 @@ class DropPlugin(MssqlPlugin):
         Drop a database after checking if schema and environment are
         valid values. Also check that host is not on the block list.
 
+        :type properties: system.Properties.Properties
         :param properties: The project properties
-        :param arguments: A dict of {
-            'host': 'The hostname to drop on',
-            'environment': 'Environment to drop the database from'
-        }
+        :type arguments: dict
+        :param arguments: This dict contains the plugin arguments:
+
+            * **host**: The hostname to drop on;
+            * **environment**: Environment to drop the database from.
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 

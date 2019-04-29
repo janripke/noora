@@ -7,6 +7,10 @@ from noora.plugins.mssql.MssqlPlugin import MssqlPlugin
 
 
 class RecreatePlugin(MssqlPlugin):
+    """
+    This class provides functionality to drop, create and update a database
+    to a specified version.
+    """
     def _validate_and_prepare(self, properties, arguments):
         """
         Prepare the version list here. All other preparation is handled by the
@@ -45,12 +49,15 @@ class RecreatePlugin(MssqlPlugin):
         Drop, create and update the database. Will loop over all versions and
         initialize the database to the latest version available.
 
+        :type properties: system.Properties.Properties
         :param properties: The project properties
-        :param arguments: A dict containing: {
-            'version': 'Desired target version',
-            'host': 'Hostname to connect to',
-            'port': 'Port to connect to (optional)',
-            'environment': 'Name of the environment (optional)',
+        :type arguments: dict
+        :param arguments: This dict contains the plugin arguments:
+
+            * **version**: Desired target version;
+            * **host**: Hostname to connect to;
+            * **port**: Port to connect to (optional);
+            * **environment**: Name of the environment (optional).
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
