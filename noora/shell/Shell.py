@@ -4,8 +4,24 @@ from noora.exceptions.plugins.PluginException import PluginException
 
 
 class Shell(object):
+    """Shell interaction"""
     @staticmethod
     def execute(call):
+        """
+        Execute the command in ``call``. Returns the standard output if
+        execution was successful, raises an exception with results from
+        standard error otherwise.
+
+        :param call: A dictionary, containing:
+
+            * **args**: The command to execute as a string;
+            * **stdout**: File-like object to write standard output to (optional);
+            * **stderr**: File-like object to write standard error to (optional);
+            * **stdin**: File-like object to read standard input from (optional);
+            * **startupinfo**: Extra flags (optional).
+
+        :return: The result from standard output.
+        """
         args = call['args']
         shell = call['shell']
         stdout = call['stdout']
