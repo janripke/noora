@@ -11,6 +11,7 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
 class DropPlugin(MssqlPlugin):
+    """Class providing functionality to drop (clear out) a database."""
     def _validate_and_prepare(self, properties, arguments):
         prepared_args = {}
 

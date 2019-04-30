@@ -12,9 +12,7 @@ from noora.io.Files import Files
 
 
 class GeneratePlugin(MssqlPlugin):
-    """
-    This class provides generation functionality for MSSQL projects.
-    """
+    """This class provides generation functionality for MSSQL projects."""
     def _validate_and_prepare(self, properties, arguments):
         # If no hostname was provided, we only set the version and then return
         prepared_args = {}

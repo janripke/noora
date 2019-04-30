@@ -39,7 +39,7 @@ class CreatePlugin(MssqlPlugin):
         :type arguments: dict
         :param arguments: This dict contains the plugin arguments:
 
-            * **host**: The hostname where the database will run;
+            * **host**: The hostname where the database is running;
             * **environment**: The environment to create the database in (optional).
         """
         prepared_args = self._validate_and_prepare(properties, arguments)

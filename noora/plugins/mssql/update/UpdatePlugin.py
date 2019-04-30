@@ -15,9 +15,7 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
 class UpdatePlugin(MssqlPlugin):
-    """
-    This class provides functionality for updating a project to a specified version.
-    """
+    """This class provides functionality for updating a project to a specified version."""
     def _validate_and_prepare(self, properties, arguments):
         prepared_args = {}
 
