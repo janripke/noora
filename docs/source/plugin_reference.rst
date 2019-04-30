@@ -104,8 +104,41 @@ PostgreSQL
 Objects and directives
 ^^^^^^^^^^^^^^^^^^^^^^
 
+A PostgreSQL Server project contains one or more schemas inside one PostgreSQL Database. When creating a  project, you'll get the following ddl objects for your initial database, in order of execution (the ``create_objects`` directive):
+
+* **seq**: Contains sequences. A sequence for the ``application_properties`` table is added by Noora;
+* **tab**: Tables are stored here. A table ``application_properties`` is added by Noora to manage project properties;
+* **fct**: Contains functions. A ``get_property`` function is added by Noora to manage project properties;
+* **vw**: Contains views.
+* **trg**: Contains triggers. Triggers are added by Noora to manage insert and update actions on the project properties table;
+* **idx**: Contains indexes. An index for the ``application_properties`` table is added by Noora.
+
+The ``drop_objects`` directive has the following default list, in order of execution:
+
+* vw
+* trg
+* fct
+* tab
+* idx
+* sex
+
 Plugins
 ^^^^^^^
+
+.. autoclass:: noora.plugins.postgresql.generate.GeneratePlugin.GeneratePlugin
+    :members:
+
+.. autoclass:: noora.plugins.postgresql.create.CreatePlugin.CreatePlugin
+    :members:
+
+.. autoclass:: noora.plugins.postgresql.drop.DropPlugin.DropPlugin
+    :members:
+
+.. autoclass:: noora.plugins.postgresql.update.UpdatePlugin.UpdatePlugin
+    :members:
+
+.. autoclass:: noora.plugins.postgresql.recreate.RecreatePlugin.RecreatePlugin
+    :members:
 
 
 Adding Plugins
