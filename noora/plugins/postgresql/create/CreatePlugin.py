@@ -11,6 +11,7 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
 class CreatePlugin(PGSQLPlugin):
+    """Plugin for creating (initializing) a PostgreSQL database."""
     def _validate_and_prepare(self, properties, arguments):
         prepared_args = {}
 
@@ -29,13 +30,15 @@ class CreatePlugin(PGSQLPlugin):
 
     def execute(self, properties, arguments):
         """
-        Create a new database instance for the latest version
+        Create a new database instance for the initial version.
 
+        :type properties: system.Properties.Properties
         :param properties: The project properties
-        :param arguments: A dict of {
-            'host': 'The hostname where the database will run',
-            'environment': 'The environment to create the database in (optional),
-        }
+        :type arguments: dict
+        :param arguments: This dict contains the plugin arguments:
+
+            * **host**: The hostname where the database is running;
+            * **environment**: The environment to create the database in (optional).
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 

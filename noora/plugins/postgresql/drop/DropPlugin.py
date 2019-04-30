@@ -11,6 +11,7 @@ from noora.connectors.ConnectionExecutor import ConnectionExecutor
 
 
 class DropPlugin(PGSQLPlugin):
+    """Class providing functionality to drop (clear out) a database."""
     def _validate_and_prepare(self, properties, arguments):
         prepared_args = {}
 
@@ -33,14 +34,13 @@ class DropPlugin(PGSQLPlugin):
         Drop a database after checking if schema and environment are
         valid values. Also check that host is not on the block list.
 
+        :type properties: system.Properties.Properties
         :param properties: The project properties
-        :param arguments: A dict of {
-            'host': 'The hostname where the database will be dropped on',
-            'database': 'The database to drop (optional)',
-            'environment': 'The environment to drop the database in (optional),
-            'alias': 'The database alias. If provided, this will overrule
-                the database argument (optional),
-        }
+        :type arguments: dict
+        :param arguments: This dict contains the plugin arguments:
+
+            * **host**: The hostname to drop on;
+            * **environment**: Environment to drop the database from.
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
