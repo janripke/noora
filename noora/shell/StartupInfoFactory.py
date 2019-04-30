@@ -3,6 +3,7 @@ import subprocess
 
 
 class StartupInfoFactory(object):
+    """Factory for creating startup info instances"""
     @staticmethod
     def new_startup_info():
         startup_info = None

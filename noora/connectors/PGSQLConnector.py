@@ -10,20 +10,22 @@ from noora.connectors.Connector import Connector
 
 class PGSQLConnector(Connector):
     """
-    Connector for PostGreSQL server.
+    Connector for PostgreSQL server.
     """
     def execute(self, executable, properties):
         """
         Execute the script provided by `executable` on the target server.
 
-        :param executable: A dict containing the following parameters: {
-            'host': 'The address of the server to connect to',
-            'port': 'Server port to connect to',
-            'database': 'The database name',
-            'username': 'Database username',
-            'password': 'Database user password',
-            'script': 'Path to the script to execute',
-        }
+        :type executable: dict
+        :param executable: Should contain the following keys and values:
+
+            * **host**: The address of the server to connect to;
+            * **port**: Server port to connect to;
+            * **database**: The database name;
+            * **username**: Database username;
+            * **password**: Database user password;
+            * **script**: Path to the script to execute.
+        :type properties: noora.system.Properties.Properties
         :param properties: A Noora project properties instance
         """
         script = executable['script']

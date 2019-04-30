@@ -8,6 +8,7 @@ from noora.io.FileFilter import FileFilter
 
 
 class Files(object):
+    # FIXME: docstrings
     @staticmethod
     def list_filtered(folder, properties):
         filters = Filters()

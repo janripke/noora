@@ -15,4 +15,5 @@ class Connector(Connectable):
         self.__result = result
 
     def execute(self, executable, properties):
+        """Override this method in a subclass"""
         raise NotImplementedError("execute method not implemented")

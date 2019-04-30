@@ -6,9 +6,11 @@ class File(object):
     File management functionality. Initialize a file object with its path (url).
     """
     def __init__(self, url=None):
+        """Initialize the file path"""
         self.__url = url
 
     def get_url(self):
+        """Return the path to the file"""
         return self.__url
 
     def is_file(self):
