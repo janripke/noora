@@ -9,6 +9,12 @@ The plugin structure is kept disconnected from the command line interface so it 
 
 In the last section we have included documentation about extending plugins or adding technologies.
 
+Plugin Base Class
+^^^^^^^^^^^^^^^^^
+
+.. autoclass:: noora.plugins.Plugin.Plugin
+    :members:
+
 
 MySQL
 -----
@@ -34,8 +40,11 @@ The ``drop_objects`` directive has the following default list, in order of execu
 
 The MySQL technology also supports using aliases for your database. Add an alias to the ``aliasses`` (sic) list in ``myproject.json`` to enable the alias, and add a mapping to the ``database_aliases`` list to map a database to an alias, e.g.: ``"database_aliases": [(foo, foo_bar)]``.
 
-Plugins
-^^^^^^^
+Connector and Plugins
+^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: noora.connectors.MysqlConnector.MysqlConnector
+    :members:
 
 .. autoclass:: noora.plugins.mysql.generate.GeneratePlugin.GeneratePlugin
     :members:
@@ -84,8 +93,11 @@ The ``drop_objects`` directive has the following default list, in order of execu
 * idx
 * dbl
 
-Plugins
-^^^^^^^
+Connector and Plugins
+^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: noora.connectors.MssqlConnector.MssqlConnector
+    :members:
 
 .. autoclass:: noora.plugins.mssql.generate.GeneratePlugin.GeneratePlugin
     :members:
@@ -127,8 +139,11 @@ The ``drop_objects`` directive has the following default list, in order of execu
 * idx
 * sex
 
-Plugins
-^^^^^^^
+Connector and Plugins
+^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: noora.connectors.PGSQLConnector.PGSQLConnector
+    :members:
 
 .. autoclass:: noora.plugins.postgresql.generate.GeneratePlugin.GeneratePlugin
     :members:
