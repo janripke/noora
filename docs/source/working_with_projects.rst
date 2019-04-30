@@ -42,7 +42,7 @@ The MySQL generate plugin created the following standard project structure::
 
 At the top level resides the project settings file along with the ``create`` directory. This directory contains the initial version of your project and will always be looked in first when deploying to an empty database.
 
-Inside the create directory you'll find another directory, one for every database that is managed by your project. If you just generated your project, there'll be only one database, in our example called "acme".
+Inside the create directory you'll find another directory, one for every database (or schema) that is managed by your project. If you just generated your project, there'll be only one database, in our example called "acme".
 
 In this example, there are two subdirectories: ``dat`` and ``ddl``. The ``dat`` directory contains static data for your database. For example, per environment you deploy your database to you can set environment specific settings.
 
