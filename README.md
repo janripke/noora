@@ -2,7 +2,7 @@
 
 
 # Welcome to Noora
-Noora is a deployment tool that can be used to automate the database deployment cycle. It allows you to organize your database structure, do versioning on your data model, set up environments and generate self-contained Python packages that can deploy your structure to a server.
+Noora is a deployment tool for automating the database deployment cycle. It allows you to organize your database structure, do versioning on your data model, set up environments and generate self-contained Python packages that can deploy your structure to a server.
 
 Noora was created with the DevOps paradigm in mind; especially when as a team you manage many database models it enables you to standardize your DDL and streamline development, testing, acceptance and deployment in production.
 
