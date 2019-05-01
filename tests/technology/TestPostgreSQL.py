@@ -12,15 +12,15 @@ from TestScenario import get_suite, TechnologyFullSimpleTest
 
 TEST_DIR = '/tmp'
 TEST_DB = {
-    'name': 'noora_test_mysql',
+    'name': 'noora_test_postgresql',
     'host': 'localhost',
-    'port': 3306,
+    'port': 5432,
     'user': 'apps',
     'pass': 'Welcome123',
 }
 
 
-class TestMySQLBase(TechnologyFullSimpleTest):
+class TestPostgreSQLBase(TechnologyFullSimpleTest):
     """
     Base class for setting up and tearing down a MySQL technology test.
     """
@@ -38,7 +38,7 @@ class TestMySQLBase(TechnologyFullSimpleTest):
         self.assertFalse(os.path.exists('{}/{}-db'.format(self.test_dir, self.test_db)))
 
         cmd = [
-            'mynoora', 'generate', 'mysql',
+            'mynoora', 'generate', 'postgresql',
             '-h', '{}'.format(self.test_db['host']),
             '-p', '{}'.format(self.test_db['port']),
             '-d', self.test_db['name'],
@@ -60,7 +60,7 @@ class TestMySQLBase(TechnologyFullSimpleTest):
         shutil.rmtree('{}/{}-db'.format(self.test_dir, self.test_db['name']))
 
 
-suite = get_suite(TestMySQLBase)
+suite = get_suite(TestPostgreSQLBase)
 
 
 if __name__ == '__main__':
