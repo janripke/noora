@@ -12,17 +12,17 @@ from TestScenario import get_suite, TechnologyFullSimpleTest
 
 TEST_DIR = '/tmp'
 TEST_DB = {
-    'name': 'noora_test_postgresql',
+    'name': 'noora_test_mssql',
     'host': '127.0.0.1',
-    'port': 5432,
+    'port': 1433,
     'user': 'apps',
     'pass': 'Welcome123',
 }
 
 
-class TestPostgreSQLBase(TechnologyFullSimpleTest):
+class TestMSSQLBase(TechnologyFullSimpleTest):
     """
-    Base class for setting up and tearing down a MySQL technology test.
+    Base class for setting up and tearing down a MSSQL technology test.
     """
     def __init__(self, *args, **kwargs):
         TechnologyFullSimpleTest.__init__(self, *args, **kwargs)
@@ -38,10 +38,11 @@ class TestPostgreSQLBase(TechnologyFullSimpleTest):
         self.assertFalse(os.path.exists('{}/{}-db'.format(self.test_dir, self.test_db)))
 
         cmd = [
-            'mynoora', 'generate', 'postgresql',
+            'mynoora', 'generate', 'mssql',
             '-h', '{}'.format(self.test_db['host']),
             '-p', '{}'.format(self.test_db['port']),
             '-d', self.test_db['name'],
+            '-s', self.test_db['name'],
             '-U' '{}'.format(self.test_db['user']),
             '-P', '{}'.format(self.test_db['pass']),
             '-v', '1.0.0',
@@ -60,7 +61,7 @@ class TestPostgreSQLBase(TechnologyFullSimpleTest):
         shutil.rmtree('{}/{}-db'.format(self.test_dir, self.test_db['name']))
 
 
-suite = get_suite(TestPostgreSQLBase)
+suite = get_suite(TestMSSQLBase)
 
 
 if __name__ == '__main__':
