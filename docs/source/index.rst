@@ -132,6 +132,7 @@ Miscellaneous
    :maxdepth: 2
 
    authors
+   changelog
    license.md
 
 Indices and tables
