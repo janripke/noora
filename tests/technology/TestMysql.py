@@ -13,7 +13,7 @@ from TestScenario import get_suite, TechnologyFullSimpleTest
 TEST_DIR = '/tmp'
 TEST_DB = {
     'name': 'noora_test_mysql',
-    'host': 'localhost',
+    'host': '127.0.0.1',
     'port': 3306,
     'user': 'apps',
     'pass': 'Welcome123',
