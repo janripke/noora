@@ -12,6 +12,8 @@ Why Noora?
 To Do:
 
 * Philosophy of programmatic databases (integrate parts of white paper)
+* Ability to easily roll out to different environments
+* Version management on database changes
 * Explanation of interaction with db through command line tools
 
 
