@@ -89,7 +89,8 @@ setup(
                             'plugins/mssql/drop/tab/*.sql',
                             'plugins/mssql/drop/typ/*.sql',
                             'plugins/mssql/drop/vw/*.sql',
-                            'plugins/mssql/update/*.sql']},
+                            'plugins/mssql/update/*.sql',
+                            'plugins/postgresql/generate/templates/*.json']},
     install_requires=['six', 'click'],
     entry_points={
         'console_scripts': [
