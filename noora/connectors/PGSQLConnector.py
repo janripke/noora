@@ -32,6 +32,7 @@ class PGSQLConnector(Connector):
 
         cp = {
             'database': executable['database'],
+            'username': executable['username'].split('@')[0]
         }
         if 'environment' in properties.keys():
             cp['environment'] = properties.get('environment')
