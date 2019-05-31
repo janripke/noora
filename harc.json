@@ -1,9 +1,5 @@
 {
-  "projects": [
-    {
-      "name": "noora",
-      "repository": "https://github.com/janripke/noora.git",
-      "technology": "python"
-    }
-  ]
+  "name": "noora",
+  "repository": "https://github.com/janripke/noora.git",
+  "technology": "python"
 }
