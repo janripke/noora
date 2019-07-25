@@ -1,3 +1,4 @@
+from noora.system.CredentialHelper import CredentialHelper
 import os
 import json
 
@@ -31,6 +32,7 @@ def get_mssql_properties(users, host, schema):
                 'username': user[2],
                 'password': user[3],
             }
+            res = CredentialHelper.get_credentials(res)
             return res
 
     return None
@@ -55,6 +57,7 @@ def get_mysql_properties(users, host, database):
                 'username': user[2],
                 'password': user[3],
             }
+            res = CredentialHelper.get_credentials(res)
             return res
 
     return None
@@ -79,6 +82,7 @@ def get_postgres_properties(users, host, database):
                 'username': user[2],
                 'password': user[3],
             }
+            res = CredentialHelper.get_credentials(res)
             return res
 
     return None
