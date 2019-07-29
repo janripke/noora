@@ -3,9 +3,9 @@ DO $$
     sttmnt VARCHAR;
   BEGIN
     FOR sttmnt IN
-      SELECT 'DROP VIEW ' || table_schema || '.' || table_name
-      FROM information_schema.views
-      WHERE table_catalog='acme' and table_schema='public'
+      SELECT 'DROP VIEW ' || schemaname || '.' || viewname
+      FROM pg_views
+      WHERE viewowner = '{username}'
     LOOP
       EXECUTE sttmnt;
     END LOOP;
