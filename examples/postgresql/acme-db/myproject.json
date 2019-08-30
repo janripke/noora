@@ -1,25 +1,25 @@
 {
-  "project": "{project}",
+  "project": "acme-db",
   "databases": [
-    "{database}"
+    "acme"
   ],
   "aliasses": [],
   "database_aliases" : [],
   "postgresql_users": [
     [
-      "{host}",
-      "{database}",
-      "{username}",
-      "{password}",
-      "{port}"
+      "localhost",
+      "acme",
+      "acme_owner",
+      "acme_owner",
+      "5432"
     ]
   ],
   "default_environment": "dev",
   "postgresql_hosts": [
-    "{host}"
+    "localhost"
   ],
   "blocked_hosts": [],
-  "version_database": "{database}",
+  "version_database": "acme",
   "excluded_extensions": [
     "bak",
     "~",
@@ -44,7 +44,7 @@
   "version_select_statement": "select value into l_value from application_properties where name='application.version';",
   "environment_insert_statement": "insert into application_properties(name,value) values ('application.environment','<environment>');",
   "environment_select_statement": "select value into l_value from application_properties where name='application.environment';",
-  "default_version": "{version}",
+  "default_version": "1.0.0",
   "drop_objects": [
     "vw",
     "trg",
