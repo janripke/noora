@@ -19,14 +19,14 @@ To install Noora, you can install from pip, a release from Github or from source
 $ pip install noora
 
 # Install from github
-$ pip install git+https://github.com/janripke/noora.git@1.1.4#egg=noora
+$ pip install git+https://github.com/janripke/noora.git@1.1.5#egg=noora
 
 # Clone and install from source
 $ git clone https://github.com/janripke/noora/
 $ cd noora
 # Checkout the release you want to use 
 # (NOTE: the master branch is NOT guaranteed to be stable!)
-$ git checkout tags/1.1.4
+$ git checkout tags/1.1.5
 $ pip install .
 ```
 
@@ -109,7 +109,7 @@ That's it! To learn more about Noora projects, check out http://noora.readthedoc
 $ mynoora drop -h=localhost
 dropping database 'acme' on host 'localhost' using environment 'dev'
 /home/niels/projects/noora/noora/plugins/mysql/drop/vw/drop_views.sql
-/home/niels/projects/noora/noora/plugins/mysql/drop/tab/drop_tables.sql
+/home/niels/projects/noora/noora/plugins/mysql/drop/tab/drop_foreign_keys.sql
 /home/niels/projects/noora/noora/plugins/mysql/drop/prc/drop_procedures.sql
 /home/niels/projects/noora/noora/plugins/mysql/drop/fct/drop_functions.sql
 database 'acme' dropped.

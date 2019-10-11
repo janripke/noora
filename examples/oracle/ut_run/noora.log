@@ -13,8 +13,8 @@
 2017-09-01 15:07:27,265 INFO /home/user/workspace/noora/src/plugins/static/drop/typ/drop_types.sql
 2017-09-01 15:07:27,265 INFO "/home/user/workspace/noora/src/plugins/static/drop/typ/drop_types.sql"
 
-2017-09-01 15:07:27,960 INFO /home/user/workspace/noora/src/plugins/static/drop/tab/drop_tables.sql
-2017-09-01 15:07:27,961 INFO "/home/user/workspace/noora/src/plugins/static/drop/tab/drop_tables.sql"
+2017-09-01 15:07:27,960 INFO /home/user/workspace/noora/src/plugins/static/drop/tab/drop_foreign_keys.sql
+2017-09-01 15:07:27,961 INFO "/home/user/workspace/noora/src/plugins/static/drop/tab/drop_foreign_keys.sql"
 
 2017-09-01 15:07:28,092 INFO /home/user/workspace/noora/src/plugins/static/drop/prc/drop_procedures.sql
 2017-09-01 15:07:28,092 INFO "/home/user/workspace/noora/src/plugins/static/drop/prc/drop_procedures.sql"
@@ -97,8 +97,8 @@ DROP TRIGGER "APPLICATION_PROPERTIES_BIU"
 2017-09-01 15:14:12,066 INFO /home/user/workspace/noora/src/plugins/static/drop/typ/drop_types.sql
 2017-09-01 15:14:12,067 INFO "/home/user/workspace/noora/src/plugins/static/drop/typ/drop_types.sql"
 
-2017-09-01 15:14:12,237 INFO /home/user/workspace/noora/src/plugins/static/drop/tab/drop_tables.sql
-2017-09-01 15:14:12,238 INFO "/home/user/workspace/noora/src/plugins/static/drop/tab/drop_tables.sql"
+2017-09-01 15:14:12,237 INFO /home/user/workspace/noora/src/plugins/static/drop/tab/drop_foreign_keys.sql
+2017-09-01 15:14:12,238 INFO "/home/user/workspace/noora/src/plugins/static/drop/tab/drop_foreign_keys.sql"
 DROP TABLE "APPLICATION_PROPERTIES" cascade constraints purge                   
 
 2017-09-01 15:14:12,331 INFO /home/user/workspace/noora/src/plugins/static/drop/prc/drop_procedures.sql
@@ -188,8 +188,8 @@ DROP TRIGGER "APPLICATION_PROPERTIES_BIU"
 2017-09-01 15:16:10,735 INFO /home/user/workspace/noora/src/plugins/static/drop/typ/drop_types.sql
 2017-09-01 15:16:10,735 INFO "/home/user/workspace/noora/src/plugins/static/drop/typ/drop_types.sql"
 
-2017-09-01 15:16:10,873 INFO /home/user/workspace/noora/src/plugins/static/drop/tab/drop_tables.sql
-2017-09-01 15:16:10,873 INFO "/home/user/workspace/noora/src/plugins/static/drop/tab/drop_tables.sql"
+2017-09-01 15:16:10,873 INFO /home/user/workspace/noora/src/plugins/static/drop/tab/drop_foreign_keys.sql
+2017-09-01 15:16:10,873 INFO "/home/user/workspace/noora/src/plugins/static/drop/tab/drop_foreign_keys.sql"
 DROP TABLE "APPLICATION_PROPERTIES" cascade constraints purge                   
 
 2017-09-01 15:16:10,965 INFO /home/user/workspace/noora/src/plugins/static/drop/prc/drop_procedures.sql

@@ -106,7 +106,7 @@ That's it! To learn more about the supported technologies and preparing your dat
   $ mynoora drop -h=localhost
   dropping database 'acme' on host 'localhost' using environment 'dev'
   /home/niels/projects/noora/noora/plugins/mysql/drop/vw/drop_views.sql
-  /home/niels/projects/noora/noora/plugins/mysql/drop/tab/drop_tables.sql
+  /home/niels/projects/noora/noora/plugins/mysql/drop/tab/drop_foreign_keys.sql
   /home/niels/projects/noora/noora/plugins/mysql/drop/prc/drop_procedures.sql
   /home/niels/projects/noora/noora/plugins/mysql/drop/fct/drop_functions.sql
   database 'acme' dropped.
