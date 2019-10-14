@@ -1,6 +1,6 @@
 create table application_properties
 (
-  id                      bigint primary key not null default (next value for application_properties_s),
+  id                      bigint primary key not null identity(1,1),
   name                    varchar(255),
   value                   varchar(4000),
   description             varchar(255),
