@@ -103,8 +103,7 @@ class UpdatePlugin(MssqlPlugin):
                   "on host '{host}' using environment '{env}'".format(
                     schema=schema, db=database, host=host, env=environment))
 
-            executor = PropertyHelper.get_mssql_properties(users, host, schema)
-            executor['database'] = database
+            executor = PropertyHelper.get_mssql_properties(users, host, database, schema)
 
             # database_folder = PropertyHelper.get_database_folder(database, database_aliases)
 

@@ -7,13 +7,13 @@
   "aliasses": [],
   "database_aliases" : [],
   "mssql_users": [
-    [
-      "localhost",
-      "dbo",
-      "meta_owner",
-      "meta_0wner",
-      "1433"
-    ]
+    {
+      "host": "localhost",
+      "schema": "dbo",
+      "username": "meta_owner",
+      "password": "meta_0wner",
+      "port": "1433"
+    }
   ],
   "default_environment": "dev",
   "mssql_hosts": [

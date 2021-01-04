@@ -6,13 +6,13 @@
   "aliasses": [],
   "database_aliases" : [],
   "postgresql_users": [
-    [
-      "{host}",
-      "{database}",
-      "{username}",
-      "{password}",
-      "{port}"
-    ]
+    {
+      "host": "{host}",
+      "database": "{database}",
+      "username": "{username}",
+      "password": "{password}",
+      "port": "{port}"
+    }
   ],
   "default_environment": "dev",
   "postgresql_hosts": [

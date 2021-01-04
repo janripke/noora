@@ -37,6 +37,7 @@ setup(
     version=find_meta('version'),
     description=find_meta('description'),
     long_description=read('README.md'),
+    long_description_content_type='text/markdown',
     license=find_meta('license'),
     author=find_meta('author'),
     author_email=find_meta('email'),
@@ -63,7 +64,7 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     keywords='development database',
-    packages=find_packages(exclude=['doc', 'env', 'examples', 'releases', 'snippets', 'src', 'test', 'tests']),
+    packages=find_packages(exclude=['doc', 'docs', 'examples', 'releases', 'snippets', 'src', 'test', 'tests']),
     package_data={'noora': ['*.json',
                             'plugins/mysql/generate/templates/*.json',
                             'plugins/mysql/generate/templates/fct/*.sql',
@@ -105,7 +106,7 @@ setup(
                             'plugins/postgresql/drop/trg/*.sql',
                             'plugins/postgresql/drop/vw/*.sql',
                             'plugins/postgresql/update/*.sql']},
-    install_requires=['six', 'click'],
+    install_requires=['six', 'click', 'fire'],
     entry_points={
         'console_scripts': [
             'mynoora=noora.mynoora_cli:main',

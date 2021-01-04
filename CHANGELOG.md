@@ -3,8 +3,44 @@ Changelog
 
 **NOTE**: We're currently migrating Noora to a new structure. This changelog describes changes in the `noora` package as found in the root of this project. The old code resides in `src` and will not receive updates.
 
+Version 1.2.0 
+-------------
+* changed layout connection parameters, sections mysql_users, mssql_users and postgresql users
+  was a list is now a dictionary. You have to change your old configurations
+  ```json
+  "mssql_users": [
+    {
+      "host": "{host}",
+      "schema": "{schema}",
+      "username": "{username}",
+      "password": "{password}",
+      "port": "{port}"
+    }
+  ],
+  
+  "mysql_users": [
+    {
+      "host": "{host}",
+      "database": "{database}",
+      "username": "{username}",
+      "password": "{password}",
+      "port": "{port}"
+    }
+  ],
+  
+  "postgresql_users": [
+    {
+      "host": "{host}",
+      "database": "{database}",
+      "username": "{username}",
+      "password": "{password}",
+      "port": "{port}"
+    }
+  ],
+```
 
-Currently in `master`
+
+Version 1.1.1
 -----------------------
 New features:
 

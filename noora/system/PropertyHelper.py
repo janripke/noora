@@ -12,24 +12,26 @@ def get_database_folder(database, folder_aliases):
     return database
 
 
-def get_mssql_properties(users, host, schema):
+def get_mssql_properties(users, host, database, schema):
     """
     For a list of user tuples, find the first occurrence that matches host and database.
 
     :param users: list containing a sequence of AT LEAST (host, schema, username, password)
+    :param database : the name of override database
     :param host: the hostname to match
     :param schema: the schema to match
     :return: a dict containing host, schema, username, password, port
     """
     for user in users:
-        if user[0].lower() == host.lower() and user[1].lower() == schema.lower():
+        if user.get("host").lower() == host.lower() \
+                and user.get("schema").lower() == schema.lower():
             res = {
                 'host': host,
+                'database': user.get("database", database),
                 'schema': schema,
-                # Backwards compatibility with old project files
-                'port': user[4] if len(user) > 4 else None,
-                'username': user[2],
-                'password': user[3],
+                'port': user.get("port"),
+                'username': user.get("username"),
+                'password': user.get("password"),
             }
             return res
 
@@ -46,14 +48,14 @@ def get_mysql_properties(users, host, database):
     :return: a dict containing host, database, username, password, port
     """
     for user in users:
-        if user[0].lower() == host.lower() and user[1].lower() == database.lower():
+        if user.get("host").lower() == host.lower() \
+                and user.get("database").lower() == database.lower():
             res = {
                 'host': host,
                 'database': database,
-                # Backwards compatibility with old project files
-                'port': user[4] if len(user) > 4 else None,
-                'username': user[2],
-                'password': user[3],
+                'port': user.get("port"),
+                'username': user.get("username"),
+                'password': user.get("password"),
             }
             return res
 
@@ -70,14 +72,14 @@ def get_postgres_properties(users, host, database):
     :return: a dict containing host, database, username, password, port
     """
     for user in users:
-        if user[0].lower() == host.lower() and user[1].lower() == database.lower():
+        if user.get("host").lower() == host.lower() \
+                and user.get("database").lower() == database.lower():
             res = {
                 'host': host,
                 'database': database,
-                # Backwards compatibility with old project files
-                'port': user[4] if len(user) > 4 else None,
-                'username': user[2],
-                'password': user[3],
+                'port': user.get("port"),
+                'username': user.get("username"),
+                'password': user.get("password"),
             }
             return res
 

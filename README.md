@@ -1,5 +1,6 @@
 # ![noora logo](https://a.fsdn.com/allura/p/noora/icon)
 
+[![Join the chat at https://gitter.im/noora_cli/Lobby](https://badges.gitter.im/noora_cli/Lobby.svg)](https://gitter.im/noora_cli/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Welcome to Noora
 Noora is a deployment tool for automating the database deployment cycle. It allows you to organize your database structure, do versioning on your data model, set up environments and generate self-contained Python packages that can deploy your structure to a server.
@@ -19,21 +20,21 @@ To install Noora, you can install from pip, a release from Github or from source
 $ pip install noora
 
 # Install from github
-$ pip install git+https://github.com/janripke/noora.git@1.1.6#egg=noora
+$ pip install git+https://github.com/janripke/noora.git@1.2.0#egg=noora
 
 # Clone and install from source
 $ git clone https://github.com/janripke/noora/
 $ cd noora
 # Checkout the release you want to use 
 # (NOTE: the master branch is NOT guaranteed to be stable!)
-$ git checkout tags/1.1.6
+$ git checkout tags/1.2.0
 $ pip install .
 ```
 
 We'll set up a MySQL project, so first make sure to create a user and database for your project:
 
 ```
-$> mysql -uroot
+$> mysql -u root
 mysql> create database acme;
 mysql> create user apps@'localhost' identified by 'apps';
 mysql> grant all on acme.* to apps@'localhost';

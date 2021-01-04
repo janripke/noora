@@ -1,4 +1,4 @@
-__version__ = '1.1.7-SNAPSHOT'
+__version__ = '1.2.0-dev0'
 
 __title__ = 'noora'
 __description__ = 'NoOra a database deployment tool.'
@@ -6,8 +6,8 @@ __uri__ = 'https://github.com/janripke/noora'
 __doc__ = __description__ + ' <' + __uri__ + '>'
 
 __author__ = 'Jan Ripke'
-__email__ = 'jan.ripke@oxyma.nl'
+__email__ = 'janripke@gmail.com'
 
 __license__ = 'GNU General Public License v3 or later (GPLv3+)'
-__copyright__ = 'Copyleft (l) 2017 Jan Ripke'
+__copyright__ = 'Copyleft (l) 2021 Jan Ripke'
 

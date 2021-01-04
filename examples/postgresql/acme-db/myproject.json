@@ -6,13 +6,13 @@
   "aliasses": [],
   "database_aliases" : [],
   "postgresql_users": [
-    [
-      "localhost",
-      "acme",
-      "acme_owner",
-      "acme_owner",
-      "5432"
-    ]
+    {
+      "host": "localhost",
+      "database": "acme",
+      "username": "acme_owner",
+      "password": "acme_owner",
+      "port": "5432"
+    }
   ],
   "default_environment": "dev",
   "postgresql_hosts": [

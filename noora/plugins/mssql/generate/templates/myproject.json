@@ -7,13 +7,13 @@
   "aliasses": [],
   "database_aliases" : [],
   "mssql_users": [
-    [
-      "{host}",
-      "{schema}",
-      "{username}",
-      "{password}",
-      "{port}"
-    ]
+    {
+      "host": "{host}",
+      "schema": "{schema}",
+      "username": "{username}",
+      "password": "{password}",
+      "port": "{port}"
+    }
   ],
   "default_environment": "dev",
   "mssql_hosts": [

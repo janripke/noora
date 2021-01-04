@@ -5,12 +5,13 @@
   "aliasses": [],
   "database_aliases" : [],
   "mysql_users": [
-    [
-      "localhost",
-      "acme",
-      "apps",
-      "apps"
-    ]
+    {
+      "host": "localhost",
+      "database": "acme",
+      "username": "apps",
+      "password": "apps",
+      "port": "3306"
+    }
   ],
   "default_environment": "dev",
   "mysql_hosts": [

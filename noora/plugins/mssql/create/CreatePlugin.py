@@ -69,7 +69,7 @@ class CreatePlugin(MssqlPlugin):
                   "on host '{host}' using environment '{env}'".format(
                     schema=schema, db=database, host=host, env=environment))
 
-            executor = PropertyHelper.get_mssql_properties(users, host, schema)
+            executor = PropertyHelper.get_mssql_properties(users, host, database, schema)
             executor['database'] = database
 
             for obj in objects:
