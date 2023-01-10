@@ -36,6 +36,8 @@ class UpdatePlugin(PGSQLPlugin):
         Fail.fail_on_invalid_environment(environment, properties)
         prepared_args['environment'] = environment
 
+        prepared_args['connection_string'] = arguments.get('connection_string')
+
         alias = arguments.get('alias')
         Fail.fail_on_invalid_alias(alias, properties)
         # if an alias is given, only this database will be installed, other databases will be
@@ -107,16 +109,23 @@ class UpdatePlugin(PGSQLPlugin):
 
         alter_dir = properties.get('alter.dir')
 
-        # retrieve the user credentials for this database project.
-        users = properties.get('postgresql_users')
+        # retrieve the database connection credentials through
+        # the commandline option --connection-string
+        connection_string = prepared_args['connection_string']
+        if connection_string:
+            users = PropertyHelper.connection_credentials(connection_string)
 
-        # try to retrieve the users from the credentials file, when no users are configured in
-        # myproject.json.
-        if not users:
-            # retrieve the name of this database project, introduced in version 1.0.12
-            profile = PropertyHelper.get_profile(properties)
-            if profile:
-                users = profile.get('postgresql_users')
+        if not connection_string:
+            # retrieve the user credentials for this database project.
+            users = properties.get('postgresql_users')
+
+            # try to retrieve the users from the credentials file, when no users are configured in
+            # myproject.json.
+            if not users:
+                # retrieve the name of this database project, introduced in version 1.0.12
+                profile = PropertyHelper.get_profile(properties)
+                if profile:
+                    users = profile.get('postgresql_users')
 
         connector = self.get_connector()
 

@@ -8,6 +8,6 @@ __doc__ = __description__ + ' <' + __uri__ + '>'
 __author__ = 'Jan Ripke'
 __email__ = 'janripke@gmail.com'
 
-__license__ = 'GNU General Public License v3 or later (GPLv3+)'
+__license__ = 'Apache License 2.0'
 __copyright__ = 'Copyleft (l) 2021 Jan Ripke'
 
