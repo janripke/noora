@@ -9,7 +9,7 @@ Noora was created with the DevOps paradigm in mind; especially when as a team yo
 
 NOTE: This project is currently split across two branches, where Noora 1.1.0 provides MySQL and MSSQL support using Python 2 and 3 and Noora 1.0.2 supports Oracle and MySQL using Python 2 only. This documentation describes Noora >= 1.1.
 
-Noora is released under the [GNU General Public License](LICENSE).
+Noora is released under the [Apache License 2.0](LICENSE).
 
 
 # Quick Start
