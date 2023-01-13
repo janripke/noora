@@ -38,7 +38,7 @@ class RecreatePlugin(PGSQLPlugin):
             if version.get_value() != prepared_args['default_version']:
                 prepared_args['update_versions'].append(version.get_value())
 
-            # Then if we reached the target version, we break
+            # Then, if we reached the target version, we break
             if version.get_value() == target_version:
                 break
 
@@ -60,6 +60,7 @@ class RecreatePlugin(PGSQLPlugin):
             * **environment**: Name of the environment (optional).
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
+        print(f"arguments: {arguments}")
 
         # find and execute the drop plugin.
         plugin = ClassLoader.load_class(ClassLoader.find_plugin(properties['technology'], 'drop'))

@@ -111,8 +111,9 @@ class Fail(object):
     def fail_on_blocked_hosts(host, properties):
         """Make sure that ``host`` is not in the list of blocked hosts"""
         blocked_hosts = properties.get('blocked_hosts')
-        if host in blocked_hosts:
-            raise BlockedHostException("blocked host: {}".format(host))
+        if blocked_hosts:
+            if host in blocked_hosts:
+                raise BlockedHostException("blocked host: {}".format(host))
 
     @staticmethod
     def fail_on_invalid_host(host, properties):
@@ -122,7 +123,8 @@ class Fail(object):
         :param host: The host to look up
         :param host_list: Properties containing the host list
         """
-        host_list = properties.get('{}_hosts'.format(properties.get('technology')), [])
-        if host not in host_list:
-            raise PluginException(
-                "Host {} not in list of valid hosts for this project".format(host))
+        host_list = properties.get('{}_hosts'.format(properties.get('technology')))
+        if host_list:
+            if host not in host_list:
+                raise PluginException(
+                    "Host {} not in list of valid hosts for this project".format(host))

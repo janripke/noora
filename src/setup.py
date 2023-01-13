@@ -14,14 +14,14 @@ setup(
       NoOra is an attempt to apply a pattern to develop and install Oracle database projects, to promote portability and productivity.  ...
       """,
       classifiers=[
-          "License :: OSI Approved :: GNU General Public License (GPL)",
+          "License :: OSI Approved :: Apache License 2.0",
           "Programming Language :: Python",
           "Development Status :: 5 - Production/Stable",
           "Intended Audience :: Developers",
           "Topic :: Database",
       ],
       keywords='database install tools',
-      license='GPL',
+      license='Apache License 2.0',
       install_requires=[
         'setuptools',
         'wxpython',

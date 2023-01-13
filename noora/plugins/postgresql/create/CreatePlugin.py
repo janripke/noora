@@ -26,6 +26,8 @@ class CreatePlugin(PGSQLPlugin):
         Fail.fail_on_invalid_environment(environment, properties)
         prepared_args['environment'] = environment
 
+        prepared_args['connection_string'] = arguments.get('connection_string')
+
         return prepared_args
 
     def execute(self, properties, arguments):
@@ -48,16 +50,23 @@ class CreatePlugin(PGSQLPlugin):
 
         objects = properties.get('create_objects')
 
-        # retrieve the user credentials for this database project.
-        users = properties.get('postgresql_users')
+        # retrieve the database connection credentials through
+        # the commandline option --connection-string
+        connection_string = prepared_args['connection_string']
+        if connection_string:
+            users = PropertyHelper.connection_credentials(connection_string)
 
-        # try to retrieve the users from the credentials file, when no users are configured in
-        # myproject.json.
-        if not users:
-            # retrieve the name of this database project, introduced in version 1.0.12
-            profile = PropertyHelper.get_profile(properties)
-            if profile:
-                users = profile.get('postgresql_users')
+        if not connection_string:
+            # retrieve the user credentials for this database project.
+            users = properties.get('postgresql_users')
+
+            # try to retrieve the users from the credentials file, when no users are configured in
+            # myproject.json.
+            if not users:
+                # retrieve the name of this database project, introduced in version 1.0.12
+                profile = PropertyHelper.get_profile(properties)
+                if profile:
+                    users = profile.get('postgresql_users')
 
         # fail when no users are found. This means that they are not set in myproject.json or
         # credentials.json

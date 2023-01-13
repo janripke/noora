@@ -9,7 +9,7 @@ Noora was created with the DevOps paradigm in mind; especially when as a team yo
 
 NOTE: This project is currently split across two branches, where Noora 1.1.0 provides MySQL and MSSQL support using Python 2 and 3 and Noora 1.0.2 supports Oracle and MySQL using Python 2 only. This documentation describes Noora >= 1.1.
 
-Noora is released under the [GNU General Public License](LICENSE).
+Noora is released under the [Apache License 2.0](LICENSE).
 
 
 # Quick Start
@@ -20,14 +20,14 @@ To install Noora, you can install from pip, a release from Github or from source
 $ pip install noora
 
 # Install from github
-$ pip install git+https://github.com/janripke/noora.git@1.2.0#egg=noora
+$ pip install git+https://github.com/janripke/noora.git@1.2.1#egg=noora
 
 # Clone and install from source
 $ git clone https://github.com/janripke/noora/
 $ cd noora
 # Checkout the release you want to use 
 # (NOTE: the master branch is NOT guaranteed to be stable!)
-$ git checkout tags/1.2.0
+$ git checkout tags/1.2.1
 $ pip install .
 ```
 
