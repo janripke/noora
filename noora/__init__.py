@@ -1,4 +1,4 @@
-__version__ = '1.2.2-dev0'
+__version__ = '1.2.3-dev0'
 
 __title__ = 'noora'
 __description__ = 'NoOra a database deployment tool.'
