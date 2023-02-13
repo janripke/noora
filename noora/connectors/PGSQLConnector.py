@@ -53,7 +53,7 @@ class PGSQLConnector(Connector):
 
         statement = \
             "PGPASSWORD={passwd} psql -h {host} -p {port} -U {user} -d {db} " \
-            "-v ON_ERROR_STOP=1".format(
+            "-v ON_ERROR_STOP=1 --csv ".format(
                 host=executable['host'],
                 port=executable.get('port'),
                 user=executable['username'],
