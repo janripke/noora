@@ -1,1 +1,0 @@
-drop table application_properties;

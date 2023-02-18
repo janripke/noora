@@ -1,1 +1,0 @@
-drop function dbo.get_env

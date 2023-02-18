@@ -137,9 +137,9 @@ def get_profile(properties):
     return profile
 
 
-def connection_credentials(connection_string: str) -> dict:
+def connection_credentials(connection_string: str) -> list:
     """
-    Returns a dict containing the connection credentials
+    Returns a list containing the connection credentials
     The following format is expected for the connection_string.
     In the example below a postgresql connection string is used.
     --connection-string host=localhost,port=5432,database=acme,username=acme_owner,password=acme_owner

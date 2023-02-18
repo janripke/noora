@@ -4,7 +4,7 @@ from noora.plugins.postgresql.recreate.RecreatePlugin import RecreatePlugin
 
 
 @click.command()
-@click.option('-h', '--host', required=True, default='localhost')
+@click.option('-h', '--host', required=True, default="localhost")
 @click.option('-e', '--environment', required=False, help='Environment')
 @click.option('-v', '--version', required=False, help='The version to recreate')
 @click.option('--connection-string', required=False)

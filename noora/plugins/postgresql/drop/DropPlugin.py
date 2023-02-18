@@ -56,7 +56,6 @@ class DropPlugin(PGSQLPlugin):
         connection_string = prepared_args['connection_string']
         if connection_string:
             users = PropertyHelper.connection_credentials(connection_string)
-
         if not connection_string:
             # retrieve the user credentials for this database project.
             users = properties.get('postgresql_users')

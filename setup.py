@@ -98,6 +98,7 @@ setup(
                             'plugins/postgresql/generate/templates/seq/*.sql',
                             'plugins/postgresql/generate/templates/tab/*.sql',
                             'plugins/postgresql/generate/templates/trg/*.sql',
+                            'plugins/postgresql/deploy/*.sql',
                             'plugins/postgresql/drop/cst/*.sql',
                             'plugins/postgresql/drop/fct/*.sql',
                             'plugins/postgresql/drop/idx/*.sql',

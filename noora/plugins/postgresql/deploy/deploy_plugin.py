@@ -6,6 +6,7 @@ from noora.system.ClassLoader import ClassLoader
 from noora.io.File import File
 from noora.plugins.postgresql.PGSQLPlugin import PGSQLPlugin
 from noora.system import PropertyHelper
+from noora.system import Ora
 from noora.plugins.Fail import Fail
 
 
@@ -75,7 +76,14 @@ class DeployPlugin(PGSQLPlugin):
 
         host = arguments.get('host')
         Fail.fail_on_no_host(host)
+        Fail.fail_on_invalid_host(host, properties)
         prepared_args['host'] = host
+
+        environment = arguments.get('environment')
+        default_environment = properties.get('default_environment')
+        environment = Ora.nvl(environment, default_environment)
+        Fail.fail_on_invalid_environment(environment, properties)
+        prepared_args['environment'] = environment
 
         prepared_args['connection_string'] = arguments.get('connection_string')
 
