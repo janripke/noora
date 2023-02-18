@@ -27,7 +27,9 @@ class DropPlugin(PGSQLPlugin):
         Fail.fail_on_invalid_environment(environment, properties)
         prepared_args['environment'] = environment
 
-        prepared_args['connection_string'] = arguments.get('connection_string')
+        connection_string = arguments.get('connection_string')
+        prepared_args['connection_string'] = PropertyHelper.connection_credentials(connection_string)
+        Fail.fail_on_host_mismatch(host, prepared_args['connection_string'])
         return prepared_args
 
     def execute(self, properties, arguments):
@@ -55,7 +57,7 @@ class DropPlugin(PGSQLPlugin):
         # the commandline option --connection-string
         connection_string = prepared_args['connection_string']
         if connection_string:
-            users = PropertyHelper.connection_credentials(connection_string)
+            users = connection_string
         if not connection_string:
             # retrieve the user credentials for this database project.
             users = properties.get('postgresql_users')

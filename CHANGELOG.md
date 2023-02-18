@@ -3,6 +3,11 @@ Changelog
 
 **NOTE**: We're currently migrating Noora to a new structure. This changelog describes changes in the `noora` package as found in the root of this project. The old code resides in `src` and will not receive updates.
 
+Version 1.2.6
+-------------
+* postgresql, connection-string support, to avoid adding database credentials database project.
+
+
 Version 1.2.0 
 -------------
 * changed layout connection parameters, sections mysql_users, mssql_users and postgresql users

@@ -147,14 +147,15 @@ def connection_credentials(connection_string: str) -> list:
     :type connection_string: str
     :param connection_string: A connection string;
     """
-
-    key_strings = connection_string.split(",")
-    result = {}
-    for key_string in key_strings:
-        key_value_pair = key_string.split("=")
-        key = key_value_pair[0]
-        value = key_value_pair[1]
-        result[key] = value
-    return [
-        result
-    ]
+    if connection_string:
+        key_strings = connection_string.split(",")
+        result = {}
+        for key_string in key_strings:
+            key_value_pair = key_string.split("=")
+            key = key_value_pair[0]
+            value = key_value_pair[1]
+            result[key] = value
+        return [
+            result
+        ]
+    return []

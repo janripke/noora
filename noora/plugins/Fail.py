@@ -128,3 +128,13 @@ class Fail(object):
             if host not in host_list:
                 raise PluginException(
                     "Host {} not in list of valid hosts for this project".format(host))
+
+    @staticmethod
+    def fail_on_host_mismatch(host: str, prepared_connection_string: list):
+        if prepared_connection_string:
+            found = False
+            for item in prepared_connection_string:
+                if host == item.get('host'):
+                    found = True
+            if not found:
+                raise PluginException(f"Host '{host}' not present in connection-string")
