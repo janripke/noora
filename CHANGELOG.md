@@ -3,6 +3,12 @@ Changelog
 
 **NOTE**: We're currently migrating Noora to a new structure. This changelog describes changes in the `noora` package as found in the root of this project. The old code resides in `src` and will not receive updates.
 
+Version 1.2.8
+-------------
+* module naming conform python standards
+* mssql, added connection-string support
+* mssql, added tests
+
 Version 1.2.7
 -------------
 * postgresql, changed the deploy and recreate plugin, support for the keyword latest is added to the version parameter.
