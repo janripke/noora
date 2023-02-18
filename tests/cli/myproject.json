@@ -1,24 +1,25 @@
 {
-  "database": "ElsevierDB",
-  "schemes": [
-    "dbo"
+  "project": "acme-db",
+  "databases": [
+    "acme"
   ],
   "aliasses": [],
-  "database_aliases": [],
-  "mssql_users": [
-    [
-      "elsevierdb4.c07v9zv3jhxs.eu-west-1.rds.amazonaws.com,1433",
-      "dbo",
-      "Elsevier",
-      "Elsevier144"
-    ]
+  "database_aliases" : [],
+  "postgresql_users": [
+    {
+      "host": "localhost",
+      "database": "acme",
+      "username": "acme_owner",
+      "password": "acme_owner",
+      "port": "5432"
+    }
   ],
   "default_environment": "dev",
-  "mssql_hosts": [
-    "elsevierdb4.c07v9zv3jhxs.eu-west-1.rds.amazonaws.com,1433"
+  "postgresql_hosts": [
+    "localhost"
   ],
   "blocked_hosts": [],
-  "version_schema": "dbo",
+  "version_database": "acme",
   "excluded_extensions": [
     "bak",
     "~",
@@ -46,32 +47,21 @@
   "default_version": "1.0.0",
   "drop_objects": [
     "vw",
-    "syn",
-    "typ",
-    "tab",
-    "prc",
+    "trg",
     "fct",
-    "seq",
+    "cst",
+    "tab",
     "idx",
-    "dbl"
+    "seq"
   ],
   "create_objects": [
     "seq",
-    "syn",
     "tab",
     "cst",
     "fct",
-    "prc",
     "vw",
     "trg",
-    "idx",
-    "gra"
+    "idx"
   ],
-  "plugins": [
-    "noora.plugins.mssql.generate.GeneratePlugin.GeneratePlugin",
-    "noora.plugins.mssql.drop.DropPlugin.DropPlugin",
-    "noora.plugins.mssql.create.CreatePlugin.CreatePlugin",
-    "noora.plugins.mssql.update.UpdatePlugin.UpdatePlugin",
-    "noora.plugins.mssql.recreate.RecreatePlugin.RecreatePlugin"
-  ]
+  "technology": "postgresql"
 }
