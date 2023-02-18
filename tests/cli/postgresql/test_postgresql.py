@@ -228,6 +228,27 @@ def test_recreate_pass(command: MagicMock):
 
 
 @patch("noora.shell.Shell.Shell.execute")
+def test_recreate_latest_version_pass(command: MagicMock):
+    """
+    This test passes when the drop, create and update parts are executed.
+    """
+    # set the SQL output, an empty string means the SQL statement is successfully executed
+    command.return_value = ""
+
+    # read the properties from myproject.json, normally handled by mynoora_cli
+    props = Properties()
+
+    runner = CliRunner()
+    result = runner.invoke(recreate, obj=props, args=["--version", "latest"])
+
+    print(result.output)
+    assert result.exit_code == 0
+    assert "database 'acme' dropped" in result.output
+    assert "database 'acme' created." in result.output
+    assert "database 'acme' updated" in result.output
+
+
+@patch("noora.shell.Shell.Shell.execute")
 def test_recreate_connection_string_pass(command: MagicMock):
     """
     This test passes when the drop, create and update parts are executed.
@@ -304,6 +325,27 @@ def test_deploy_pass(command: MagicMock):
 
     runner = CliRunner()
     result = runner.invoke(deploy, obj=props)
+
+    print(result.output)
+    assert result.exit_code == 0
+    assert "database 'acme' created." in result.output
+    assert "database 'acme' updated" in result.output
+
+
+@patch("noora.shell.Shell.Shell.execute")
+def test_deploy_latest_version_pass(command: MagicMock):
+    """
+    This test passes when both the create and update parts are executed.
+    """
+
+    # set the SQL output, an empty string means the SQL statement is successfully executed
+    command.return_value = ""
+
+    # read the properties from myproject.json, normally handled by mynoora_cli
+    props = Properties()
+
+    runner = CliRunner()
+    result = runner.invoke(deploy, obj=props, args=["--version", "latest"])
 
     print(result.output)
     assert result.exit_code == 0
