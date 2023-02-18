@@ -3,7 +3,7 @@ import click
 
 import noora
 
-from noora.system.App import App
+from noora.system.app import App
 
 
 @click.command(cls=App, invoke_without_command=True, no_args_is_help=True)

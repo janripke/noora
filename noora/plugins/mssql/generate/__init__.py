@@ -1,6 +1,6 @@
 import click
 
-from noora.plugins.mssql.generate.GeneratePlugin import GeneratePlugin
+from noora.plugins.mssql.generate.generate_plugin import GeneratePlugin
 
 
 @click.command()

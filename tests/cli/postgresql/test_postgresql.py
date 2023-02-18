@@ -7,10 +7,10 @@ from noora.plugins.postgresql.create import cli as create
 from noora.plugins.postgresql.update import cli as update
 from noora.plugins.postgresql.recreate import cli as recreate
 from noora.plugins.postgresql.deploy import cli as deploy
-from noora.system.Properties import Properties
+from noora.system.properties import Properties
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_drop_pass(command: MagicMock):
     """
     This test passes when the drop scripts are executed.
@@ -29,7 +29,7 @@ def test_drop_pass(command: MagicMock):
     assert "database 'acme' dropped" in result.output
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_drop_connection_string_pass(command: MagicMock):
     """
     This test passes when the drop scripts are executed.
@@ -48,7 +48,7 @@ def test_drop_connection_string_pass(command: MagicMock):
     assert "database 'acme' dropped" in result.output
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_drop_unknown_host_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message
@@ -68,7 +68,7 @@ def test_drop_unknown_host_fail(command: MagicMock):
     assert "Host unknown_host not in list of valid hosts for this project" in result.exception.__str__()
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_drop_host_mismatch_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message
@@ -88,7 +88,7 @@ def test_drop_host_mismatch_fail(command: MagicMock):
     assert "Host 'localhost' not present in connection-string" in result.exception.__str__()
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_create_pass(command: MagicMock):
     """
     This test passes when the create scripts are executed.
@@ -107,7 +107,7 @@ def test_create_pass(command: MagicMock):
     assert "database 'acme' created." in result.output
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_create_unknown_host_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message
@@ -127,7 +127,7 @@ def test_create_unknown_host_fail(command: MagicMock):
     assert "Host unknown_host not in list of valid hosts for this project" in result.exception.__str__()
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_create_host_mismatch_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message
@@ -147,7 +147,7 @@ def test_create_host_mismatch_fail(command: MagicMock):
     assert "Host 'localhost' not present in connection-string" in result.exception.__str__()
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_update_pass(command: MagicMock):
     """
     This test passes when the update scripts for version 1.0.1 are executed.
@@ -166,7 +166,7 @@ def test_update_pass(command: MagicMock):
     assert "database 'acme' updated" in result.output
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_update_unknown_host_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message
@@ -186,7 +186,7 @@ def test_update_unknown_host_fail(command: MagicMock):
     assert "Host unknown_host not in list of valid hosts for this project" in result.exception.__str__()
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_update_host_mismatch_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message
@@ -206,7 +206,7 @@ def test_update_host_mismatch_fail(command: MagicMock):
     assert "Host 'localhost' not present in connection-string" in result.exception.__str__()
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_recreate_pass(command: MagicMock):
     """
     This test passes when the drop, create and update parts are executed.
@@ -227,7 +227,7 @@ def test_recreate_pass(command: MagicMock):
     assert "database 'acme' updated" in result.output
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_recreate_latest_version_pass(command: MagicMock):
     """
     This test passes when the drop, create and update parts are executed.
@@ -248,7 +248,7 @@ def test_recreate_latest_version_pass(command: MagicMock):
     assert "database 'acme' updated" in result.output
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_recreate_connection_string_pass(command: MagicMock):
     """
     This test passes when the drop, create and update parts are executed.
@@ -269,7 +269,7 @@ def test_recreate_connection_string_pass(command: MagicMock):
     assert "database 'acme' updated" in result.output
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_recreate_unknown_host_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message
@@ -290,7 +290,7 @@ def test_recreate_unknown_host_fail(command: MagicMock):
     assert "Host unknown_host not in list of valid hosts for this project" in result.exception.__str__()
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_recreate_host_mismatch_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message
@@ -311,7 +311,7 @@ def test_recreate_host_mismatch_fail(command: MagicMock):
     assert "Host 'localhost' not present in connection-string" in result.exception.__str__()
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_deploy_pass(command: MagicMock):
     """
     This test passes when both the create and update parts are executed.
@@ -332,7 +332,7 @@ def test_deploy_pass(command: MagicMock):
     assert "database 'acme' updated" in result.output
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_deploy_latest_version_pass(command: MagicMock):
     """
     This test passes when both the create and update parts are executed.
@@ -353,7 +353,7 @@ def test_deploy_latest_version_pass(command: MagicMock):
     assert "database 'acme' updated" in result.output
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_deploy_create_only_pass(command: MagicMock):
     """
     This test passes when the create part and only the create part is executed.
@@ -374,7 +374,7 @@ def test_deploy_create_only_pass(command: MagicMock):
     assert "database 'acme' updated" not in result.output
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_deploy_unknown_host_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message
@@ -395,7 +395,7 @@ def test_deploy_unknown_host_fail(command: MagicMock):
     assert "Host unknown_host not in list of valid hosts for this project" in result.exception.__str__()
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_deploy_no_host_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message
@@ -416,7 +416,7 @@ def test_deploy_no_host_fail(command: MagicMock):
     assert "no host was given" in result.exception.__str__()
 
 
-@patch("noora.shell.Shell.Shell.execute")
+@patch("noora.shell.shell.Shell.execute")
 def test_deploy_invalid_environment_fail(command: MagicMock):
     """
     This test passes when a PluginException is raised, with the message

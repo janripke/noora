@@ -4,7 +4,7 @@ import os
 import argparse
 import json
 from noora.plugins.GeneratePlugin import GeneratePlugin
-from noora.system.App import App
+from noora.system.app import App
 import noora
 
 

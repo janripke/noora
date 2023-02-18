@@ -4,8 +4,8 @@ import os
 import noora
 import argparse
 import json
-from noora.plugins.mssql.update.UpdatePlugin import UpdatePlugin
-from noora.system.App import App
+from noora.plugins.mssql.update.update_plugin import UpdatePlugin
+from noora.system.app import App
 
 
 class TestBase(unittest.TestCase):

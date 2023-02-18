@@ -1,8 +1,8 @@
 from os.path import expanduser
-from noora.system import PropertyHelper
+from noora.system import property_helper
 import os
 import json
-from noora.io.Files import Files
+from noora.io.files import Files
 
 
 properties = dict()

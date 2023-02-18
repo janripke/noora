@@ -4,8 +4,8 @@ import os
 import noora
 import argparse
 import json
-from noora.plugins.mssql.recreate.RecreatePlugin import RecreatePlugin
-from noora.system.App import App
+from noora.plugins.mssql.recreate.recreate_plugin import RecreatePlugin
+from noora.system.app import App
 
 
 class TestBase(unittest.TestCase):

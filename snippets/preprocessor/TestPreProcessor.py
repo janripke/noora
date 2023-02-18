@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import unittest
 
-from noora.io.File import File
-from noora.processor.PreProcessor import PreProcessor
+from noora.io.file import File
+from noora.processor.pre_processor import PreProcessor
 
 
 class TestPreProcessor(unittest.TestCase):

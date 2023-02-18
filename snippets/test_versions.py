@@ -1,5 +1,5 @@
-from noora.version.Versions import Versions
-from noora.version.Version import Version
+from noora.version.versions import Versions
+from noora.version.version import Version
 
 # def weight(value):
 #     i = 0

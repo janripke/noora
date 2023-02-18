@@ -1,6 +1,6 @@
 import click
 
-from noora.plugins.mysql.recreate.RecreatePlugin import RecreatePlugin
+from noora.plugins.mysql.recreate.recreate_plugin import RecreatePlugin
 
 
 @click.command()

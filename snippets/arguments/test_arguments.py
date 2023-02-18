@@ -1,5 +1,5 @@
 import argparse
-from noora.plugins.mysql.create.CreatePlugin import CreatePlugin
+from noora.plugins.mysql.create.create_plugin import CreatePlugin
 
 parser = argparse.ArgumentParser(description="mynoora, a mysql deployment tool", add_help=False)
 parser.add_argument("commands", help="display a square of a given number", type=str, nargs='+')

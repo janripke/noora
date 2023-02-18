@@ -1,6 +1,6 @@
 import click
 
-from .BuildPlugin import BuildPlugin
+from .build_plugin import BuildPlugin
 
 
 @click.command()

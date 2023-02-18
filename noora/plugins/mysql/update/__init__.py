@@ -1,6 +1,6 @@
 import click
 
-from noora.plugins.mysql.update.UpdatePlugin import UpdatePlugin
+from noora.plugins.mysql.update.update_plugin import UpdatePlugin
 
 
 @click.command()

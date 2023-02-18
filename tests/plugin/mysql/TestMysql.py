@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import unittest
 from noora.mynoora_cli import main
-from noora.plugins.mysql.drop.DropPlugin import DropPlugin
-from noora.plugins.mysql.create.CreatePlugin import CreatePlugin
-from noora.connectors.MysqlConnectorStub import MysqlConnectorStub
-from noora.system.App import App
+from noora.plugins.mysql.drop.drop_plugin import DropPlugin
+from noora.plugins.mysql.create.create_plugin import CreatePlugin
+from noora.connectors.mysql_connector_stub import MysqlConnectorStub
+from noora.system.app import App
 
 
 class TestBase(unittest.TestCase):

@@ -4,8 +4,8 @@ import os
 import noora
 import argparse
 import json
-from noora.plugins.mysql.drop.DropPlugin import DropPlugin
-from noora.system.App import App
+from noora.plugins.mysql.drop.drop_plugin import DropPlugin
+from noora.system.app import App
 
 
 class TestBase(unittest.TestCase):
