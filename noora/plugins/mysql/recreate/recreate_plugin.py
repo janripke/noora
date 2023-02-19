@@ -21,6 +21,9 @@ class RecreatePlugin(MysqlPlugin):
             'update_versions': [],
         }
         target_version = arguments.get('version')
+        if target_version:
+            if target_version.lower() == "latest":
+                target_version = None
 
         # If the target version is the default, we stop here because create takes care of this
         if prepared_args['default_version'] == target_version:

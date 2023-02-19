@@ -66,7 +66,7 @@ class App(click.MultiCommand):
             if hasattr(mod, 'cli'):
                 return mod.cli
         elif cmd_name == 'generate':
-            mod = import_module('noora.system.GenerateCommand')
+            mod = import_module('noora.system.generate_command')
             return mod.cli
 
         return None

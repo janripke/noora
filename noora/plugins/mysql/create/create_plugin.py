@@ -26,6 +26,10 @@ class CreatePlugin(MysqlPlugin):
         Fail.fail_on_invalid_environment(environment, properties)
         prepared_args['environment'] = environment
 
+        connection_string = arguments.get('connection_string')
+        prepared_args['connection_string'] = property_helper.connection_credentials(connection_string)
+        Fail.fail_on_host_mismatch(host, prepared_args['connection_string'])
+
         alias = arguments.get('alias')
         Fail.fail_on_invalid_alias(alias, properties)
         # if an alias is given, only this database will be installed, other databases will be
@@ -58,7 +62,6 @@ class CreatePlugin(MysqlPlugin):
         """
         prepared_args = self._validate_and_prepare(properties, arguments)
 
-        #: Some comment
         host = prepared_args['host']
         environment = prepared_args['environment']
         databases = prepared_args['databases']
@@ -66,16 +69,23 @@ class CreatePlugin(MysqlPlugin):
 
         objects = properties.get('create_objects')
 
-        # retrieve the user credentials for this database project.
-        users = properties.get('mysql_users')
+        # retrieve the database connection credentials through
+        # the commandline option --connection-string
+        connection_string = prepared_args['connection_string']
+        if connection_string:
+            users = connection_string
 
-        # try to retrieve the users from the credentials file, when no users are configured in
-        # myproject.json.
-        if not users:
-            # retrieve the name of this database project, introduced in version 1.0.12
-            profile = property_helper.get_profile(properties)
-            if profile:
-                users = profile.get('mysql_users')
+        if not connection_string:
+            # retrieve the user credentials for this database project.
+            users = properties.get('mysql_users')
+
+            # try to retrieve the users from the credentials file, when no users are configured in
+            # myproject.json.
+            if not users:
+                # retrieve the name of this database project, introduced in version 1.0.12
+                profile = property_helper.get_profile(properties)
+                if profile:
+                    users = profile.get('mysql_users')
 
         # fail when no users are found. This means that they are not set in myproject.json or
         # credentials.json

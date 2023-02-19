@@ -9,6 +9,11 @@ Version 1.2.8
 * mssql, added connection-string support
 * mssql, added tests
 
+Version 1.2.8
+-------------
+* mysql, changed the deploy and recreate plugin, support for the keyword latest is added to the version parameter.
+* mysql, connection-string support, to avoid adding database credentials database project.
+
 Version 1.2.7
 -------------
 * postgresql, changed the deploy and recreate plugin, support for the keyword latest is added to the version parameter.

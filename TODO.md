@@ -7,4 +7,16 @@
 * create a deploy plugin for mssql and mysql
 * replace the version class with a version dataclass
 * change .format string to formatted strings
-* use pyproject.toml in favour of setup.py, which is marked as deprecated by pip 
+* create and test a python application, using actions on github
+
+  https://github.com/janripke/noora/actions/new
+
+* publish a python package to PyPI on release, using actions on github
+  
+  https://github.com/janripke/noora/actions/new
+
+* use pyproject.toml in favour of setup.py, which is marked as deprecated by pip.
+
+  https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+  
+  https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/
