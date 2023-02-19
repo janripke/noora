@@ -31,7 +31,8 @@
     "hotfix"
   ],
   "excluded_files": [
-    "install.sql"
+    "install.sql",
+    ".gitkeep"
   ],
   "environments": [
     "dev",
