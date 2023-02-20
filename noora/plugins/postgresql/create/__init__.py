@@ -1,6 +1,6 @@
 import click
 
-from noora.plugins.postgresql.create.CreatePlugin import CreatePlugin
+from noora.plugins.postgresql.create.create_plugin import CreatePlugin
 
 
 @click.command()

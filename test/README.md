@@ -1,1 +1,0 @@
-NOTE: this directory is part of Noora < 1.0 and will be removed in the future.

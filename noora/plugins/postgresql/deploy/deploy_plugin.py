@@ -1,13 +1,13 @@
 import os
-from noora.version.Versions import Versions
-from noora.version.VersionLoader import VersionLoader
-from noora.exceptions.plugins.PluginException import PluginException
-from noora.system.ClassLoader import ClassLoader
-from noora.io.File import File
-from noora.plugins.postgresql.PGSQLPlugin import PGSQLPlugin
-from noora.system import PropertyHelper
-from noora.system import Ora
-from noora.plugins.Fail import Fail
+from noora.version.versions import Versions
+from noora.version.version_loader import VersionLoader
+from noora.exceptions.plugins.plugin_exception import PluginException
+from noora.system.class_loader import ClassLoader
+from noora.io.file import File
+from noora.plugins.postgresql.pqsql_plugin import PGSQLPlugin
+from noora.system import property_helper
+from noora.system import ora
+from noora.plugins.fails import Fail
 
 
 def plan(installed_version: str, prepared_arguments: dict) -> dict:
@@ -81,7 +81,7 @@ class DeployPlugin(PGSQLPlugin):
 
         environment = arguments.get('environment')
         default_environment = properties.get('default_environment')
-        environment = Ora.nvl(environment, default_environment)
+        environment = ora.nvl(environment, default_environment)
         Fail.fail_on_invalid_environment(environment, properties)
         prepared_args['environment'] = environment
 
@@ -137,7 +137,7 @@ class DeployPlugin(PGSQLPlugin):
         # the commandline option --connection-string
         connection_string = prepared_args['connection_string']
         if connection_string:
-            users = PropertyHelper.connection_credentials(connection_string)
+            users = property_helper.connection_credentials(connection_string)
 
         if not connection_string:
             # retrieve the user credentials for this database project.
@@ -147,13 +147,13 @@ class DeployPlugin(PGSQLPlugin):
             # myproject.json.
             if not users:
                 # retrieve the name of this database project, introduced in version 1.0.12
-                profile = PropertyHelper.get_profile(properties)
+                profile = property_helper.get_profile(properties)
                 if profile:
                     users = profile.get('postgresql_users')
 
         connector = self.get_connector()
         version_database = properties.get('version_database')
-        executor = PropertyHelper.get_postgres_properties(users, host, version_database)
+        executor = property_helper.get_postgres_properties(users, host, version_database)
         installed_version = fetch_installed_version(connector, executor, properties)
 
         planned_versions = plan(installed_version, prepared_args)

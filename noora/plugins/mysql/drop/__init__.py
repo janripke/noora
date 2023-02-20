@@ -1,6 +1,6 @@
 import click
 
-from noora.plugins.mysql.drop.DropPlugin import DropPlugin
+from noora.plugins.mysql.drop.drop_plugin import DropPlugin
 
 
 @click.command()
@@ -8,13 +8,14 @@ from noora.plugins.mysql.drop.DropPlugin import DropPlugin
 @click.option('-d', '--database', required=False, help='Database name')
 @click.option('-e', '--environment', required=False, help='Environment')
 @click.option('-a', '--alias', required=False, help='Alias. Overrules the database option')
+@click.option('--connection-string', required=False)
 @click.pass_obj
-def cli(props, host, database, environment, alias):
+def cli(props, host, database, environment, alias, connection_string):
     """
     Drop (clear out) a MySQL database.
     """
     plugin = DropPlugin()
     plugin.execute(
         props,
-        {'host': host, 'database': database, 'environment': environment, 'alias': alias},
+        {'host': host, 'database': database, 'environment': environment, 'alias': alias, 'connection_string': connection_string},
     )

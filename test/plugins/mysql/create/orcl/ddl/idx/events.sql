@@ -1,1 +1,0 @@
-CREATE INDEX evt_rlk_id_idx ON events (rlk_id);

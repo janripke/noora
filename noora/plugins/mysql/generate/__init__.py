@@ -1,6 +1,6 @@
 import click
 
-from noora.plugins.mysql.generate.GeneratePlugin import GeneratePlugin
+from noora.plugins.mysql.generate.generate_plugin import GeneratePlugin
 
 
 @click.command()

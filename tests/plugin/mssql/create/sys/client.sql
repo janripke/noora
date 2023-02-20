@@ -1,2 +1,0 @@
-print "client"
-print "$(USERNAME)"

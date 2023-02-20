@@ -12,7 +12,7 @@ In the last section we have included documentation about extending plugins or ad
 Plugin Base Class
 ^^^^^^^^^^^^^^^^^
 
-.. autoclass:: noora.plugins.Plugin.Plugin
+.. autoclass:: noora.plugins.plugin.Plugin
     :members:
 
 
@@ -43,22 +43,22 @@ The MySQL technology also supports using aliases for your database. Add an alias
 Connector and Plugins
 ^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: noora.connectors.MysqlConnector.MysqlConnector
+.. autoclass:: noora.connectors.mysql_connector.MysqlConnector
     :members:
 
-.. autoclass:: noora.plugins.mysql.generate.GeneratePlugin.GeneratePlugin
+.. autoclass:: noora.plugins.mysql.generate.generate_plugin.GeneratePlugin
     :members:
 
-.. autoclass:: noora.plugins.mysql.create.CreatePlugin.CreatePlugin
+.. autoclass:: noora.plugins.mysql.create.create_plugin.CreatePlugin
     :members:
 
-.. autoclass:: noora.plugins.mysql.drop.DropPlugin.DropPlugin
+.. autoclass:: noora.plugins.mysql.drop.drop_plugin.DropPlugin
     :members:
 
-.. autoclass:: noora.plugins.mysql.update.UpdatePlugin.UpdatePlugin
+.. autoclass:: noora.plugins.mysql.update.update_plugin.UpdatePlugin
     :members:
 
-.. autoclass:: noora.plugins.mysql.recreate.RecreatePlugin.RecreatePlugin
+.. autoclass:: noora.plugins.mysql.recreate.recreate_plugin.RecreatePlugin
     :members:
 
 
@@ -96,22 +96,22 @@ The ``drop_objects`` directive has the following default list, in order of execu
 Connector and Plugins
 ^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: noora.connectors.MssqlConnector.MssqlConnector
+.. autoclass:: noora.connectors.mssql_connector.MssqlConnector
     :members:
 
-.. autoclass:: noora.plugins.mssql.generate.GeneratePlugin.GeneratePlugin
+.. autoclass:: noora.plugins.mssql.generate.generate_plugin.GeneratePlugin
     :members:
 
-.. autoclass:: noora.plugins.mssql.create.CreatePlugin.CreatePlugin
+.. autoclass:: noora.plugins.mssql.create.create_plugin.CreatePlugin
     :members:
 
-.. autoclass:: noora.plugins.mssql.drop.DropPlugin.DropPlugin
+.. autoclass:: noora.plugins.mssql.drop.drop_plugin.DropPlugin
     :members:
 
-.. autoclass:: noora.plugins.mssql.update.UpdatePlugin.UpdatePlugin
+.. autoclass:: noora.plugins.mssql.update.update_plugin.UpdatePlugin
     :members:
 
-.. autoclass:: noora.plugins.mssql.recreate.RecreatePlugin.RecreatePlugin
+.. autoclass:: noora.plugins.mssql.recreate.recreate_plugin.RecreatePlugin
     :members:
 
 
@@ -142,22 +142,22 @@ The ``drop_objects`` directive has the following default list, in order of execu
 Connector and Plugins
 ^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: noora.connectors.PGSQLConnector.PGSQLConnector
+.. autoclass:: noora.connectors.pgsql_connector.PGSQLConnector
     :members:
 
-.. autoclass:: noora.plugins.postgresql.generate.GeneratePlugin.GeneratePlugin
+.. autoclass:: noora.plugins.postgresql.generate.generate_plugin.GeneratePlugin
     :members:
 
-.. autoclass:: noora.plugins.postgresql.create.CreatePlugin.CreatePlugin
+.. autoclass:: noora.plugins.postgresql.create.create_plugin.CreatePlugin
     :members:
 
-.. autoclass:: noora.plugins.postgresql.drop.DropPlugin.DropPlugin
+.. autoclass:: noora.plugins.postgresql.drop.drop_plugin.DropPlugin
     :members:
 
-.. autoclass:: noora.plugins.postgresql.update.UpdatePlugin.UpdatePlugin
+.. autoclass:: noora.plugins.postgresql.update.update_plugin.UpdatePlugin
     :members:
 
-.. autoclass:: noora.plugins.postgresql.recreate.RecreatePlugin.RecreatePlugin
+.. autoclass:: noora.plugins.postgresql.recreate.recreate_plugin.RecreatePlugin
     :members:
 
 

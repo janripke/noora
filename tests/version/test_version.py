@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 import unittest
-from noora.version.Versions import Versions
-from noora.version.VersionLoader import VersionLoader
-from noora.version.Version import Version
+from noora.version.versions import Versions
+from noora.version.version_loader import VersionLoader
+from noora.version.version import Version
 import os
 
 

@@ -1,6 +1,6 @@
 import click
 
-from noora.plugins.postgresql.drop.DropPlugin import DropPlugin
+from noora.plugins.postgresql.drop.drop_plugin import DropPlugin
 
 
 @click.command()

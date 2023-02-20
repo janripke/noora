@@ -1,6 +1,6 @@
 import click
 
-from noora.plugins.postgresql.update.UpdatePlugin import UpdatePlugin
+from noora.plugins.postgresql.update.update_plugin import UpdatePlugin
 
 
 @click.command()

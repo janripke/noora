@@ -20,14 +20,14 @@ To install Noora, you can install from pip, a release from Github or from source
 $ pip install noora
 
 # Install from github
-$ pip install git+https://github.com/janripke/noora.git@1.2.7#egg=noora
+$ pip install git+https://github.com/janripke/noora.git@1.2.8#egg=noora
 
 # Clone and install from source
 $ git clone https://github.com/janripke/noora/
 $ cd noora
 # Checkout the release you want to use 
 # (NOTE: the master branch is NOT guaranteed to be stable!)
-$ git checkout tags/1.2.7
+$ git checkout tags/1.2.8
 $ pip install .
 ```
 
